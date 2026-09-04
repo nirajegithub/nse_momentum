@@ -27,6 +27,7 @@ jobs:
       DRY_RUN: "true"
       MIN_PRICE: "250"
       MIN_PREV_VOLUME: "500000"
+      TEST_DATE: "2026-09-04"
       SCANNER_ACTION: ${{ inputs.action }}
     steps:
       - uses: actions/checkout@v4
