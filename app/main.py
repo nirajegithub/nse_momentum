@@ -38,13 +38,22 @@ def ltp_batch(dhan, ids):
         }
     )
 
-    data = response.get("data", response) if isinstance(response, dict) else {}
-    block = data.get("NSE_EQ", {}) if isinstance(data, dict) else {}
+    data = (
+        response.get("data", response)
+        if isinstance(response, dict)
+        else {}
+    )
+
+    block = (
+        data.get("NSE_EQ", {})
+        if isinstance(data, dict)
+        else {}
+    )
 
     return block if isinstance(block, dict) else {}
 
 
-def create_universe(dhan, state):
+def create_universe(dhan, state, as_of_date):
     if state["universe"]:
         LOG.info(
             "Universe already exists: %d symbols",
@@ -52,7 +61,11 @@ def create_universe(dhan, state):
         )
         return
 
-    state["universe"] = build_universe(dhan)
+    state["universe"] = build_universe(
+        dhan,
+        as_of_date=as_of_date,
+    )
+
     save(state)
 
     LOG.info(
@@ -257,6 +270,7 @@ def summary(dhan, state, ts):
             s["exit_price"] = float(px)
             s["exit_time"] = ts.isoformat()
             s["exit_reason"] = "END_OF_DAY"
+
             prices[s["symbol"]] = float(px)
 
     send(
@@ -294,10 +308,6 @@ def main():
 
     # ---------------------------------------------------------
     # TEST DATE OVERRIDE
-    # ---------------------------------------------------------
-    # When TEST_DATE is set, use that date instead of today's
-    # actual IST date. This allows testing on weekends/outside
-    # market hours.
     # ---------------------------------------------------------
 
     test_date = os.getenv(
@@ -347,6 +357,7 @@ def main():
     # ---------------------------------------------------------
 
     dhan = DhanClient()
+
     state = load(today)
 
     # ---------------------------------------------------------
@@ -357,6 +368,7 @@ def main():
         create_universe(
             dhan,
             state,
+            today,
         )
         return
 
