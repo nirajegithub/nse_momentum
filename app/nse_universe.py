@@ -177,9 +177,7 @@ def build_universe(dhan: DhanClient):
     )
 
     from_date = prev_day.isoformat()
-    to_date = (
-        prev_day + timedelta(days=1)
-    ).isoformat()
+    to_date = (prev_day + timedelta(days=1)).isoformat()
 
     to_date = prev_day.isoformat()
 
