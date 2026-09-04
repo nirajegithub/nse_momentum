@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+from datetime import date
 
 import pandas as pd
 from dhanhq import DhanContext, dhanhq
@@ -21,158 +22,146 @@ class DhanClient:
         self.context = DhanContext(client_id, token)
         self.dhan = dhanhq(self.context)
 
+    @staticmethod
+    def _find_col(df: pd.DataFrame, names):
+        normalized = {
+            str(c).lower().replace(" ", "_"): c
+            for c in df.columns
+        }
+
+        for name in names:
+            if name.lower() in normalized:
+                return normalized[name.lower()]
+
+        return None
+
     def security_master(self) -> pd.DataFrame:
-        """
-        Download Dhan's detailed security master.
-
-        NSE cash equity:
-            EXCH_ID    = NSE
-            SEGMENT    = E
-            INSTRUMENT = EQUITY
-
-        Scanner symbol:
-            UNDERLYING_SYMBOL
-
-        Dhan identifier:
-            SECURITY_ID
-        """
-
-        columns = [
-            "EXCH_ID",
-            "SEGMENT",
-            "SECURITY_ID",
-            "INSTRUMENT",
-            "UNDERLYING_SYMBOL",
-            "SYMBOL_NAME",
-        ]
-
-        try:
-            df = pd.read_csv(
-                DHAN_DETAILED_MASTER_URL,
-                usecols=columns,
-                dtype=str,
-                low_memory=False,
-            )
-        except Exception as exc:
-            raise RuntimeError(
-                f"Unable to download Dhan detailed security master: {exc}"
-            ) from exc
-
-        for column in columns:
-            df[column] = (
-                df[column]
-                .fillna("")
-                .astype(str)
-                .str.strip()
-            )
-
-        df = df[
-            (df["EXCH_ID"].str.upper() == "NSE")
-            & (df["SEGMENT"].str.upper() == "E")
-            & (df["INSTRUMENT"].str.upper() == "EQUITY")
-        ].copy()
-
-        df["UNDERLYING_SYMBOL"] = (
-            df["UNDERLYING_SYMBOL"]
-            .str.upper()
-            .str.strip()
+        df = pd.read_csv(
+            DHAN_DETAILED_MASTER_URL,
+            low_memory=False
         )
-
-        df["SECURITY_ID"] = (
-            df["SECURITY_ID"]
-            .str.strip()
-        )
-
-        df = df[
-            (df["UNDERLYING_SYMBOL"] != "")
-            & (df["SECURITY_ID"] != "")
-        ].copy()
 
         LOG.info(
-            "Dhan detailed master: %d NSE equity instruments loaded",
-            len(df),
+            "Dhan detailed master: %d rows loaded",
+            len(df)
         )
 
         return df
 
     def build_symbol_map(
         self,
-        symbols: list[str],
+        symbols: list[str]
     ) -> dict[str, dict]:
-        """
-        Build:
-
-            NSE SYMBOL -> Dhan SECURITY_ID
-
-        Example:
-
-            POLYCAB -> {
-                "security_id": "9598",
-                "exchange_segment": "NSE_EQ",
-                "instrument": "EQUITY"
-            }
-        """
 
         df = self.security_master()
 
-        wanted = {
-            str(symbol).strip().upper()
-            for symbol in symbols
-            if str(symbol).strip()
-        }
+        required = [
+            "EXCH_ID",
+            "SEGMENT",
+            "SECURITY_ID",
+            "INSTRUMENT",
+            "UNDERLYING_SYMBOL",
+        ]
 
-        if not wanted:
-            return {}
+        missing = [c for c in required if c not in df.columns]
+
+        if missing:
+            raise RuntimeError(
+                f"Missing Dhan master columns: {missing}"
+            )
+
+        df = df[
+            (df["EXCH_ID"].astype(str).str.upper() == "NSE")
+            & (df["SEGMENT"].astype(str).str.upper() == "E")
+            & (df["INSTRUMENT"].astype(str).str.upper() == "EQUITY")
+        ].copy()
+
+        wanted = {s.upper() for s in symbols}
+
+        df["UNDERLYING_SYMBOL"] = (
+            df["UNDERLYING_SYMBOL"]
+            .astype(str)
+            .str.strip()
+            .str.upper()
+        )
 
         matched = df[
             df["UNDERLYING_SYMBOL"].isin(wanted)
-        ].copy()
+        ]
 
-        matched = matched.drop_duplicates(
-            subset=["UNDERLYING_SYMBOL"],
-            keep="first",
-        )
-
-        result: dict[str, dict] = {}
+        out = {}
 
         for _, row in matched.iterrows():
-            symbol = (
-                str(row["UNDERLYING_SYMBOL"])
-                .strip()
-                .upper()
-            )
+            symbol = row["UNDERLYING_SYMBOL"]
 
-            security_id = (
-                str(row["SECURITY_ID"])
-                .strip()
-            )
-
-            if not symbol or not security_id:
-                continue
-
-            result[symbol] = {
-                "security_id": security_id,
+            out[symbol] = {
+                "security_id": str(row["SECURITY_ID"]),
                 "exchange_segment": "NSE_EQ",
                 "instrument": "EQUITY",
             }
 
-        missing = sorted(
-            wanted - set(result.keys())
-        )
-
         LOG.info(
             "Dhan Security ID mapping: %d/%d symbols matched",
-            len(result),
+            len(out),
             len(wanted),
         )
 
-        for symbol in missing:
-            LOG.warning(
-                "Missing Dhan security_id: %s",
-                symbol,
-            )
+        return out
 
-        return result
+    def historical_daily_df(
+        self,
+        security_id: str,
+        from_date: str,
+        to_date: str,
+    ) -> pd.DataFrame:
+
+        payload = self.dhan.historical_daily_data(
+            security_id=str(security_id),
+            exchange_segment="NSE_EQ",
+            instrument_type="EQUITY",
+            from_date=from_date,
+            to_date=to_date,
+        )
+
+        if not isinstance(payload, dict):
+            return pd.DataFrame()
+
+        required = [
+            "timestamp",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+        ]
+
+        if not all(k in payload for k in required):
+            return pd.DataFrame()
+
+        n = min(len(payload[k]) for k in required)
+
+        df = pd.DataFrame(
+            {
+                k: payload[k][:n]
+                for k in required
+            }
+        )
+
+        if df.empty:
+            return df
+
+        df["timestamp"] = pd.to_datetime(
+            df["timestamp"],
+            unit="s",
+            utc=True,
+        ).dt.tz_convert("Asia/Kolkata")
+
+        df = (
+            df.set_index("timestamp")
+            .sort_index()
+        )
+
+        return df
 
     def intraday_df(
         self,
@@ -181,13 +170,6 @@ class DhanClient:
         from_date: str,
         to_date: str,
     ) -> pd.DataFrame:
-        """
-        Fetch Dhan intraday minute data.
-
-        Resample locally to:
-            5-minute
-            15-minute
-        """
 
         payload = self.dhan.intraday_minute_data(
             security_id=str(security_id),
@@ -195,6 +177,7 @@ class DhanClient:
             instrument_type="EQUITY",
             from_date=from_date,
             to_date=to_date,
+            interval=1,
         )
 
         if not isinstance(payload, dict):
@@ -209,90 +192,42 @@ class DhanClient:
             "volume",
         ]
 
-        if not all(key in payload for key in keys):
-            LOG.warning(
-                "Incomplete intraday response for security_id=%s",
-                security_id,
-            )
+        if not all(k in payload for k in keys):
             return pd.DataFrame()
 
-        try:
-            n = min(
-                len(payload[key])
-                for key in keys
-            )
+        n = min(len(payload[k]) for k in keys)
 
-            if n == 0:
-                return pd.DataFrame()
+        df = pd.DataFrame(
+            {
+                k: payload[k][:n]
+                for k in keys
+            }
+        )
 
-            df = pd.DataFrame(
-                {
-                    key: payload[key][:n]
-                    for key in keys
-                }
-            )
+        df["timestamp"] = pd.to_datetime(
+            df["timestamp"],
+            unit="s",
+            utc=True,
+        ).dt.tz_convert("Asia/Kolkata")
 
-            df["timestamp"] = pd.to_datetime(
-                df["timestamp"],
-                unit="s",
-                utc=True,
-            ).dt.tz_convert("Asia/Kolkata")
+        df = (
+            df.set_index("timestamp")
+            .sort_index()
+        )
 
-            df = (
-                df
-                .set_index("timestamp")
-                .sort_index()
-            )
+        if interval == 5:
+            df = resample_ohlcv(df, "5min")
+        elif interval == 15:
+            df = resample_ohlcv(df, "15min")
 
-            for column in [
-                "open",
-                "high",
-                "low",
-                "close",
-                "volume",
-            ]:
-                df[column] = pd.to_numeric(
-                    df[column],
-                    errors="coerce",
-                )
-
-            df = df.dropna(
-                subset=[
-                    "open",
-                    "high",
-                    "low",
-                    "close",
-                ]
-            )
-
-            if interval == 5:
-                return resample_ohlcv(
-                    df,
-                    "5min",
-                )
-
-            if interval == 15:
-                return resample_ohlcv(
-                    df,
-                    "15min",
-                )
-
-            return df
-
-        except Exception as exc:
-            LOG.warning(
-                "Failed to process intraday data "
-                "for security_id=%s: %s",
-                security_id,
-                exc,
-            )
-            return pd.DataFrame()
+        return df
 
 
 def resample_ohlcv(
     df: pd.DataFrame,
-    rule: str,
+    rule: str
 ) -> pd.DataFrame:
+
     if df.empty:
         return df
 
