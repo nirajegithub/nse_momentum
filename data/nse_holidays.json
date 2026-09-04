@@ -1,7 +1,129 @@
 {
   "year": 2026,
   "market": "CM",
-  "updated_at_ist": "",
-  "holidays": [],
-  "holiday_details": []
+  "updated_at_ist": "2026-09-04T22:44:49.479542+05:30",
+  "holidays": [
+    "2026-01-15",
+    "2026-01-26",
+    "2026-02-15",
+    "2026-03-03",
+    "2026-03-21",
+    "2026-03-26",
+    "2026-03-31",
+    "2026-04-03",
+    "2026-04-14",
+    "2026-05-01",
+    "2026-05-28",
+    "2026-06-26",
+    "2026-08-15",
+    "2026-09-14",
+    "2026-10-02",
+    "2026-10-20",
+    "2026-11-08",
+    "2026-11-10",
+    "2026-11-24",
+    "2026-12-25"
+  ],
+  "holiday_details": [
+    {
+      "date": "2026-01-15",
+      "day": "Thursday",
+      "description": "Municipal Corporation Election - Maharashtra"
+    },
+    {
+      "date": "2026-01-26",
+      "day": "Monday",
+      "description": "Republic Day"
+    },
+    {
+      "date": "2026-02-15",
+      "day": "Sunday",
+      "description": "Mahashivratri"
+    },
+    {
+      "date": "2026-03-03",
+      "day": "Tuesday",
+      "description": "Holi"
+    },
+    {
+      "date": "2026-03-21",
+      "day": "Saturday",
+      "description": "Id-Ul-Fitr (Ramadan Eid)"
+    },
+    {
+      "date": "2026-03-26",
+      "day": "Thursday",
+      "description": "Shri Ram Navami"
+    },
+    {
+      "date": "2026-03-31",
+      "day": "Tuesday",
+      "description": "Shri Mahavir Jayanti"
+    },
+    {
+      "date": "2026-04-03",
+      "day": "Friday",
+      "description": "Good Friday"
+    },
+    {
+      "date": "2026-04-14",
+      "day": "Tuesday",
+      "description": "Dr. Baba Saheb Ambedkar Jayanti"
+    },
+    {
+      "date": "2026-05-01",
+      "day": "Friday",
+      "description": "Maharashtra Day"
+    },
+    {
+      "date": "2026-05-28",
+      "day": "Thursday",
+      "description": "Bakri Id"
+    },
+    {
+      "date": "2026-06-26",
+      "day": "Friday",
+      "description": "Muharram"
+    },
+    {
+      "date": "2026-08-15",
+      "day": "Saturday",
+      "description": "Independence Day"
+    },
+    {
+      "date": "2026-09-14",
+      "day": "Monday",
+      "description": "Ganesh Chaturthi"
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "description": "Mahatma Gandhi Jayanti"
+    },
+    {
+      "date": "2026-10-20",
+      "day": "Tuesday",
+      "description": "Dussehra"
+    },
+    {
+      "date": "2026-11-08",
+      "day": "Sunday",
+      "description": "Diwali Laxmi Pujan*"
+    },
+    {
+      "date": "2026-11-10",
+      "day": "Tuesday",
+      "description": "Diwali-Balipratipada"
+    },
+    {
+      "date": "2026-11-24",
+      "day": "Tuesday",
+      "description": "Prakash Gurpurb Sri Guru Nanak Dev"
+    },
+    {
+      "date": "2026-12-25",
+      "day": "Friday",
+      "description": "Christmas"
+    }
+  ]
 }
