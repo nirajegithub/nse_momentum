@@ -1,5 +1,588 @@
 {
-  "date": "",
-  "universe": [],
+  "date": "2026-09-04",
+  "universe": [
+    {
+      "symbol": "ABB",
+      "security_id": "13",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "ABCAPITAL",
+      "security_id": "21614",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "ABSLAMC",
+      "security_id": "6018",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "ACUTAAS",
+      "security_id": "5578",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "ADANIENSOL",
+      "security_id": "10217",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "ADANIGREEN",
+      "security_id": "3563",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "ADANIPOWER",
+      "security_id": "17388",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "ANANDRATHI",
+      "security_id": "7145",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "APARINDS",
+      "security_id": "11491",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "ATHERENERG",
+      "security_id": "757645",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "BELRISE",
+      "security_id": "757102",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "BHARATFORG",
+      "security_id": "422",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "BHEL",
+      "security_id": "438",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "BSE",
+      "security_id": "19585",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "CGPOWER",
+      "security_id": "760",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "CRAFTSMAN",
+      "security_id": "2854",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "CUMMINSIND",
+      "security_id": "1901",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "FEDERALBNK",
+      "security_id": "1023",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "FINCABLES",
+      "security_id": "1038",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "GESHIP",
+      "security_id": "13776",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "GLENMARK",
+      "security_id": "7406",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "GMDCLTD",
+      "security_id": "5204",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "GRANULES",
+      "security_id": "11872",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "HFCL",
+      "security_id": "21954",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "HINDALCO",
+      "security_id": "1363",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "HINDCOPPER",
+      "security_id": "17939",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "HONASA",
+      "security_id": "19813",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "IDEA",
+      "security_id": "14366",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "KARURVYSYA",
+      "security_id": "1838",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "KEI",
+      "security_id": "13310",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "KIRLOSENG",
+      "security_id": "20936",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "LAURUSLABS",
+      "security_id": "19234",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "LTF",
+      "security_id": "24948",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "MAHABANK",
+      "security_id": "11377",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "MCX",
+      "security_id": "31181",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "MOTHERSON",
+      "security_id": "25510",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "NATIONALUM",
+      "security_id": "6364",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "NAVINFLUOR",
+      "security_id": "14672",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "NETWEB",
+      "security_id": "17433",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "NLCINDIA",
+      "security_id": "8585",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "NTPC",
+      "security_id": "11630",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "POLYCAB",
+      "security_id": "9590",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "POWERINDIA",
+      "security_id": "18457",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "RBLBANK",
+      "security_id": "18391",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "RRKABEL",
+      "security_id": "18566",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "SAIL",
+      "security_id": "2963",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "SAILIFE",
+      "security_id": "27839",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "SCHNEIDER",
+      "security_id": "31234",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "SHRIRAMFIN",
+      "security_id": "4306",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "SOLARINDS",
+      "security_id": "13332",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "SYRMA",
+      "security_id": "10793",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "TATASTEEL",
+      "security_id": "3499",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "THERMAX",
+      "security_id": "3475",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "TORNTPHARM",
+      "security_id": "3518",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    },
+    {
+      "symbol": "VEDL",
+      "security_id": "3063",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1
+    },
+    {
+      "symbol": "WELCORP",
+      "security_id": "11821",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1
+    }
+  ],
   "signals": {}
 }
