@@ -32,10 +32,9 @@ class DhanClient:
 
         self.dhan = dhanhq(self.context)
 
-    # ------------------------------------------------------------------
-    # Dhan Security Master
-    # ------------------------------------------------------------------
-
+    # ---------------------------------------------------------
+    # Dhan security master
+    # ---------------------------------------------------------
     def security_master(self) -> pd.DataFrame:
         df = pd.read_csv(
             DHAN_DETAILED_MASTER_URL,
@@ -49,10 +48,9 @@ class DhanClient:
 
         return df
 
-    # ------------------------------------------------------------------
-    # Build NSE Equity Symbol -> Security ID mapping
-    # ------------------------------------------------------------------
-
+    # ---------------------------------------------------------
+    # Build NSE equity symbol -> security ID mapping
+    # ---------------------------------------------------------
     def build_symbol_map(
         self,
         symbols: list[str],
@@ -78,17 +76,6 @@ class DhanClient:
             raise RuntimeError(
                 f"Missing Dhan master columns: {missing}"
             )
-
-        # Dhan detailed master values:
-        #
-        # EXCH_ID    = NSE
-        # SEGMENT    = E
-        # INSTRUMENT = EQUITY
-        #
-        # API values:
-        #
-        # exchangeSegment = NSE_EQ
-        # instrument      = EQUITY
 
         df = df[
             (df["EXCH_ID"].astype(str).str.upper() == "NSE")
@@ -144,15 +131,9 @@ class DhanClient:
 
         return result
 
-    # ------------------------------------------------------------------
-    # Historical Daily Data
-    #
-    # Uses Dhan REST API directly.
-    #
-    # This matches the exact API request that was successfully
-    # tested in Postman.
-    # ------------------------------------------------------------------
-
+    # ---------------------------------------------------------
+    # Historical DAILY data
+    # ---------------------------------------------------------
     def historical_daily_df(
         self,
         security_id: str,
@@ -175,6 +156,20 @@ class DhanClient:
             "toDate": to_date,
         }
 
+        # -----------------------------------------------------
+        # TEMPORARY DIAGNOSTIC LOG
+        # -----------------------------------------------------
+        LOG.info(
+            "Dhan historical REQUEST: "
+            "security_id=%s from=%s to=%s "
+            "exchange=%s instrument=%s",
+            security_id,
+            from_date,
+            to_date,
+            payload["exchangeSegment"],
+            payload["instrument"],
+        )
+
         try:
 
             response = requests.post(
@@ -182,6 +177,17 @@ class DhanClient:
                 headers=headers,
                 json=payload,
                 timeout=20,
+            )
+
+            # -------------------------------------------------
+            # TEMPORARY DIAGNOSTIC LOG
+            # -------------------------------------------------
+            LOG.info(
+                "Dhan historical RESPONSE: "
+                "security_id=%s HTTP=%s body=%s",
+                security_id,
+                response.status_code,
+                response.text[:1000],
             )
 
             if response.status_code != 200:
@@ -216,8 +222,9 @@ class DhanClient:
             if missing:
 
                 LOG.error(
-                    "Dhan historical response missing fields: "
-                    "security_id=%s missing=%s response=%s",
+                    "Dhan historical response "
+                    "missing fields: security_id=%s "
+                    "missing=%s response=%s",
                     security_id,
                     missing,
                     data,
@@ -233,8 +240,9 @@ class DhanClient:
             if n == 0:
 
                 LOG.warning(
-                    "Dhan historical API returned no candles: "
-                    "security_id=%s from=%s to=%s",
+                    "Dhan historical API returned "
+                    "no candles: security_id=%s "
+                    "from=%s to=%s",
                     security_id,
                     from_date,
                     to_date,
@@ -244,24 +252,12 @@ class DhanClient:
 
             df = pd.DataFrame(
                 {
-                    "timestamp": data[
-                        "timestamp"
-                    ][:n],
-                    "open": data[
-                        "open"
-                    ][:n],
-                    "high": data[
-                        "high"
-                    ][:n],
-                    "low": data[
-                        "low"
-                    ][:n],
-                    "close": data[
-                        "close"
-                    ][:n],
-                    "volume": data[
-                        "volume"
-                    ][:n],
+                    "timestamp": data["timestamp"][:n],
+                    "open": data["open"][:n],
+                    "high": data["high"][:n],
+                    "low": data["low"][:n],
+                    "close": data["close"][:n],
+                    "volume": data["volume"][:n],
                 }
             )
 
@@ -274,8 +270,19 @@ class DhanClient:
             )
 
             df = (
-                df.set_index("timestamp")
+                df
+                .set_index("timestamp")
                 .sort_index()
+            )
+
+            LOG.info(
+                "Dhan historical parsed: "
+                "security_id=%s candles=%d "
+                "first=%s last=%s",
+                security_id,
+                len(df),
+                df.index.min(),
+                df.index.max(),
             )
 
             return df
@@ -302,10 +309,9 @@ class DhanClient:
 
             return pd.DataFrame()
 
-    # ------------------------------------------------------------------
-    # Intraday Minute Data
-    # ------------------------------------------------------------------
-
+    # ---------------------------------------------------------
+    # Intraday data
+    # ---------------------------------------------------------
     def intraday_df(
         self,
         security_id: str,
@@ -317,9 +323,7 @@ class DhanClient:
         try:
 
             payload = self.dhan.intraday_minute_data(
-                security_id=str(
-                    security_id
-                ),
+                security_id=str(security_id),
                 exchange_segment="NSE_EQ",
                 instrument_type="EQUITY",
                 from_date=from_date,
@@ -391,7 +395,8 @@ class DhanClient:
         )
 
         df = (
-            df.set_index("timestamp")
+            df
+            .set_index("timestamp")
             .sort_index()
         )
 
@@ -412,10 +417,9 @@ class DhanClient:
         return df
 
 
-# ----------------------------------------------------------------------
-# OHLCV Resampling
-# ----------------------------------------------------------------------
-
+# -------------------------------------------------------------
+# OHLCV resampling
+# -------------------------------------------------------------
 def resample_ohlcv(
     df: pd.DataFrame,
     rule: str,
