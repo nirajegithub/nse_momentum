@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import date
 
 import pandas as pd
+import requests
 from dhanhq import DhanContext, dhanhq
 
 LOG = logging.getLogger(__name__)
@@ -13,44 +13,49 @@ DHAN_DETAILED_MASTER_URL = (
     "https://images.dhan.co/api-data/api-scrip-master-detailed.csv"
 )
 
+DHAN_HISTORICAL_URL = (
+    "https://api.dhan.co/v2/charts/historical"
+)
+
 
 class DhanClient:
     def __init__(self) -> None:
         client_id = os.environ["DHAN_CLIENT_ID"]
         token = os.environ["DHAN_ACCESS_TOKEN"]
 
-        self.context = DhanContext(client_id, token)
+        self.access_token = token
+
+        self.context = DhanContext(
+            client_id,
+            token,
+        )
+
         self.dhan = dhanhq(self.context)
 
-    @staticmethod
-    def _find_col(df: pd.DataFrame, names):
-        normalized = {
-            str(c).lower().replace(" ", "_"): c
-            for c in df.columns
-        }
-
-        for name in names:
-            if name.lower() in normalized:
-                return normalized[name.lower()]
-
-        return None
+    # ------------------------------------------------------------------
+    # Dhan Security Master
+    # ------------------------------------------------------------------
 
     def security_master(self) -> pd.DataFrame:
         df = pd.read_csv(
             DHAN_DETAILED_MASTER_URL,
-            low_memory=False
+            low_memory=False,
         )
 
         LOG.info(
             "Dhan detailed master: %d rows loaded",
-            len(df)
+            len(df),
         )
 
         return df
 
+    # ------------------------------------------------------------------
+    # Build NSE Equity Symbol -> Security ID mapping
+    # ------------------------------------------------------------------
+
     def build_symbol_map(
         self,
-        symbols: list[str]
+        symbols: list[str],
     ) -> dict[str, dict]:
 
         df = self.security_master()
@@ -63,20 +68,48 @@ class DhanClient:
             "UNDERLYING_SYMBOL",
         ]
 
-        missing = [c for c in required if c not in df.columns]
+        missing = [
+            column
+            for column in required
+            if column not in df.columns
+        ]
 
         if missing:
             raise RuntimeError(
                 f"Missing Dhan master columns: {missing}"
             )
 
+        # Dhan detailed master values:
+        #
+        # EXCH_ID    = NSE
+        # SEGMENT    = E
+        # INSTRUMENT = EQUITY
+        #
+        # API values:
+        #
+        # exchangeSegment = NSE_EQ
+        # instrument      = EQUITY
+
         df = df[
             (df["EXCH_ID"].astype(str).str.upper() == "NSE")
-            & (df["SEGMENT"].astype(str).str.upper() == "E")
-            & (df["INSTRUMENT"].astype(str).str.upper() == "EQUITY")
+            & (
+                df["SEGMENT"]
+                .astype(str)
+                .str.upper()
+                == "E"
+            )
+            & (
+                df["INSTRUMENT"]
+                .astype(str)
+                .str.upper()
+                == "EQUITY"
+            )
         ].copy()
 
-        wanted = {s.upper() for s in symbols}
+        wanted = {
+            str(symbol).strip().upper()
+            for symbol in symbols
+        }
 
         df["UNDERLYING_SYMBOL"] = (
             df["UNDERLYING_SYMBOL"]
@@ -89,24 +122,36 @@ class DhanClient:
             df["UNDERLYING_SYMBOL"].isin(wanted)
         ]
 
-        out = {}
+        result: dict[str, dict] = {}
 
         for _, row in matched.iterrows():
+
             symbol = row["UNDERLYING_SYMBOL"]
 
-            out[symbol] = {
-                "security_id": str(row["SECURITY_ID"]),
+            result[symbol] = {
+                "security_id": str(
+                    row["SECURITY_ID"]
+                ),
                 "exchange_segment": "NSE_EQ",
                 "instrument": "EQUITY",
             }
 
         LOG.info(
             "Dhan Security ID mapping: %d/%d symbols matched",
-            len(out),
+            len(result),
             len(wanted),
         )
 
-        return out
+        return result
+
+    # ------------------------------------------------------------------
+    # Historical Daily Data
+    #
+    # Uses Dhan REST API directly.
+    #
+    # This matches the exact API request that was successfully
+    # tested in Postman.
+    # ------------------------------------------------------------------
 
     def historical_daily_df(
         self,
@@ -115,53 +160,151 @@ class DhanClient:
         to_date: str,
     ) -> pd.DataFrame:
 
-        payload = self.dhan.historical_daily_data(
-            security_id=str(security_id),
-            exchange_segment="NSE_EQ",
-            instrument_type="EQUITY",
-            from_date=from_date,
-            to_date=to_date,
-        )
+        headers = {
+            "Content-Type": "application/json",
+            "access-token": self.access_token,
+        }
 
-        if not isinstance(payload, dict):
-            return pd.DataFrame()
+        payload = {
+            "securityId": str(security_id),
+            "exchangeSegment": "NSE_EQ",
+            "instrument": "EQUITY",
+            "expiryCode": 0,
+            "oi": False,
+            "fromDate": from_date,
+            "toDate": to_date,
+        }
 
-        required = [
-            "timestamp",
-            "open",
-            "high",
-            "low",
-            "close",
-            "volume",
-        ]
+        try:
 
-        if not all(k in payload for k in required):
-            return pd.DataFrame()
+            response = requests.post(
+                DHAN_HISTORICAL_URL,
+                headers=headers,
+                json=payload,
+                timeout=20,
+            )
 
-        n = min(len(payload[k]) for k in required)
+            if response.status_code != 200:
 
-        df = pd.DataFrame(
-            {
-                k: payload[k][:n]
-                for k in required
-            }
-        )
+                LOG.error(
+                    "Dhan historical API failed: "
+                    "security_id=%s HTTP=%s response=%s",
+                    security_id,
+                    response.status_code,
+                    response.text,
+                )
 
-        if df.empty:
+                return pd.DataFrame()
+
+            data = response.json()
+
+            required = [
+                "timestamp",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+            ]
+
+            missing = [
+                key
+                for key in required
+                if key not in data
+            ]
+
+            if missing:
+
+                LOG.error(
+                    "Dhan historical response missing fields: "
+                    "security_id=%s missing=%s response=%s",
+                    security_id,
+                    missing,
+                    data,
+                )
+
+                return pd.DataFrame()
+
+            n = min(
+                len(data[key])
+                for key in required
+            )
+
+            if n == 0:
+
+                LOG.warning(
+                    "Dhan historical API returned no candles: "
+                    "security_id=%s from=%s to=%s",
+                    security_id,
+                    from_date,
+                    to_date,
+                )
+
+                return pd.DataFrame()
+
+            df = pd.DataFrame(
+                {
+                    "timestamp": data[
+                        "timestamp"
+                    ][:n],
+                    "open": data[
+                        "open"
+                    ][:n],
+                    "high": data[
+                        "high"
+                    ][:n],
+                    "low": data[
+                        "low"
+                    ][:n],
+                    "close": data[
+                        "close"
+                    ][:n],
+                    "volume": data[
+                        "volume"
+                    ][:n],
+                }
+            )
+
+            df["timestamp"] = pd.to_datetime(
+                df["timestamp"],
+                unit="s",
+                utc=True,
+            ).dt.tz_convert(
+                "Asia/Kolkata"
+            )
+
+            df = (
+                df.set_index("timestamp")
+                .sort_index()
+            )
+
             return df
 
-        df["timestamp"] = pd.to_datetime(
-            df["timestamp"],
-            unit="s",
-            utc=True,
-        ).dt.tz_convert("Asia/Kolkata")
+        except requests.RequestException as exc:
 
-        df = (
-            df.set_index("timestamp")
-            .sort_index()
-        )
+            LOG.error(
+                "Dhan historical HTTP exception: "
+                "security_id=%s error=%s",
+                security_id,
+                exc,
+            )
 
-        return df
+            return pd.DataFrame()
+
+        except Exception as exc:
+
+            LOG.exception(
+                "Dhan historical API exception: "
+                "security_id=%s error=%s",
+                security_id,
+                exc,
+            )
+
+            return pd.DataFrame()
+
+    # ------------------------------------------------------------------
+    # Intraday Minute Data
+    # ------------------------------------------------------------------
 
     def intraday_df(
         self,
@@ -171,14 +314,29 @@ class DhanClient:
         to_date: str,
     ) -> pd.DataFrame:
 
-        payload = self.dhan.intraday_minute_data(
-            security_id=str(security_id),
-            exchange_segment="NSE_EQ",
-            instrument_type="EQUITY",
-            from_date=from_date,
-            to_date=to_date,
-            interval=1,
-        )
+        try:
+
+            payload = self.dhan.intraday_minute_data(
+                security_id=str(
+                    security_id
+                ),
+                exchange_segment="NSE_EQ",
+                instrument_type="EQUITY",
+                from_date=from_date,
+                to_date=to_date,
+                interval=1,
+            )
+
+        except Exception as exc:
+
+            LOG.exception(
+                "Dhan intraday API exception: "
+                "security_id=%s error=%s",
+                security_id,
+                exc,
+            )
+
+            return pd.DataFrame()
 
         if not isinstance(payload, dict):
             return pd.DataFrame()
@@ -192,15 +350,35 @@ class DhanClient:
             "volume",
         ]
 
-        if not all(k in payload for k in keys):
+        missing = [
+            key
+            for key in keys
+            if key not in payload
+        ]
+
+        if missing:
+
+            LOG.error(
+                "Dhan intraday response missing fields: "
+                "security_id=%s missing=%s",
+                security_id,
+                missing,
+            )
+
             return pd.DataFrame()
 
-        n = min(len(payload[k]) for k in keys)
+        n = min(
+            len(payload[key])
+            for key in keys
+        )
+
+        if n == 0:
+            return pd.DataFrame()
 
         df = pd.DataFrame(
             {
-                k: payload[k][:n]
-                for k in keys
+                key: payload[key][:n]
+                for key in keys
             }
         )
 
@@ -208,7 +386,9 @@ class DhanClient:
             df["timestamp"],
             unit="s",
             utc=True,
-        ).dt.tz_convert("Asia/Kolkata")
+        ).dt.tz_convert(
+            "Asia/Kolkata"
+        )
 
         df = (
             df.set_index("timestamp")
@@ -216,16 +396,29 @@ class DhanClient:
         )
 
         if interval == 5:
-            df = resample_ohlcv(df, "5min")
+
+            df = resample_ohlcv(
+                df,
+                "5min",
+            )
+
         elif interval == 15:
-            df = resample_ohlcv(df, "15min")
+
+            df = resample_ohlcv(
+                df,
+                "15min",
+            )
 
         return df
 
 
+# ----------------------------------------------------------------------
+# OHLCV Resampling
+# ----------------------------------------------------------------------
+
 def resample_ohlcv(
     df: pd.DataFrame,
-    rule: str
+    rule: str,
 ) -> pd.DataFrame:
 
     if df.empty:
