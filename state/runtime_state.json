@@ -1,5 +1,17 @@
 {
   "date": "2026-09-04",
-  "universe": [],
+  "universe": [
+    {
+      "symbol": "BHEL",
+      "security_id": "438",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2
+    }
+  ],
   "signals": {}
 }
