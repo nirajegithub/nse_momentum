@@ -87,7 +87,7 @@ def fetch_index(session, code):
     return extract_symbols(r.json())
 
 
-def build_universe(dhan: DhanClient):
+def build_universe(dhan: DhanClient, as_of_date=None):
 
     # ---------------------------------------------------------
     # 1. Fetch M50 + M30
@@ -167,7 +167,9 @@ def build_universe(dhan: DhanClient):
     # 3. Previous trading day
     # ---------------------------------------------------------
 
-    today = datetime.now(IST).date()
+    # Use TEST_DATE/as_of_date when supplied.
+    # Otherwise use today's IST date.
+    today = as_of_date or datetime.now(IST).date()
 
     prev_day = previous_trading_day(today)
 
@@ -176,10 +178,17 @@ def build_universe(dhan: DhanClient):
         prev_day.isoformat(),
     )
 
+    # Dhan's toDate is non-inclusive.
+    # Therefore, to fetch the candle for prev_day,
+    # toDate must be the following calendar day.
     from_date = prev_day.isoformat()
     to_date = (prev_day + timedelta(days=1)).isoformat()
 
-    to_date = prev_day.isoformat()
+    LOG.info(
+        "Daily historical range: from=%s to=%s",
+        from_date,
+        to_date,
+    )
 
     # ---------------------------------------------------------
     # 4. Apply price + previous-day volume filters
@@ -205,6 +214,7 @@ def build_universe(dhan: DhanClient):
             )
 
             if df.empty:
+
                 LOG.warning(
                     "%s: no daily data",
                     symbol,
@@ -239,7 +249,10 @@ def build_universe(dhan: DhanClient):
                 candle["volume"]
             )
 
+            # -------------------------------------------------
             # Price filter
+            # -------------------------------------------------
+
             if close_price <= SETTINGS.min_price:
 
                 price_rejected += 1
@@ -253,7 +266,10 @@ def build_universe(dhan: DhanClient):
 
                 continue
 
+            # -------------------------------------------------
             # Previous-day volume filter
+            # -------------------------------------------------
+
             if prev_volume <= SETTINGS.min_prev_volume:
 
                 volume_rejected += 1
@@ -267,7 +283,10 @@ def build_universe(dhan: DhanClient):
 
                 continue
 
+            # -------------------------------------------------
             # Passed both filters
+            # -------------------------------------------------
+
             item["prev_close"] = close_price
             item["prev_volume"] = prev_volume
             item["prev_trading_day"] = (
