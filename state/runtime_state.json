@@ -1684,6 +1684,41 @@
       "signal_time": "2026-09-04T14:25:00",
       "status": "ACTIVE",
       "setup_key": "NETWEB|SELL|CONTINUATION|2026-09-04T14:25:00"
+    },
+    "WELCORP|SELL|CONTINUATION|2026-09-04T12:25:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T12:25:00",
+      "signal_price": 2604.8,
+      "rvol": 3.9093413585401033,
+      "rsi": 39.47034806343432,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 2604.8,
+        "sl": 2618.719575978163,
+        "risk": 13.919575978162811,
+        "t1": 2583.920636032756,
+        "t2": 2570.001060054593,
+        "t3": 2556.0814840764306
+      },
+      "symbol": "WELCORP",
+      "score": 100,
+      "grade": "A+",
+      "ltp": 2604.8,
+      "signal_time": "2026-09-04T12:25:00",
+      "status": "ACTIVE",
+      "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-04T12:25:00"
     }
   }
 }
