@@ -141,10 +141,8 @@ def create_universe(dhan, state, as_of_date):
         as_of_date=as_of_date,
     )
 
-    save(
-        state,
-        as_of_date,
-    )
+    # state.save() accepts only the state object.
+    save(state)
 
     LOG.info(
         "Universe size: %d",
