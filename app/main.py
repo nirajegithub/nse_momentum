@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 import logging
 import os
-from datetime import datetime, time
+from datetime import datetime, timedelta, time
+
+import pandas as pd
 
 from .calendar import is_nse_trading_day
 from .config import SETTINGS
@@ -15,19 +19,25 @@ MARKET_OPEN = time(9, 15)
 MARKET_CLOSE = time(15, 30)
 
 
+# ----------------------------------------------------------------------
+# Test / scan datetime
+# ----------------------------------------------------------------------
+
 def get_scan_time():
     """
     Return the effective scan datetime.
 
-    TEST_DATETIME is used for testing.
-
-    Example:
-        TEST_DATETIME=2026-09-04 09:25
+    TEST_DATETIME example:
+        2026-09-04 09:25
 
     If TEST_DATETIME is not supplied,
-    current IST time is used.
+    use current IST time.
     """
-    test_datetime = os.getenv("TEST_DATETIME", "").strip()
+
+    test_datetime = os.getenv(
+        "TEST_DATETIME",
+        "",
+    ).strip()
 
     if test_datetime:
         try:
@@ -35,6 +45,7 @@ def get_scan_time():
                 test_datetime,
                 "%Y-%m-%d %H:%M",
             )
+
         except ValueError:
             LOG.error(
                 "Invalid TEST_DATETIME=%s. "
@@ -54,18 +65,17 @@ def get_scan_time():
         return datetime.now()
 
 
-def get_completed_5m_cutoff(scan_time):
-    """
-    Return the latest completed 5M candle timestamp.
+# ----------------------------------------------------------------------
+# Completed candle cutoffs
+# ----------------------------------------------------------------------
 
-    Examples:
-        09:25 -> 09:25
-        09:26 -> 09:25
-        09:30 -> 09:30
+def get_completed_5m_cutoff(
+    scan_time: datetime,
+) -> datetime:
 
-    Candle labelled 09:25 represents 09:20-09:25.
-    """
-    minute = (scan_time.minute // 5) * 5
+    minute = (
+        scan_time.minute // 5
+    ) * 5
 
     return scan_time.replace(
         minute=minute,
@@ -74,86 +84,29 @@ def get_completed_5m_cutoff(scan_time):
     )
 
 
-def get_completed_15m_cutoff(scan_time):
-    """
-    Return the latest completed 15M candle timestamp.
+def get_completed_15m_cutoff(
+    scan_time: datetime,
+) -> datetime:
 
-    Examples:
-        09:25 -> 09:15
-        09:30 -> 09:30
-        09:35 -> 09:30
-        15:25 -> 15:15
-        15:30 -> 15:30
-
-    Candle labelled 09:30 represents 09:15-09:30.
-    """
-    minute = scan_time.minute
-
-    completed_minute = (minute // 15) * 15
+    minute = (
+        scan_time.minute // 15
+    ) * 15
 
     return scan_time.replace(
-        minute=completed_minute,
+        minute=minute,
         second=0,
         microsecond=0,
     )
 
 
-def log_candle_cutoffs(scan_time):
-    """
-    Log the latest candles allowed for the strategy.
-    """
-    cutoff_5m = get_completed_5m_cutoff(scan_time)
-    cutoff_15m = get_completed_15m_cutoff(scan_time)
+# ----------------------------------------------------------------------
+# Scan-time validation
+# ----------------------------------------------------------------------
 
-    LOG.info(
-        "Scan time: %s",
-        scan_time.strftime("%Y-%m-%d %H:%M"),
-    )
+def validate_scan_time(
+    scan_time: datetime,
+) -> bool:
 
-    LOG.info(
-        "5M latest allowed candle: %s",
-        cutoff_5m.strftime("%Y-%m-%d %H:%M"),
-    )
-
-    LOG.info(
-        "15M latest allowed candle: %s",
-        cutoff_15m.strftime("%Y-%m-%d %H:%M"),
-    )
-
-    return cutoff_5m, cutoff_15m
-
-
-def create_universe(dhan, state, as_of_date):
-    """
-    Create the fixed daily universe.
-
-    Universe is created only once for the day.
-    """
-    if state["universe"]:
-        LOG.info(
-            "Universe already exists: %d symbols",
-            len(state["universe"]),
-        )
-        return
-
-    state["universe"] = build_universe(
-        dhan,
-        as_of_date=as_of_date,
-    )
-
-    # state.save() accepts only the state object.
-    save(state)
-
-    LOG.info(
-        "Universe size: %d",
-        len(state["universe"]),
-    )
-
-
-def validate_scan_time(scan_time):
-    """
-    Validate that scan time is within NSE market hours.
-    """
     current_time = scan_time.time()
 
     if current_time < MARKET_OPEN:
@@ -173,13 +126,402 @@ def validate_scan_time(scan_time):
     return True
 
 
-def main():
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s",
+# ----------------------------------------------------------------------
+# Daily universe
+# ----------------------------------------------------------------------
+
+def create_universe(
+    dhan: DhanClient,
+    state: dict,
+    as_of_date,
+) -> None:
+
+    if state["universe"]:
+
+        LOG.info(
+            "Universe already exists: %d symbols",
+            len(state["universe"]),
+        )
+
+        return
+
+    LOG.info(
+        "Building daily universe for %s",
+        as_of_date.isoformat(),
     )
 
-    # Existing project configuration.
+    state["universe"] = build_universe(
+        dhan,
+        as_of_date=as_of_date,
+    )
+
+    save(state)
+
+    LOG.info(
+        "Universe created: %d symbols",
+        len(state["universe"]),
+    )
+
+
+# ----------------------------------------------------------------------
+# Universe item helpers
+# ----------------------------------------------------------------------
+
+def get_symbol_and_security_id(
+    item: dict,
+):
+    """
+    Support the expected universe structure.
+
+    Example:
+
+    {
+        "symbol": "TCS",
+        "security_id": "11536",
+        "indices": ["M50"],
+        "membership_count": 1
+    }
+    """
+
+    symbol = item.get("symbol")
+
+    security_id = (
+        item.get("security_id")
+        or item.get("securityId")
+        or item.get("SECURITY_ID")
+    )
+
+    return symbol, security_id
+
+
+# ----------------------------------------------------------------------
+# Historical date range
+# ----------------------------------------------------------------------
+
+def get_intraday_date_range(
+    scan_date,
+):
+    """
+    Fetch several calendar days so that the strategy has
+    sufficient candles for EMA / RSI / ATR / RVOL calculations.
+
+    We intentionally fetch more than one trading day.
+    """
+
+    from_date = (
+        scan_date - timedelta(days=7)
+    )
+
+    to_date = scan_date
+
+    return (
+        from_date.isoformat(),
+        to_date.isoformat(),
+    )
+
+
+# ----------------------------------------------------------------------
+# Fetch 5M / 15M data
+# ----------------------------------------------------------------------
+
+def fetch_symbol_data(
+    dhan: DhanClient,
+    symbol: str,
+    security_id: str,
+    scan_time: datetime,
+):
+    """
+    Fetch 5M and 15M historical candles using the
+    existing DhanClient.intraday_df() method.
+    """
+
+    from_date, to_date = (
+        get_intraday_date_range(
+            scan_time.date()
+        )
+    )
+
+    LOG.debug(
+        "Fetching candles | symbol=%s security_id=%s "
+        "from=%s to=%s",
+        symbol,
+        security_id,
+        from_date,
+        to_date,
+    )
+
+    df_5m = dhan.intraday_df(
+        security_id=str(security_id),
+        interval=5,
+        from_date=from_date,
+        to_date=to_date,
+    )
+
+    df_15m = dhan.intraday_df(
+        security_id=str(security_id),
+        interval=15,
+        from_date=from_date,
+        to_date=to_date,
+    )
+
+    return {
+        "5m": df_5m,
+        "15m": df_15m,
+    }
+
+
+# ----------------------------------------------------------------------
+# Completed candle filtering
+# ----------------------------------------------------------------------
+
+def filter_completed_candles(
+    df: pd.DataFrame,
+    cutoff: datetime,
+    timeframe: str,
+) -> pd.DataFrame:
+
+    if df is None or df.empty:
+        return pd.DataFrame()
+
+    result = df.copy()
+
+    # DhanClient returns timezone-aware IST timestamps.
+    if getattr(
+        result.index,
+        "tz",
+        None,
+    ) is not None:
+
+        index = (
+            result.index
+            .tz_convert("Asia/Kolkata")
+            .tz_localize(None)
+        )
+
+        result.index = index
+
+    else:
+        result.index = pd.to_datetime(
+            result.index
+        )
+
+    result = result.sort_index()
+
+    result = result[
+        result.index <= cutoff
+    ]
+
+    LOG.debug(
+        "%s completed candle filter: "
+        "rows=%d cutoff=%s",
+        timeframe,
+        len(result),
+        cutoff.strftime("%Y-%m-%d %H:%M"),
+    )
+
+    return result
+
+
+# ----------------------------------------------------------------------
+# Candle diagnostics
+# ----------------------------------------------------------------------
+
+def log_dataframe_summary(
+    symbol: str,
+    timeframe: str,
+    df: pd.DataFrame,
+    cutoff: datetime,
+) -> None:
+
+    if df is None or df.empty:
+
+        LOG.warning(
+            "%s | %s | NO COMPLETED CANDLES | cutoff=%s",
+            symbol,
+            timeframe,
+            cutoff.strftime("%H:%M"),
+        )
+
+        return
+
+    latest = df.iloc[-1]
+
+    LOG.info(
+        "%s | %s | candles=%d | "
+        "latest=%s | "
+        "O=%.2f H=%.2f L=%.2f C=%.2f V=%.0f",
+        symbol,
+        timeframe,
+        len(df),
+        df.index[-1].strftime(
+            "%Y-%m-%d %H:%M"
+        ),
+        float(latest["open"]),
+        float(latest["high"]),
+        float(latest["low"]),
+        float(latest["close"]),
+        float(latest["volume"]),
+    )
+
+
+# ----------------------------------------------------------------------
+# Run diagnostic data scan
+# ----------------------------------------------------------------------
+
+def run_scan(
+    dhan: DhanClient,
+    state: dict,
+    scan_time: datetime,
+) -> None:
+
+    cutoff_5m = (
+        get_completed_5m_cutoff(
+            scan_time
+        )
+    )
+
+    cutoff_15m = (
+        get_completed_15m_cutoff(
+            scan_time
+        )
+    )
+
+    LOG.info(
+        "Starting candle data scan"
+    )
+
+    LOG.info(
+        "Universe size: %d",
+        len(state["universe"]),
+    )
+
+    LOG.info(
+        "Scan datetime: %s",
+        scan_time.strftime(
+            "%Y-%m-%d %H:%M"
+        ),
+    )
+
+    LOG.info(
+        "5M latest allowed candle: %s",
+        cutoff_5m.strftime(
+            "%Y-%m-%d %H:%M"
+        ),
+    )
+
+    LOG.info(
+        "15M latest allowed candle: %s",
+        cutoff_15m.strftime(
+            "%Y-%m-%d %H:%M"
+        ),
+    )
+
+    success = 0
+    failed = 0
+
+    for item in state["universe"]:
+
+        symbol, security_id = (
+            get_symbol_and_security_id(
+                item
+            )
+        )
+
+        if not symbol:
+
+            LOG.warning(
+                "Universe item missing symbol: %s",
+                item,
+            )
+
+            failed += 1
+            continue
+
+        if not security_id:
+
+            LOG.warning(
+                "Universe item missing security_id: "
+                "symbol=%s item=%s",
+                symbol,
+                item,
+            )
+
+            failed += 1
+            continue
+
+        try:
+
+            data = fetch_symbol_data(
+                dhan=dhan,
+                symbol=symbol,
+                security_id=security_id,
+                scan_time=scan_time,
+            )
+
+            df_5m = filter_completed_candles(
+                data["5m"],
+                cutoff_5m,
+                "5M",
+            )
+
+            df_15m = filter_completed_candles(
+                data["15m"],
+                cutoff_15m,
+                "15M",
+            )
+
+            log_dataframe_summary(
+                symbol,
+                "5M",
+                df_5m,
+                cutoff_5m,
+            )
+
+            log_dataframe_summary(
+                symbol,
+                "15M",
+                df_15m,
+                cutoff_15m,
+            )
+
+            success += 1
+
+        except Exception as exc:
+
+            LOG.exception(
+                "Candle processing failed: "
+                "symbol=%s security_id=%s error=%s",
+                symbol,
+                security_id,
+                exc,
+            )
+
+            failed += 1
+
+    LOG.info(
+        "Candle data scan completed | "
+        "success=%d | failed=%d | total=%d",
+        success,
+        failed,
+        len(state["universe"]),
+    )
+
+
+# ----------------------------------------------------------------------
+# Main
+# ----------------------------------------------------------------------
+
+def main():
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format=(
+            "%(asctime)s | "
+            "%(levelname)s | "
+            "%(message)s"
+        ),
+    )
+
     config = SETTINGS
 
     scan_time = get_scan_time()
@@ -187,11 +529,19 @@ def main():
     if scan_time is None:
         return
 
-    # TEST_DATE allows historical trading-day testing.
-    test_date = os.getenv("TEST_DATE", "").strip()
+    # --------------------------------------------------------------
+    # Test date
+    # --------------------------------------------------------------
+
+    test_date = os.getenv(
+        "TEST_DATE",
+        "",
+    ).strip()
 
     if test_date:
+
         try:
+
             today = datetime.strptime(
                 test_date,
                 "%Y-%m-%d",
@@ -203,21 +553,34 @@ def main():
             )
 
         except ValueError:
+
             LOG.error(
-                "Invalid TEST_DATE=%s. Expected YYYY-MM-DD.",
+                "Invalid TEST_DATE=%s. "
+                "Expected YYYY-MM-DD.",
                 test_date,
             )
+
             return
+
     else:
         today = scan_time.date()
 
-    # Do not run on NSE holidays/weekends.
+    # --------------------------------------------------------------
+    # NSE trading day
+    # --------------------------------------------------------------
+
     if not is_nse_trading_day(today):
+
         LOG.info(
             "Not an NSE trading day: %s",
             today.isoformat(),
         )
+
         return
+
+    # --------------------------------------------------------------
+    # Action
+    # --------------------------------------------------------------
 
     action = os.getenv(
         "SCANNER_ACTION",
@@ -229,65 +592,93 @@ def main():
         action,
     )
 
-    # Existing DhanClient takes no positional arguments.
+    # --------------------------------------------------------------
+    # Dhan
+    # --------------------------------------------------------------
+
     dhan = DhanClient()
 
-    # Existing state API requires the trading day.
+    # --------------------------------------------------------------
+    # Same-day state
+    # --------------------------------------------------------------
+
     state = load(today)
 
-    # ---------------------------------------------------------
-    # UNIVERSE
-    # ---------------------------------------------------------
+    # --------------------------------------------------------------
+    # Universe
+    # --------------------------------------------------------------
+
     if action == "universe":
+
         create_universe(
             dhan,
             state,
             as_of_date=today,
         )
+
         return
 
-    # ---------------------------------------------------------
-    # SCAN / MONITOR
-    # ---------------------------------------------------------
-    if action in {"scan", "monitor"}:
+    # --------------------------------------------------------------
+    # Scan / Monitor
+    # --------------------------------------------------------------
 
-        if not validate_scan_time(scan_time):
+    if action in {
+        "scan",
+        "monitor",
+    }:
+
+        if not validate_scan_time(
+            scan_time
+        ):
             return
 
-        cutoff_5m, cutoff_15m = log_candle_cutoffs(
-            scan_time,
-        )
+        if not state["universe"]:
 
-        LOG.info(
-            "Completed-candle validation active."
-        )
+            LOG.info(
+                "Universe is empty. "
+                "Creating daily universe."
+            )
 
-        LOG.info(
-            "Strategy data must not use candles after "
-            "5M=%s or 15M=%s",
-            cutoff_5m.strftime("%H:%M"),
-            cutoff_15m.strftime("%H:%M"),
-        )
+            create_universe(
+                dhan,
+                state,
+                as_of_date=today,
+            )
 
-        # Strategy integration will be added next.
-        #
-        # For now this validates the scan time and
-        # completed-candle cutoffs only.
+            state = load(today)
+
+        if not state["universe"]:
+
+            LOG.error(
+                "Universe creation returned zero symbols."
+            )
+
+            return
+
+        run_scan(
+            dhan=dhan,
+            state=state,
+            scan_time=scan_time,
+        )
 
         return
 
-    # ---------------------------------------------------------
-    # SUMMARY
-    # ---------------------------------------------------------
+    # --------------------------------------------------------------
+    # Summary
+    # --------------------------------------------------------------
+
     if action == "summary":
+
         LOG.info(
             "Summary action requested."
         )
+
         return
 
-    # ---------------------------------------------------------
-    # UNKNOWN ACTION
-    # ---------------------------------------------------------
+    # --------------------------------------------------------------
+    # Unknown action
+    # --------------------------------------------------------------
+
     LOG.error(
         "Unknown SCANNER_ACTION=%s",
         action,
