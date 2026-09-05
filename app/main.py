@@ -48,7 +48,19 @@ def get_completed_15m_cutoff(scan_time: datetime):
     )
 
 
-def validate_scan_time(scan_time: datetime):
+def validate_scan_time(scan_time: datetime) -> bool:
+    """
+    Validate the invocation time without failing the GitHub/cron job.
+
+    If the workflow is manually triggered or accidentally invoked outside
+    the NSE session, log a clean SKIP and return False so GitHub Actions
+    finishes successfully with exit code 0.
+
+    Valid application window:
+      09:15 IST through 15:29 IST
+
+    15:30 IST is handled by the summary workflow.
+    """
     market_open = scan_time.replace(
         hour=9, minute=15, second=0, microsecond=0
     )
@@ -57,9 +69,14 @@ def validate_scan_time(scan_time: datetime):
     )
 
     if scan_time < market_open or scan_time >= market_close:
-        raise ValueError(
-            f"Scan time outside NSE session: {scan_time}"
+        logger.info(
+            "SKIP | Outside NSE session | scan_time=%s | "
+            "valid_window=09:15-15:30 IST",
+            scan_time.strftime("%Y-%m-%d %H:%M:%S %Z"),
         )
+        return False
+
+    return True
 
 
 def get_scan_day(scan_date: str):
