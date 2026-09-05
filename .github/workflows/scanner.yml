@@ -9,6 +9,12 @@ on:
         type: choice
         options: [universe, scan, monitor, summary]
 
+      test_datetime:
+        description: "Test datetime IST, e.g. 2026-09-04 09:25"
+        required: false
+        default: ""
+        type: string
+
 permissions:
   contents: write
 
@@ -19,27 +25,37 @@ concurrency:
 jobs:
   scanner:
     runs-on: ubuntu-latest
+
     env:
       DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
       DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
       DRY_RUN: "true"
       MIN_PRICE: "250"
       MIN_PREV_VOLUME: "500000"
+
       TEST_DATE: "2026-09-04"
+      TEST_DATETIME: ${{ inputs.test_datetime }}
+
       SCANNER_ACTION: ${{ inputs.action }}
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: Run scanner
         run: python -m app.main
+
       - name: Persist same-day state
         run: |
           git config user.name "github-actions[bot]"
