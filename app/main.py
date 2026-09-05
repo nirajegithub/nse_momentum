@@ -231,8 +231,8 @@ def main():
         action,
     )
 
-    dhan = DhanClient(config)
-
+    dhan = DhanClient()
+    
     state = load()
 
     # ---------------------------------------------------------
