@@ -1,5 +1,6 @@
 import logging
 import os
+import pandas as pd
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -157,6 +158,69 @@ def filter_completed_candles(df, scan_date: str, cutoff, timeframe: str):
     return df
 
 
+def prepare_indicator_data(df, scan_date, cutoff, timeframe):
+    """
+    Keep historical candles for indicator warm-up, while never allowing
+    current-day candles beyond the completed-candle cutoff.
+
+    Indicators are calculated over historical + allowed current-day candles.
+    VWAP is reset per trading session.
+    """
+    if df is None or df.empty:
+        return pd.DataFrame()
+
+    x = df.copy()
+    x.index = to_naive_ist(x.index)
+    x = x.sort_index()
+    x = x[~x.index.duplicated(keep="last")]
+
+    scan_day = datetime.strptime(
+        scan_date,
+        "%Y-%m-%d",
+    ).date()
+
+    if cutoff is None:
+        x = x[x.index.date < scan_day]
+    else:
+        cutoff_naive = cutoff.replace(tzinfo=None)
+        x = x[
+            (x.index.date < scan_day)
+            | (
+                (x.index.date == scan_day)
+                & (x.index <= cutoff_naive)
+            )
+        ]
+
+    if x.empty:
+        return x
+
+    result = add_indicators(
+        x,
+        rvol_lookback=SETTINGS.rvol_lookback,
+    )
+
+    if result.empty:
+        return result
+
+    session_date = pd.Series(
+        result.index.date,
+        index=result.index,
+    )
+
+    typical = (
+        result["high"]
+        + result["low"]
+        + result["close"]
+    ) / 3
+
+    result["vwap"] = (
+        (typical * result["volume"]).groupby(session_date).cumsum()
+        / result["volume"].groupby(session_date).cumsum().replace(0, float("nan"))
+    )
+
+    return result
+
+
 def fetch_symbol_data(dhan: DhanClient, security_id, scan_date: str):
     from_date, to_date = get_intraday_date_range(scan_date)
 
@@ -196,31 +260,32 @@ def build_signal(symbol, signal, score, grade):
     return result
 
 
-def process_signal(state, symbol, df5, df15):
-    """Calculate indicators, strategy and score for one symbol."""
-    df5i = add_indicators(
-        df5,
-        rvol_lookback=SETTINGS.rvol_lookback,
-    )
-    df15i = add_indicators(
-        df15,
-        rvol_lookback=SETTINGS.rvol_lookback,
-    )
+
+def process_signal(symbol, df5, df15):
+    if df5 is None or df15 is None or df5.empty or df15.empty:
+        logger.info("%s | indicator data unavailable", symbol)
+        return None
 
     if (
-        len(df5i) < SETTINGS.min_5m_candles
-        or len(df15i) < SETTINGS.min_15m_candles
+        len(df5) < SETTINGS.min_5m_candles
+        or len(df15) < SETTINGS.min_15m_candles
     ):
         logger.info(
             "%s | insufficient indicator candles | 5M=%d | 15M=%d",
-            symbol, len(df5i), len(df15i),
+            symbol,
+            len(df5),
+            len(df15),
         )
         return None
 
-    signal = evaluate(df5i, df15i)
-
-    if signal is None:
-        logger.info("%s | decision=IGNORE/NO SETUP", symbol)
+    signal = evaluate(df5, df15)
+    if not signal:
+        logger.info(
+            "%s | no valid setup | 15M regime=%s",
+            symbol,
+            df15.iloc[-1].get("direction", "N/A")
+            if not df15.empty else "N/A",
+        )
         return None
 
     score, grade = score_signal(
@@ -228,67 +293,26 @@ def process_signal(state, symbol, df5, df15):
         signal,
     )
 
+    signal["score"] = score
+    signal["grade"] = grade
+
     logger.info(
-        "%s | direction=%s | setup=%s | score=%d | grade=%s | "
-        "RSI=%.1f | RVOL=%.2fx | entry=%.2f | SL=%.2f",
+        "%s | SIGNAL | direction=%s | setup=%s | "
+        "score=%d | grade=%s | candle=%s | "
+        "rsi=%.2f | rvol=%.2f | entry=%.2f | sl=%.2f",
         symbol,
         signal["direction"],
         signal["setup"],
         score,
         grade,
+        signal["candle_time"],
         signal["rsi"],
         signal["rvol"],
         signal["risk"]["entry"],
         signal["risk"]["sl"],
     )
 
-    if grade not in {"A", "A+"}:
-        logger.info(
-            "%s | score=%d | grade=%s | no Telegram alert",
-            symbol, score, grade,
-        )
-        return None
-
-    result = build_signal(symbol, signal, score, grade)
-
-    existing = state.setdefault("signals", {})
-    key = result["setup_key"]
-
-    if key in existing:
-        logger.info("%s | duplicate signal skipped | key=%s", symbol, key)
-        return None
-
-    # Do not allow simultaneous opposite-direction signals on the
-    # same setup/candle.
-    for old_key, old_signal in existing.items():
-        if (
-            old_signal.get("symbol") == symbol
-            and old_signal.get("candle_time") == result["candle_time"]
-            and old_signal.get("direction") != result["direction"]
-        ):
-            logger.warning(
-                "%s | opposite signal already exists | skipped",
-                symbol,
-            )
-            return None
-
-    existing[key] = result
-
-    try:
-        send(signal_message(result))
-        logger.info(
-            "%s | TELEGRAM SENT | %s | %s | score=%d",
-            symbol,
-            result["direction"],
-            result["grade"],
-            result["score"],
-        )
-    except Exception:
-        # Roll back state if Telegram fails so the signal can retry.
-        existing.pop(key, None)
-        raise
-
-    return result
+    return signal
 
 
 def run_scan(dhan: DhanClient, scan_time: datetime):
@@ -315,7 +339,7 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
     else:
         logger.info(
             "15M latest allowed | NONE "
-            "(first 15M candle completes at 09:30)"
+            "(first 15M candle completes at 09:30)",
         )
 
     state = load(scan_day)
@@ -324,7 +348,6 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
     if not universe:
         logger.warning("Universe is empty. Creating universe.")
         universe = create_universe(dhan, scan_date)
-        state = load(scan_day)
 
     logger.info(
         "Scanning fixed daily universe | count=%d",
@@ -346,15 +369,25 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
             continue
 
         try:
-            df_5m, df_15m = fetch_symbol_data(
-                dhan, security_id, scan_date
+            df_5m_raw, df_15m_raw = fetch_symbol_data(
+                dhan,
+                security_id,
+                scan_date,
             )
 
+            # Current-day completed candles: used only to identify the latest
+            # completed signal candle and enforce the cutoff.
             df_5m = filter_completed_candles(
-                df_5m, scan_date, cutoff_5m, "5M"
+                df_5m_raw,
+                scan_date,
+                cutoff_5m,
+                "5M",
             )
             df_15m = filter_completed_candles(
-                df_15m, scan_date, cutoff_15m, "15M"
+                df_15m_raw,
+                scan_date,
+                cutoff_15m,
+                "15M",
             )
 
             latest_5m = (
@@ -369,7 +402,8 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
             )
 
             logger.info(
-                "%s | security_id=%s | 5M latest=%s | 15M latest=%s",
+                "%s | security_id=%s | "
+                "5M latest=%s | 15M latest=%s",
                 symbol,
                 security_id,
                 latest_5m,
@@ -378,24 +412,76 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
 
             successful += 1
 
-            # Before 09:30 there is intentionally no 15M regime.
+            # Before 09:30 there is no completed current-day 15M candle,
+            # therefore no technical signal can be generated yet.
             if cutoff_15m is None or latest_15m is None:
                 skipped_15m += 1
                 continue
 
-            if df_5m is None or df_5m.empty:
-                continue
-
-            signal = process_signal(
-                state,
-                symbol,
-                df_5m,
-                df_15m,
+            # Build indicator-ready history: prior trading sessions plus
+            # today's completed candles only.
+            df_5m_ind = prepare_indicator_data(
+                df_5m_raw,
+                scan_date,
+                cutoff_5m,
+                "5M",
+            )
+            df_15m_ind = prepare_indicator_data(
+                df_15m_raw,
+                scan_date,
+                cutoff_15m,
+                "15M",
             )
 
-            if signal is not None:
+            logger.info(
+                "%s | indicator-ready | 5M=%d | 15M=%d | "
+                "5M latest=%s | 15M latest=%s",
+                symbol,
+                len(df_5m_ind),
+                len(df_15m_ind),
+                df_5m_ind.index[-1] if not df_5m_ind.empty else "NONE",
+                df_15m_ind.index[-1] if not df_15m_ind.empty else "NONE",
+            )
+
+            signal = process_signal(
+                symbol,
+                df_5m_ind,
+                df_15m_ind,
+            )
+
+            if not signal:
+                continue
+
+            # Keep the existing duplicate/state behavior in the baseline if
+            # present in the generated main.py.
+            state_key = (
+                f"{symbol}|{signal['direction']}|"
+                f"{signal['setup']}|{signal['candle_time']}"
+            )
+
+            if state_key in state.get("signals", {}):
+                logger.info(
+                    "%s | duplicate signal skipped | key=%s",
+                    symbol,
+                    state_key,
+                )
+                continue
+
+            state.setdefault("signals", {})[state_key] = signal
+
+            try:
+                telegram.send(
+                    telegram.signal_message(
+                        symbol,
+                        signal,
+                    )
+                )
                 signals_sent += 1
-                save(state)
+            except Exception:
+                logger.exception(
+                    "%s | Telegram send failed",
+                    symbol,
+                )
 
         except Exception:
             logger.exception(
@@ -404,16 +490,15 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
                 security_id,
             )
 
-    # Persist any state changes even when no signal was generated.
     save(state)
 
     logger.info(
-        "SCAN COMPLETE | successful=%d | 15M unavailable=%d | signals_sent=%d",
+        "SCAN COMPLETE | successful=%d | "
+        "15M unavailable=%d | signals_sent=%d",
         successful,
         skipped_15m,
         signals_sent,
     )
-
 
 def run_monitor(dhan: DhanClient, scan_time: datetime):
     """Monitor active signals. No new signal creation here."""
