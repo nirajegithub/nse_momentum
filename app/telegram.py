@@ -1,60 +1,103 @@
 from __future__ import annotations
 
+import html
 import logging
 import os
-import unicodedata
-from typing import Any
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import requests
 
 from .config import DISCLAIMER
 
+
+IST = ZoneInfo("Asia/Kolkata")
+
 logger = logging.getLogger(__name__)
 
-TELEGRAM_API = "https://api.telegram.org"
 
-
-def _clean_env(value: str | None) -> str:
-    """Remove invisible/control characters from environment values."""
+def _clean(value):
     if value is None:
         return ""
-
-    value = unicodedata.normalize("NFKC", value)
-
-    cleaned = "".join(
-        ch
-        for ch in value.strip()
-        if unicodedata.category(ch) not in {"Cf", "Cc"}
-    )
-
-    return cleaned.strip()
+    return str(value).strip()
 
 
-def _get_credentials() -> tuple[str, str]:
-    token = _clean_env(os.getenv("TELEGRAM_BOT_TOKEN"))
-    chat_id = _clean_env(os.getenv("TELEGRAM_CHAT_ID"))
+def _price(value):
+    try:
+        return f"₹{float(value):.2f}"
+    except (TypeError, ValueError):
+        return "Not provided"
+
+
+def _number(value, decimals=2):
+    try:
+        return f"{float(value):.{decimals}f}"
+    except (TypeError, ValueError):
+        return "Not provided"
+
+
+def _format_time(value):
+    if value is None:
+        return "Not provided"
+
+    try:
+        if isinstance(value, datetime):
+            dt = value
+        else:
+            text = str(value).strip()
+            dt = datetime.fromisoformat(text)
+
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=IST)
+        else:
+            dt = dt.astimezone(IST)
+
+        return dt.strftime("%d-%b-%Y %H:%M:%S IST")
+
+    except Exception:
+        return str(value)
+
+
+def _get_risk(signal):
+    risk = signal.get("risk")
+
+    if not isinstance(risk, dict):
+        return {}
+
+    return risk
+
+
+def send(text):
+    """
+    Send Telegram message.
+
+    DRY_RUN=true:
+        Print message only.
+
+    DRY_RUN=false:
+        Send to configured Telegram chat.
+    """
+
+    full = text.rstrip() + "\n\n" + DISCLAIMER
+
+    if os.getenv("DRY_RUN", "true").strip().lower() == "true":
+        print(full)
+        return True
+
+    token = _clean(os.getenv("TELEGRAM_BOT_TOKEN"))
+    chat_id = _clean(os.getenv("TELEGRAM_CHAT_ID"))
 
     if not token:
-        raise RuntimeError("TELEGRAM_BOT_TOKEN is missing")
+        raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured")
 
     if not chat_id:
-        raise RuntimeError("TELEGRAM_CHAT_ID is missing")
+        raise RuntimeError("TELEGRAM_CHAT_ID is not configured")
 
-    return token, chat_id
-
-
-def send(message: str) -> bool:
-    """
-    Send an HTML-formatted Telegram message.
-    """
-    token, chat_id = _get_credentials()
-
-    url = f"{TELEGRAM_API}/bot{token}/sendMessage"
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     payload = {
         "chat_id": chat_id,
-        "text": message,
-        "parse_mode": "HTML",
+        "text": full,
         "disable_web_page_preview": True,
     }
 
@@ -62,296 +105,182 @@ def send(message: str) -> bool:
         response = requests.post(
             url,
             json=payload,
-            timeout=15,
+            timeout=20,
         )
 
-        if response.ok:
-            logger.info("Telegram message sent successfully")
-            return True
-
-        try:
-            body: Any = response.json()
-        except ValueError:
-            body = response.text[:1000]
-
-        logger.error(
-            "Telegram API error | status=%s | response=%s",
-            response.status_code,
-            body,
-        )
+        if not response.ok:
+            logger.error(
+                "Telegram API error | status=%s | response=%s",
+                response.status_code,
+                response.text,
+            )
 
         response.raise_for_status()
-        return False
 
-    except requests.RequestException as exc:
-        logger.error("Telegram request failed | error=%s", exc)
+        data = response.json()
+
+        if not data.get("ok"):
+            raise RuntimeError(
+                f"Telegram API returned ok=false: {data}"
+            )
+
+        return True
+
+    except Exception:
+        logger.exception("Telegram request failed")
         raise
 
 
-def _get(signal: Any, *keys: str, default: Any = "") -> Any:
+def signal_message(signal):
     """
-    Read the first available field from either a dict or object.
+    Build a new-signal Telegram message.
+
+    Signal fields come from app.strategy.py / app.main.py:
+      signal_price
+      ltp
+      candle_time / signal_time
+      risk.entry
+      risk.sl
+      risk.t1
+      risk.t2
+      risk.t3
+      regime.direction
+      setup
+      rsi
+      rvol
+      score
+      grade
     """
-    for key in keys:
-        if isinstance(signal, dict):
-            value = signal.get(key)
-        else:
-            value = getattr(signal, key, None)
 
-        if value is not None and value != "":
-            return value
+    risk = _get_risk(signal)
 
-    return default
+    symbol = html.escape(
+        _clean(signal.get("symbol")) or "UNKNOWN"
+    )
 
+    direction = _clean(signal.get("direction")).upper()
+    grade = html.escape(
+        _clean(signal.get("grade")) or "N/A"
+    )
 
-def _price(value: Any) -> str:
-    """Format price to 2 decimal places."""
-    if value is None or value == "":
-        return ""
+    if direction == "BUY":
+        header = "🚀 BUY"
+    elif direction == "SELL":
+        header = "🔻 SELL"
+    else:
+        header = "📊 SIGNAL"
+
+    signal_close = signal.get("signal_price")
+
+    # During scan, ltp is currently initialized from signal_price.
+    current_ltp = signal.get("ltp", signal_close)
+
+    regime = signal.get("regime")
+
+    if isinstance(regime, dict):
+        regime_direction = regime.get("direction")
+    else:
+        regime_direction = regime
+
+    regime_direction = html.escape(
+        _clean(regime_direction) or "N/A"
+    )
+
+    setup = html.escape(
+        _clean(signal.get("setup")) or "N/A"
+    )
+
+    score = signal.get("score")
 
     try:
-        return f"{float(value):.2f}"
+        score_text = f"{int(score)}/100"
     except (TypeError, ValueError):
-        return str(value)
-
-
-def _number(value: Any) -> str:
-    """Format numeric indicator to 2 decimal places."""
-    if value is None or value == "":
-        return ""
-
-    try:
-        return f"{float(value):.2f}"
-    except (TypeError, ValueError):
-        return str(value)
-
-
-def _time(value: Any) -> str:
-    """Format timestamp for Telegram."""
-    if value is None or value == "":
-        return ""
-
-    text = str(value)
-
-    # Convert ISO timestamp to a cleaner display.
-    if "T" in text:
-        text = text.replace("T", " ")
-
-    # Remove seconds if present.
-    if len(text) >= 19 and text[10] == " ":
-        text = text[:16]
-
-    if "IST" not in text:
-        text += " IST"
-
-    return text
-
-
-def _html(value: Any) -> str:
-    """
-    Basic HTML escaping.
-    """
-    if value is None:
-        return ""
-
-    text = str(value)
+        score_text = "Not provided"
 
     return (
-        text.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
+        f"{header} — {grade}\n\n"
+        f"📌 {symbol}\n\n"
+        f"Signal Candle Close: {_price(signal_close)}\n"
+        f"Current LTP: {_price(current_ltp)}\n\n"
+        f"Entry: {_price(risk.get('entry'))}\n"
+        f"Stop Loss: {_price(risk.get('sl'))}\n"
+        f"T1: {_price(risk.get('t1'))}\n"
+        f"T2: {_price(risk.get('t2'))}\n"
+        f"T3: {_price(risk.get('t3'))}\n\n"
+        f"15M: {regime_direction}\n"
+        f"5M: {setup}\n"
+        f"RSI: {_number(signal.get('rsi'), 2)}\n"
+        f"RVOL: {_number(signal.get('rvol'), 2)}x\n"
+        f"Score: {score_text}\n"
+        f"Signal Time: {_format_time(signal.get('candle_time') or signal.get('signal_time'))}"
     )
 
 
-def signal_message(signal: Any) -> str:
+def exit_message(signal, exit_price, reason, exit_time):
     """
-    Build formatted Telegram message for a new signal.
-    """
-
-    symbol = _get(signal, "symbol")
-    direction = _get(signal, "direction", "action")
-    setup = _get(signal, "setup")
-
-    score = _get(signal, "score")
-    grade = _get(signal, "grade")
-
-    # Signal candle timestamp
-    signal_time = _get(
-        signal,
-        "signal_time",
-        "timestamp",
-        "candle_time",
-        "candle",
-    )
-
-    # Signal candle CLOSE PRICE
-    candle_close = _get(
-        signal,
-        "signal_candle_close",
-        "candle_close",
-        "close",
-        "price",
-        default="",
-    )
-
-    # Entry
-    entry = _get(
-        signal,
-        "entry",
-        "entry_price",
-        "entry_ltp",
-        "ltp",
-        default="",
-    )
-
-    # Stop loss
-    sl = _get(
-        signal,
-        "sl",
-        "stop_loss",
-        "stop_loss_price",
-        "sl_price",
-        default="",
-    )
-
-    t1 = _get(signal, "t1", "target1", "target_1")
-    t2 = _get(signal, "t2", "target2", "target_2")
-    t3 = _get(signal, "t3", "target3", "target_3")
-
-    # Current LTP
-    ltp = _get(
-        signal,
-        "current_ltp",
-        "ltp",
-        "last_price",
-        "price",
-        default="",
-    )
-
-    rsi = _get(signal, "rsi", "rsi14")
-    rvol = _get(signal, "rvol", "relative_volume")
-
-    if str(direction).upper() == "BUY":
-        direction_icon = "🟢"
-    elif str(direction).upper() == "SELL":
-        direction_icon = "🔴"
-    else:
-        direction_icon = "⚪"
-
-    lines = [
-        "📊 <b>NSE MOMENTUM SIGNAL</b>",
-        "",
-        f"📌 <b>Symbol:</b> {_html(symbol)}",
-        f"{direction_icon} <b>Direction:</b> {_html(direction)}",
-        f"⚙️ <b>Setup:</b> {_html(setup)}",
-        f"🏆 <b>Score:</b> {_html(score)}",
-        f"⭐ <b>Grade:</b> {_html(grade)}",
-        "",
-        f"🕯️ <b>Signal Candle Close:</b> {_price(candle_close)}",
-        f"💰 <b>Current LTP:</b> {_price(ltp)}",
-        f"⏰ <b>Signal Time:</b> {_time(signal_time)}",
-        "",
-        f"🎯 <b>Entry:</b> {_price(entry)}",
-        f"🛑 <b>Stop Loss:</b> {_price(sl)}",
-    ]
-
-    if t1 not in (None, ""):
-        lines.append(f"🎯 <b>T1:</b> {_price(t1)}")
-
-    if t2 not in (None, ""):
-        lines.append(f"🎯 <b>T2:</b> {_price(t2)}")
-
-    if t3 not in (None, ""):
-        lines.append(f"🎯 <b>T3:</b> {_price(t3)}")
-
-    if rsi not in (None, ""):
-        lines.append(f"📈 <b>RSI:</b> {_number(rsi)}")
-
-    if rvol not in (None, ""):
-        lines.append(f"📊 <b>RVOL:</b> {_number(rvol)}")
-
-    lines.extend(
-        [
-            "",
-            _html(DISCLAIMER),
-        ]
-    )
-
-    return "\n".join(lines)
-
-
-def exit_message(signal: Any) -> str:
-    """
-    Build formatted Telegram message for an exited signal.
+    Build EXIT Telegram message.
     """
 
-    symbol = _get(signal, "symbol")
-    direction = _get(signal, "direction", "action")
-    setup = _get(signal, "setup")
+    risk = _get_risk(signal)
 
-    entry = _get(
-        signal,
-        "entry",
-        "entry_price",
+    direction = _clean(signal.get("direction")).upper()
+
+    entry = risk.get("entry")
+
+    try:
+        entry_value = float(entry)
+        exit_value = float(exit_price)
+
+        if direction == "BUY":
+            move = (
+                (exit_value - entry_value)
+                / entry_value
+                * 100
+            )
+        else:
+            move = (
+                (entry_value - exit_value)
+                / entry_value
+                * 100
+            )
+
+        move_text = f"{move:+.2f}%"
+
+    except (TypeError, ValueError, ZeroDivisionError):
+        move_text = "Not available"
+
+    symbol = html.escape(
+        _clean(signal.get("symbol")) or "UNKNOWN"
     )
 
-    exit_price = _get(
-        signal,
-        "exit",
-        "exit_price",
-        "exit_ltp",
+    direction_text = html.escape(
+        direction or "N/A"
     )
 
-    exit_time = _get(
-        signal,
-        "exit_time",
-        "timestamp",
-        "signal_time",
+    reason_text = html.escape(
+        _clean(reason) or "Not provided"
     )
 
-    pnl = _get(
-        signal,
-        "pnl_pct",
-        "return_pct",
-        "profit_pct",
+    grade = html.escape(
+        _clean(signal.get("grade")) or "N/A"
     )
 
-    reason = _get(
-        signal,
-        "exit_reason",
-        "reason",
+    score = signal.get("score")
+
+    try:
+        score_text = f"{int(score)}/100"
+    except (TypeError, ValueError):
+        score_text = "Not provided"
+
+    return (
+        f"⚠️ EXIT — {symbol}\n\n"
+        f"Direction: {direction_text}\n"
+        f"Entry: {_price(entry)}\n"
+        f"Exit: {_price(exit_price)}\n"
+        f"Move: {move_text}\n\n"
+        f"Reason: {reason_text}\n"
+        f"Original Signal: {grade}\n"
+        f"Original Score: {score_text}\n"
+        f"Entry Time: {_format_time(signal.get('candle_time') or signal.get('signal_time'))}\n"
+        f"Exit Time: {_format_time(exit_time)}"
     )
-
-    if str(direction).upper() == "BUY":
-        direction_icon = "🟢"
-    elif str(direction).upper() == "SELL":
-        direction_icon = "🔴"
-    else:
-        direction_icon = "⚪"
-
-    lines = [
-        "📤 <b>NSE MOMENTUM EXIT</b>",
-        "",
-        f"📌 <b>Symbol:</b> {_html(symbol)}",
-        f"{direction_icon} <b>Direction:</b> {_html(direction)}",
-        f"⚙️ <b>Setup:</b> {_html(setup)}",
-        "",
-        f"🎯 <b>Entry:</b> {_price(entry)}",
-        f"💰 <b>Exit:</b> {_price(exit_price)}",
-        f"⏰ <b>Exit Time:</b> {_time(exit_time)}",
-    ]
-
-    if pnl not in (None, ""):
-        lines.append(f"📈 <b>P&amp;L %:</b> {_number(pnl)}")
-
-    if reason not in (None, ""):
-        lines.append(f"ℹ️ <b>Reason:</b> {_html(reason)}")
-
-    lines.extend(
-        [
-            "",
-            _html(DISCLAIMER),
-        ]
-    )
-
-    return "\n".join(lines)
