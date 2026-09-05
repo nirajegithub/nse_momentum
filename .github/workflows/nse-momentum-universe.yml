@@ -1,10 +1,6 @@
 name: NSE Momentum - Daily Universe
 
 on:
-  schedule:
-    # 09:22 IST = 03:52 UTC
-    - cron: "52 3 * * 1-5"
-
   workflow_dispatch:
 
 permissions:
