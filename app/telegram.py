@@ -15,7 +15,7 @@ TELEGRAM_API = "https://api.telegram.org"
 
 
 def _clean_env(value: str | None) -> str:
-    """Remove invisible/unicode formatting characters and surrounding whitespace."""
+    """Remove invisible Unicode/control characters from environment values."""
     if value is None:
         return ""
 
@@ -47,7 +47,7 @@ def send(message: str) -> bool:
     """
     Send a plain-text Telegram message.
 
-    Plain text is intentionally used for V1 so that Markdown/HTML parsing
+    Plain text is intentional for V1 so Markdown/HTML parsing
     cannot cause Telegram HTTP 400 errors.
     """
     token, chat_id = _get_credentials()
@@ -71,7 +71,6 @@ def send(message: str) -> bool:
             logger.info("Telegram message sent successfully")
             return True
 
-        # Never log the bot token or full URL.
         try:
             body: Any = response.json()
         except ValueError:
@@ -99,17 +98,21 @@ def _get(signal: Any, key: str, default: Any = "") -> Any:
     return getattr(signal, key, default)
 
 
-def signal_message(signal: Any) -> str:
-    """
-    Build the Telegram signal message.
+def _format_value(value: Any) -> str:
+    if value is None:
+        return ""
 
-    Supports the existing dict/object signal structure used by app.main.
-    """
-    symbol = _get(signal, "symbol", "")
-    direction = _get(signal, "direction", "")
-    setup = _get(signal, "setup", "")
-    score = _get(signal, "score", "")
-    grade = _get(signal, "grade", "")
+    return str(value)
+
+
+def signal_message(signal: Any) -> str:
+    """Build the Telegram message for a new signal."""
+
+    symbol = _get(signal, "symbol")
+    direction = _get(signal, "direction")
+    setup = _get(signal, "setup")
+    score = _get(signal, "score")
+    grade = _get(signal, "grade")
 
     candle = _get(
         signal,
@@ -117,12 +120,16 @@ def signal_message(signal: Any) -> str:
         _get(signal, "candle", ""),
     )
 
-    entry = _get(signal, "entry", "")
-    sl = _get(signal, "sl", _get(signal, "stop_loss", ""))
+    entry = _get(signal, "entry")
+    sl = _get(
+        signal,
+        "sl",
+        _get(signal, "stop_loss", ""),
+    )
 
-    t1 = _get(signal, "t1", "")
-    t2 = _get(signal, "t2", "")
-    t3 = _get(signal, "t3", "")
+    t1 = _get(signal, "t1")
+    t2 = _get(signal, "t2")
+    t3 = _get(signal, "t3")
 
     ltp = _get(
         signal,
@@ -136,38 +143,100 @@ def signal_message(signal: Any) -> str:
         _get(signal, "timestamp", ""),
     )
 
-    rsi = _get(signal, "rsi", "")
-    rvol = _get(signal, "rvol", "")
+    rsi = _get(signal, "rsi")
+    rvol = _get(signal, "rvol")
 
     lines = [
         "📊 NSE MOMENTUM SIGNAL",
         "",
-        f"Symbol: {symbol}",
-        f"Direction: {direction}",
-        f"Setup: {setup}",
-        f"Score: {score}",
-        f"Grade: {grade}",
+        f"Symbol: {_format_value(symbol)}",
+        f"Direction: {_format_value(direction)}",
+        f"Setup: {_format_value(setup)}",
+        f"Score: {_format_value(score)}",
+        f"Grade: {_format_value(grade)}",
         "",
-        f"Signal Candle Close: {candle}",
-        f"Current LTP: {ltp}",
-        f"Signal Time: {signal_time}",
+        f"Signal Candle Close: {_format_value(candle)}",
+        f"Current LTP: {_format_value(ltp)}",
+        f"Signal Time: {_format_value(signal_time)}",
         "",
-        f"Entry: {entry}",
-        f"Stop Loss: {sl}",
+        f"Entry: {_format_value(entry)}",
+        f"Stop Loss: {_format_value(sl)}",
     ]
 
-    if t1 != "":
-        lines.append(f"T1: {t1}")
-    if t2 != "":
-        lines.append(f"T2: {t2}")
-    if t3 != "":
-        lines.append(f"T3: {t3}")
+    if t1 not in (None, ""):
+        lines.append(f"T1: {_format_value(t1)}")
 
-    if rsi != "":
-        lines.append(f"RSI: {rsi}")
+    if t2 not in (None, ""):
+        lines.append(f"T2: {_format_value(t2)}")
 
-    if rvol != "":
-        lines.append(f"RVOL: {rvol}")
+    if t3 not in (None, ""):
+        lines.append(f"T3: {_format_value(t3)}")
+
+    if rsi not in (None, ""):
+        lines.append(f"RSI: {_format_value(rsi)}")
+
+    if rvol not in (None, ""):
+        lines.append(f"RVOL: {_format_value(rvol)}")
+
+    lines.extend(
+        [
+            "",
+            DISCLAIMER,
+        ]
+    )
+
+    return "\n".join(lines)
+
+
+def exit_message(signal: Any) -> str:
+    """Build the Telegram message for an exited signal."""
+
+    symbol = _get(signal, "symbol")
+    direction = _get(signal, "direction")
+    setup = _get(signal, "setup")
+
+    entry = _get(signal, "entry")
+    exit_price = _get(
+        signal,
+        "exit",
+        _get(signal, "exit_price", ""),
+    )
+
+    exit_time = _get(
+        signal,
+        "exit_time",
+        _get(signal, "signal_time", ""),
+    )
+
+    pnl = _get(
+        signal,
+        "pnl_pct",
+        _get(signal, "return_pct", ""),
+    )
+
+    reason = _get(
+        signal,
+        "exit_reason",
+        _get(signal, "reason", ""),
+    )
+
+    lines = [
+        "📤 NSE MOMENTUM EXIT",
+        "",
+        f"Symbol: {_format_value(symbol)}",
+        f"Direction: {_format_value(direction)}",
+        f"Setup: {_format_value(setup)}",
+        "",
+        f"Entry: {_format_value(entry)}",
+        f"Exit: {_format_value(exit_price)}",
+        f"Exit Time: {_format_value(exit_time)}",
+    ]
+
+    if pnl not in (None, ""):
+        lines.append(f"P&L %: {_format_value(pnl)}")
+
+    if reason not in (None, ""):
+        lines.append(f"Reason: {_format_value(reason)}")
 
     lines.extend(
         [
