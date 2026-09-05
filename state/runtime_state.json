@@ -1859,6 +1859,111 @@
       "signal_time": "2026-09-04T11:55:00",
       "status": "ACTIVE",
       "setup_key": "ADANIGREEN|BUY|CONTINUATION|2026-09-04T11:55:00"
+    },
+    "ADANIGREEN|BUY|CONTINUATION|2026-09-04T11:40:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T11:40:00",
+      "signal_price": 1299.3,
+      "rvol": 0.40555673254441454,
+      "rsi": 67.91953385530448,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1299.3,
+        "sl": 1294.3712255885291,
+        "risk": 4.92877441147084,
+        "t1": 1306.6931616172062,
+        "t2": 1311.621936028677,
+        "t3": 1316.550710440148
+      },
+      "symbol": "ADANIGREEN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1299.3,
+      "signal_time": "2026-09-04T11:40:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|BUY|CONTINUATION|2026-09-04T11:40:00"
+    },
+    "ATHERENERG|SELL|CONTINUATION|2026-09-04T11:40:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T11:40:00",
+      "signal_price": 1588.3,
+      "rvol": 0.8041713255216978,
+      "rsi": 31.56133215248144,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1588.3,
+        "sl": 1599.979711278694,
+        "risk": 11.679711278693958,
+        "t1": 1570.780433081959,
+        "t2": 1559.100721803265,
+        "t3": 1547.421010524571
+      },
+      "symbol": "ATHERENERG",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1588.3,
+      "signal_time": "2026-09-04T11:40:00",
+      "status": "ACTIVE",
+      "setup_key": "ATHERENERG|SELL|CONTINUATION|2026-09-04T11:40:00"
+    },
+    "BHEL|BUY|CONTINUATION|2026-09-04T11:40:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T11:40:00",
+      "signal_price": 434.55,
+      "rvol": 0.6009588670702928,
+      "rsi": 58.71249969640446,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 434.55,
+        "sl": 432.8059694830425,
+        "risk": 1.7440305169575367,
+        "t1": 437.1660457754363,
+        "t2": 438.91007629239385,
+        "t3": 440.6541068093514
+      },
+      "symbol": "BHEL",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 434.55,
+      "signal_time": "2026-09-04T11:40:00",
+      "status": "ACTIVE",
+      "setup_key": "BHEL|BUY|CONTINUATION|2026-09-04T11:40:00"
     }
   }
 }
