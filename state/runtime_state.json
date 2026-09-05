@@ -914,6 +914,146 @@
       "signal_time": "2026-09-04T13:25:00",
       "status": "ACTIVE",
       "setup_key": "HONASA|SELL|CONTINUATION|2026-09-04T13:25:00"
+    },
+    "ABCAPITAL|BUY|CONTINUATION|2026-09-04T13:45:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:45:00",
+      "signal_price": 405.1,
+      "rvol": 5.207897607301184,
+      "rsi": 56.50525002693052,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 405.1,
+        "sl": 404.02633348632173,
+        "risk": 1.0736665136782904,
+        "t1": 406.71049977051746,
+        "t2": 407.78416628419575,
+        "t3": 408.85783279787404
+      },
+      "symbol": "ABCAPITAL",
+      "score": 100,
+      "grade": "A+",
+      "ltp": 405.1,
+      "signal_time": "2026-09-04T13:45:00",
+      "status": "ACTIVE",
+      "setup_key": "ABCAPITAL|BUY|CONTINUATION|2026-09-04T13:45:00"
+    },
+    "ADANIGREEN|BUY|CONTINUATION|2026-09-04T13:45:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:45:00",
+      "signal_price": 1301.3,
+      "rvol": 0.5275801533770674,
+      "rsi": 64.06046183407113,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1301.3,
+        "sl": 1298.0379487812554,
+        "risk": 3.2620512187445456,
+        "t1": 1306.1930768281168,
+        "t2": 1309.4551280468613,
+        "t3": 1312.7171792656059
+      },
+      "symbol": "ADANIGREEN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1301.3,
+      "signal_time": "2026-09-04T13:45:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|BUY|CONTINUATION|2026-09-04T13:45:00"
+    },
+    "ATHERENERG|SELL|CONTINUATION|2026-09-04T13:45:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:45:00",
+      "signal_price": 1561.3,
+      "rvol": 0.5408358321702802,
+      "rsi": 20.490621270583873,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1561.3,
+        "sl": 1568.4876406648787,
+        "risk": 7.1876406648787,
+        "t1": 1550.5185390026818,
+        "t2": 1543.3308983378033,
+        "t3": 1536.1432576729244
+      },
+      "symbol": "ATHERENERG",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1561.3,
+      "signal_time": "2026-09-04T13:45:00",
+      "status": "ACTIVE",
+      "setup_key": "ATHERENERG|SELL|CONTINUATION|2026-09-04T13:45:00"
+    },
+    "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:45:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:45:00",
+      "signal_price": 1039.7,
+      "rvol": 0.6476188873887326,
+      "rsi": 39.96413201980806,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1039.7,
+        "sl": 1041.9321987456015,
+        "risk": 2.2321987456014085,
+        "t1": 1036.3517018815978,
+        "t2": 1034.1195031359966,
+        "t3": 1031.887304390395
+      },
+      "symbol": "SHRIRAMFIN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1039.7,
+      "signal_time": "2026-09-04T13:45:00",
+      "status": "ACTIVE",
+      "setup_key": "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:45:00"
     }
   }
 }
