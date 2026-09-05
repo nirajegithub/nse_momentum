@@ -1824,6 +1824,41 @@
       "signal_time": "2026-09-04T12:15:00",
       "status": "ACTIVE",
       "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-04T12:15:00"
+    },
+    "ADANIGREEN|BUY|CONTINUATION|2026-09-04T11:55:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T11:55:00",
+      "signal_price": 1299.3,
+      "rvol": 0.8344885239309636,
+      "rsi": 66.26552416525577,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1299.3,
+        "sl": 1295.3449189569967,
+        "risk": 3.955081043003247,
+        "t1": 1305.2326215645048,
+        "t2": 1309.187702607508,
+        "t3": 1313.1427836505113
+      },
+      "symbol": "ADANIGREEN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1299.3,
+      "signal_time": "2026-09-04T11:55:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|BUY|CONTINUATION|2026-09-04T11:55:00"
     }
   }
 }
