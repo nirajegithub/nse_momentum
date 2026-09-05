@@ -444,5 +444,126 @@
       "prev_trading_day": "2026-09-03"
     }
   ],
-  "signals": {}
+  "signals": {
+    "ATHERENERG|SELL|CONTINUATION|2026-09-04T10:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T10:00:00",
+      "signal_price": 1622.0,
+      "rvol": 0.6519989313166757,
+      "rsi": 38.19944338451039,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1622.0,
+        "sl": 1632.356286291337,
+        "risk": 10.356286291337028,
+        "t1": 1606.4655705629943,
+        "t2": 1596.1092842716575,
+        "t3": 1585.7529979803203
+      },
+      "score": 90,
+      "grade": "A+"
+    },
+    "FEDERALBNK|SELL|CONTINUATION|2026-09-04T10:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T10:00:00",
+      "signal_price": 342.3,
+      "rvol": 0.2368139521732758,
+      "rsi": 28.528609739840732,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 342.3,
+        "sl": 344.2017552247143,
+        "risk": 1.901755224714293,
+        "t1": 339.4473671629286,
+        "t2": 337.5456119382143,
+        "t3": 335.6438567135
+      },
+      "score": 90,
+      "grade": "A+"
+    },
+    "HINDALCO|BUY|CONTINUATION|2026-09-04T10:00:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T10:00:00",
+      "signal_price": 1009.9,
+      "rvol": 0.6193976564193454,
+      "rsi": 63.103283062780264,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1009.9,
+        "sl": 1005.7756714716307,
+        "risk": 4.124328528369233,
+        "t1": 1016.0864927925538,
+        "t2": 1020.2108213209231,
+        "t3": 1024.3351498492923
+      },
+      "score": 90,
+      "grade": "A+"
+    },
+    "LTF|BUY|CONTINUATION|2026-09-04T10:00:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T10:00:00",
+      "signal_price": 319.25,
+      "rvol": 2.880108331569791,
+      "rsi": 65.20259116719856,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 319.25,
+        "sl": 317.0059886020327,
+        "risk": 2.244011397967313,
+        "t1": 322.61601709695094,
+        "t2": 324.8600284949183,
+        "t3": 327.10403989288557
+      },
+      "score": 100,
+      "grade": "A+"
+    }
+  }
 }
