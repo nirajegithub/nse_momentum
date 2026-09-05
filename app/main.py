@@ -3,14 +3,13 @@ import os
 from datetime import datetime, time
 
 from .calendar import is_nse_trading_day
-from .config import load_config
+from .config import SETTINGS
 from .dhan_client import DhanClient
 from .state import load, save
 from .nse_universe import build_universe
 
 
 LOG = logging.getLogger("nse_momentum")
-
 
 MARKET_OPEN = time(9, 15)
 MARKET_CLOSE = time(15, 30)
@@ -20,10 +19,13 @@ def get_scan_time():
     """
     Return the effective scan datetime.
 
-    TEST_DATETIME can be used for testing, for example:
-        2026-09-04 09:25
+    TEST_DATETIME is used for testing.
 
-    If TEST_DATETIME is not supplied, use current IST time.
+    Example:
+        TEST_DATETIME=2026-09-04 09:25
+
+    If TEST_DATETIME is not supplied,
+    current IST time is used.
     """
     test_datetime = os.getenv("TEST_DATETIME", "").strip()
 
@@ -41,21 +43,28 @@ def get_scan_time():
             )
             return None
 
-    from datetime import datetime as dt
-
     try:
         from zoneinfo import ZoneInfo
 
-        return dt.now(ZoneInfo("Asia/Kolkata")).replace(tzinfo=None)
+        return datetime.now(
+            ZoneInfo("Asia/Kolkata")
+        ).replace(tzinfo=None)
+
     except Exception:
-        return dt.now()
+        return datetime.now()
 
 
 def get_completed_5m_cutoff(scan_time):
     """
-    A 5M candle labelled 09:25 represents 09:20-09:25.
+    Return the latest completed 5M candle timestamp.
 
-    Therefore at 09:25, the 09:25 candle is complete and usable.
+    Example:
+        09:25 -> 09:25
+        09:26 -> 09:25
+        09:30 -> 09:30
+
+    A candle labelled 09:25 represents
+    the 09:20-09:25 interval.
     """
     minute = (scan_time.minute // 5) * 5
 
@@ -68,22 +77,19 @@ def get_completed_5m_cutoff(scan_time):
 
 def get_completed_15m_cutoff(scan_time):
     """
-    A 15M candle labelled 09:30 represents 09:15-09:30.
+    Return the latest completed 15M candle timestamp.
 
-    Therefore:
-      09:25 -> latest completed 15M candle is BEFORE 09:25
-      09:30 -> 09:30 candle is completed
-      15:25 -> latest completed 15M candle is 15:15
-      15:30 -> 15:30 candle is completed, but scanner does not scan then
+    Examples:
+        09:25 -> 09:15
+        09:30 -> 09:30
+        09:35 -> 09:30
+        15:25 -> 15:15
+        15:30 -> 15:30
+
+    A candle labelled 09:30 represents
+    the 09:15-09:30 interval.
     """
     minute = scan_time.minute
-
-    if minute % 15 == 0:
-        return scan_time.replace(
-            minute=minute,
-            second=0,
-            microsecond=0,
-        )
 
     completed_minute = (minute // 15) * 15
 
@@ -96,7 +102,7 @@ def get_completed_15m_cutoff(scan_time):
 
 def log_candle_cutoffs(scan_time):
     """
-    Log the candles that strategy is allowed to use.
+    Log the latest candles allowed for the strategy.
     """
     cutoff_5m = get_completed_5m_cutoff(scan_time)
     cutoff_15m = get_completed_15m_cutoff(scan_time)
@@ -120,6 +126,11 @@ def log_candle_cutoffs(scan_time):
 
 
 def create_universe(dhan, state, as_of_date):
+    """
+    Create the fixed daily universe.
+
+    Universe is created only once for the day.
+    """
     if state["universe"]:
         LOG.info(
             "Universe already exists: %d symbols",
@@ -141,14 +152,19 @@ def create_universe(dhan, state, as_of_date):
 
 
 def validate_scan_time(scan_time):
-    if scan_time.time() < MARKET_OPEN:
+    """
+    Validate that scan time is within NSE market hours.
+    """
+    current_time = scan_time.time()
+
+    if current_time < MARKET_OPEN:
         LOG.info(
             "Before market open: %s",
             scan_time.strftime("%H:%M"),
         )
         return False
 
-    if scan_time.time() > MARKET_CLOSE:
+    if current_time > MARKET_CLOSE:
         LOG.info(
             "After market close: %s",
             scan_time.strftime("%H:%M"),
@@ -164,13 +180,15 @@ def main():
         format="%(asctime)s | %(levelname)s | %(message)s",
     )
 
-    config = load_config()
+    # Existing project configuration.
+    config = SETTINGS
 
     scan_time = get_scan_time()
 
     if scan_time is None:
         return
 
+    # TEST_DATE allows historical trading-day testing.
     test_date = os.getenv("TEST_DATE", "").strip()
 
     if test_date:
@@ -191,9 +209,11 @@ def main():
                 test_date,
             )
             return
+
     else:
         today = scan_time.date()
 
+    # Do not run on NSE holidays/weekends.
     if not is_nse_trading_day(today):
         LOG.info(
             "Not an NSE trading day: %s",
@@ -215,6 +235,9 @@ def main():
 
     state = load()
 
+    # ---------------------------------------------------------
+    # UNIVERSE
+    # ---------------------------------------------------------
     if action == "universe":
         create_universe(
             dhan,
@@ -223,7 +246,11 @@ def main():
         )
         return
 
+    # ---------------------------------------------------------
+    # SCAN / MONITOR
+    # ---------------------------------------------------------
     if action in {"scan", "monitor"}:
+
         if not validate_scan_time(scan_time):
             return
 
@@ -242,18 +269,26 @@ def main():
             cutoff_15m.strftime("%H:%M"),
         )
 
-        # Strategy scan will be connected here next.
+        # Strategy integration will be added next.
         #
-        # IMPORTANT:
-        # Do not call strategy yet until the cutoff
-        # values are passed into the strategy/data layer.
+        # For now this test verifies that the scanner
+        # correctly determines which completed 5M and
+        # 15M candles are allowed at the requested scan time.
 
         return
 
+    # ---------------------------------------------------------
+    # SUMMARY
+    # ---------------------------------------------------------
     if action == "summary":
-        LOG.info("Summary action requested.")
+        LOG.info(
+            "Summary action requested."
+        )
         return
 
+    # ---------------------------------------------------------
+    # UNKNOWN ACTION
+    # ---------------------------------------------------------
     LOG.error(
         "Unknown SCANNER_ACTION=%s",
         action,
