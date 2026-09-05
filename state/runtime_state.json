@@ -844,6 +844,76 @@
       "signal_time": "2026-09-04T13:30:00",
       "status": "ACTIVE",
       "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-04T13:30:00"
+    },
+    "ADANIGREEN|BUY|CONTINUATION|2026-09-04T13:25:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:25:00",
+      "signal_price": 1301.3,
+      "rvol": 0.7663312990110563,
+      "rsi": 65.39027450732107,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1301.3,
+        "sl": 1297.8806743594662,
+        "risk": 3.4193256405337706,
+        "t1": 1306.4289884608006,
+        "t2": 1309.8483141013344,
+        "t3": 1313.2676397418682
+      },
+      "symbol": "ADANIGREEN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1301.3,
+      "signal_time": "2026-09-04T13:25:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|BUY|CONTINUATION|2026-09-04T13:25:00"
+    },
+    "HONASA|SELL|CONTINUATION|2026-09-04T13:25:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:25:00",
+      "signal_price": 472.95,
+      "rvol": 0.8548999237594149,
+      "rsi": 35.74363501075584,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 472.95,
+        "sl": 475.63399020621654,
+        "risk": 2.6839902062165493,
+        "t1": 468.92401469067516,
+        "t2": 466.2400244844586,
+        "t3": 463.55603427824207
+      },
+      "symbol": "HONASA",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 472.95,
+      "signal_time": "2026-09-04T13:25:00",
+      "status": "ACTIVE",
+      "setup_key": "HONASA|SELL|CONTINUATION|2026-09-04T13:25:00"
     }
   }
 }
