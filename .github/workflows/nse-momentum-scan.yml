@@ -1,7 +1,72 @@
-09:25 IST
-09:30 IST
-09:35 IST
-...
-14:55 IST
-15:00 IST
-15:05 IST
+name: NSE Momentum - Scanner
+
+on:
+  schedule:
+    # 09:25 IST = 03:55 UTC
+    - cron: "55 3 * * 1-5"
+
+    # 09:30 IST through 14:55 IST
+    - cron: "*/5 4-8 * * 1-5"
+
+    # 15:00 IST and 15:05 IST
+    - cron: "30,35 9 * * 1-5"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nse-momentum
+  cancel-in-progress: false
+
+jobs:
+  scanner:
+    name: Scan NSE Momentum
+    runs-on: ubuntu-latest
+
+    env:
+      DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+      DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      DRY_RUN: "false"
+      MIN_PRICE: "250"
+      MIN_PREV_VOLUME: "500000"
+
+      SCANNER_ACTION: "scan"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run scanner
+        run: |
+          python -m app.main
+
+      - name: Commit scanner state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add state/runtime_state.json
+
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+          else
+            git commit -m "Update NSE momentum scanner state"
+            git push
+          fi
