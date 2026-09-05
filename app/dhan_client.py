@@ -77,7 +77,6 @@ class DhanClient:
                 f"Missing Dhan master columns: {missing}"
             )
 
-        # NSE Equity only
         df = df[
             (df["EXCH_ID"].astype(str).str.upper() == "NSE")
             & (df["SEGMENT"].astype(str).str.upper() == "E")
@@ -169,7 +168,6 @@ class DhanClient:
                     response.status_code,
                     response.text,
                 )
-
                 return pd.DataFrame()
 
             data = response.json()
@@ -197,7 +195,6 @@ class DhanClient:
                     missing,
                     data,
                 )
-
                 return pd.DataFrame()
 
             n = min(
@@ -213,7 +210,6 @@ class DhanClient:
                     from_date,
                     to_date,
                 )
-
                 return pd.DataFrame()
 
             df = pd.DataFrame(
@@ -231,9 +227,7 @@ class DhanClient:
                 df["timestamp"],
                 unit="s",
                 utc=True,
-            ).dt.tz_convert(
-                "Asia/Kolkata"
-            )
+            ).dt.tz_convert("Asia/Kolkata")
 
             df = (
                 df
@@ -251,7 +245,6 @@ class DhanClient:
                 security_id,
                 exc,
             )
-
             return pd.DataFrame()
 
         except Exception as exc:
@@ -262,7 +255,6 @@ class DhanClient:
                 security_id,
                 exc,
             )
-
             return pd.DataFrame()
 
     # ------------------------------------------------------------------
@@ -278,7 +270,6 @@ class DhanClient:
     ) -> pd.DataFrame:
 
         try:
-
             payload = self.dhan.intraday_minute_data(
                 security_id=str(security_id),
                 exchange_segment="NSE_EQ",
@@ -296,48 +287,23 @@ class DhanClient:
                 security_id,
                 exc,
             )
-
             return pd.DataFrame()
 
         # --------------------------------------------------------------
-        # TEMPORARY DEBUG
+        # Dhan SDK response format:
         #
-        # Only print the raw response for one security.
-        # This prevents the GitHub Actions log from becoming huge.
-        # --------------------------------------------------------------
-
-        if str(security_id) == "21614":
-
-            LOG.warning(
-                "========== DHAN INTRADAY RAW RESPONSE =========="
-            )
-
-            LOG.warning(
-                "security_id=%s",
-                security_id,
-            )
-
-            LOG.warning(
-                "response_type=%s",
-                type(payload).__name__,
-            )
-
-            try:
-                LOG.warning(
-                    "response=%s",
-                    repr(payload)[:5000],
-                )
-            except Exception:
-                LOG.warning(
-                    "response=<unable to repr payload>"
-                )
-
-            LOG.warning(
-                "========== END DHAN INTRADAY RAW RESPONSE =========="
-            )
-
-        # --------------------------------------------------------------
-        # Validate response
+        # {
+        #     "status": "success",
+        #     "remarks": "",
+        #     "data": {
+        #         "open": [...],
+        #         "high": [...],
+        #         "low": [...],
+        #         "close": [...],
+        #         "volume": [...],
+        #         "timestamp": [...]
+        #     }
+        # }
         # --------------------------------------------------------------
 
         if not isinstance(payload, dict):
@@ -351,6 +317,62 @@ class DhanClient:
 
             return pd.DataFrame()
 
+        # Check API status
+        status = payload.get("status")
+
+        if status != "success":
+
+            LOG.error(
+                "Dhan intraday API unsuccessful: "
+                "security_id=%s status=%s remarks=%s",
+                security_id,
+                status,
+                payload.get("remarks", ""),
+            )
+
+            return pd.DataFrame()
+
+        # Extract nested data
+        data = payload.get("data")
+
+        if not isinstance(data, dict):
+
+            LOG.error(
+                "Dhan intraday response missing data object: "
+                "security_id=%s",
+                security_id,
+            )
+
+            return pd.DataFrame()
+
+        # --------------------------------------------------------------
+        # Temporary concise validation log
+        # --------------------------------------------------------------
+
+        if str(security_id) == "21614":
+
+            LOG.info(
+                "Dhan intraday response validated: "
+                "security_id=%s data_keys=%s",
+                security_id,
+                list(data.keys()),
+            )
+
+            LOG.info(
+                "Dhan intraday candle counts: "
+                "security_id=%s counts=%s",
+                security_id,
+                {
+                    key: len(data[key])
+                    for key in data
+                    if isinstance(data[key], list)
+                },
+            )
+
+        # --------------------------------------------------------------
+        # Required OHLCV fields
+        # --------------------------------------------------------------
+
         keys = [
             "timestamp",
             "open",
@@ -363,13 +385,13 @@ class DhanClient:
         missing = [
             key
             for key in keys
-            if key not in payload
+            if key not in data
         ]
 
         if missing:
 
             LOG.error(
-                "Dhan intraday response missing fields: "
+                "Dhan intraday data missing fields: "
                 "security_id=%s missing=%s",
                 security_id,
                 missing,
@@ -378,11 +400,24 @@ class DhanClient:
             return pd.DataFrame()
 
         # --------------------------------------------------------------
-        # Build DataFrame
+        # Validate arrays
         # --------------------------------------------------------------
 
+        if not all(
+            isinstance(data[key], list)
+            for key in keys
+        ):
+
+            LOG.error(
+                "Dhan intraday OHLCV fields are not lists: "
+                "security_id=%s",
+                security_id,
+            )
+
+            return pd.DataFrame()
+
         n = min(
-            len(payload[key])
+            len(data[key])
             for key in keys
         )
 
@@ -398,12 +433,20 @@ class DhanClient:
 
             return pd.DataFrame()
 
+        # --------------------------------------------------------------
+        # Build DataFrame
+        # --------------------------------------------------------------
+
         df = pd.DataFrame(
             {
-                key: payload[key][:n]
+                key: data[key][:n]
                 for key in keys
             }
         )
+
+        # --------------------------------------------------------------
+        # Convert timestamp
+        # --------------------------------------------------------------
 
         df["timestamp"] = pd.to_datetime(
             df["timestamp"],
@@ -420,7 +463,17 @@ class DhanClient:
         )
 
         # --------------------------------------------------------------
-        # Resample 1-minute candles
+        # Remove duplicate timestamps
+        # --------------------------------------------------------------
+
+        df = df[
+            ~df.index.duplicated(
+                keep="last"
+            )
+        ]
+
+        # --------------------------------------------------------------
+        # Resample
         # --------------------------------------------------------------
 
         if interval == 5:
