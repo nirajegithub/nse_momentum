@@ -299,11 +299,17 @@ def build_universe(dhan: DhanClient, as_of_date=None):
     # 3. Previous trading day
     # ---------------------------------------------------------
 
-    today = (
-        as_of_date
-        or datetime.now(IST).date()
-    )
-
+    if as_of_date:
+        if isinstance(as_of_date, str):
+            today = datetime.strptime(
+                as_of_date,
+                "%Y-%m-%d",
+            ).date()
+        else:
+            today = as_of_date
+    else:
+        today = datetime.now(IST).date()
+    
     prev_day = previous_trading_day(today)
 
     LOG.info(
