@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import logging
+import time
 import requests
 
 from .config import SETTINGS
@@ -15,7 +16,6 @@ from .dhan_client import DhanClient
 LOG = logging.getLogger(__name__)
 
 BASE = "https://www.nseindia.com"
-
 URL = f"{BASE}/api/heatmap-symbols"
 
 INDEXES = {
@@ -26,14 +26,20 @@ INDEXES = {
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 Chrome/124 Safari/537.36"
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
     ),
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.9",
     "Referer": BASE + "/",
+    "Connection": "keep-alive",
 }
 
 IST = ZoneInfo("Asia/Kolkata")
+
+NSE_TIMEOUT = 45
+NSE_RETRIES = 3
+NSE_RETRY_DELAY = 5
 
 
 def extract_symbols(payload):
@@ -72,19 +78,127 @@ def extract_symbols(payload):
     return sorted(found)
 
 
+def create_nse_session():
+    session = requests.Session()
+    session.headers.update(HEADERS)
+
+    return session
+
+
+def nse_get(session, url, params=None):
+    """
+    Reliable NSE GET request with retries.
+
+    Retries:
+    - ReadTimeout
+    - ConnectionError
+    - HTTP 429
+    - HTTP 5xx
+    """
+
+    last_exception = None
+
+    for attempt in range(1, NSE_RETRIES + 1):
+
+        try:
+
+            LOG.info(
+                "NSE request attempt %d/%d | url=%s | params=%s",
+                attempt,
+                NSE_RETRIES,
+                url,
+                params,
+            )
+
+            response = session.get(
+                url,
+                params=params,
+                timeout=NSE_TIMEOUT,
+            )
+
+            LOG.info(
+                "NSE response | status=%d | attempt=%d/%d",
+                response.status_code,
+                attempt,
+                NSE_RETRIES,
+            )
+
+            # Retry rate-limit responses.
+            if response.status_code == 429:
+
+                LOG.warning(
+                    "NSE rate limited (429). Waiting %d seconds.",
+                    NSE_RETRY_DELAY,
+                )
+
+                time.sleep(NSE_RETRY_DELAY)
+                continue
+
+            # Retry temporary NSE/server errors.
+            if response.status_code >= 500:
+
+                LOG.warning(
+                    "NSE server error %d. Waiting %d seconds.",
+                    response.status_code,
+                    NSE_RETRY_DELAY,
+                )
+
+                time.sleep(NSE_RETRY_DELAY)
+                continue
+
+            response.raise_for_status()
+
+            return response
+
+        except (
+            requests.exceptions.ReadTimeout,
+            requests.exceptions.ConnectTimeout,
+            requests.exceptions.ConnectionError,
+        ) as exc:
+
+            last_exception = exc
+
+            LOG.warning(
+                "NSE request failed on attempt %d/%d: %s",
+                attempt,
+                NSE_RETRIES,
+                exc,
+            )
+
+            if attempt < NSE_RETRIES:
+                LOG.info(
+                    "Retrying NSE request in %d seconds...",
+                    NSE_RETRY_DELAY,
+                )
+
+                time.sleep(NSE_RETRY_DELAY)
+
+    if last_exception is not None:
+        raise last_exception
+
+    raise RuntimeError("NSE request failed after retries")
+
+
 def fetch_index(session, code):
-    r = session.get(
+
+    response = nse_get(
+        session,
         URL,
         params={
             "type": "Strategy Indices",
             "indices": code,
         },
-        timeout=20,
     )
 
-    r.raise_for_status()
+    symbols = extract_symbols(response.json())
 
-    return extract_symbols(r.json())
+    LOG.info(
+        "NSE index=%s returned %d symbols",
+        code,
+        len(symbols),
+    )
+
+    return symbols
 
 
 def build_universe(dhan: DhanClient, as_of_date=None):
@@ -93,13 +207,29 @@ def build_universe(dhan: DhanClient, as_of_date=None):
     # 1. Fetch M50 + M30
     # ---------------------------------------------------------
 
-    session = requests.Session()
-    session.headers.update(HEADERS)
+    session = create_nse_session()
 
-    session.get(
-        BASE + "/",
-        timeout=20,
-    )
+    # NSE sometimes requires an initial homepage request
+    # before API requests are accepted.
+    try:
+
+        LOG.info("NSE session initialization")
+
+        nse_get(
+            session,
+            BASE + "/",
+        )
+
+        LOG.info("NSE homepage session initialized")
+
+    except Exception as exc:
+
+        LOG.warning(
+            "NSE homepage initialization failed: %s",
+            exc,
+        )
+
+        # Continue. The API request itself may still work.
 
     membership = defaultdict(set)
 
@@ -139,10 +269,12 @@ def build_universe(dhan: DhanClient, as_of_date=None):
         meta = mapping.get(symbol)
 
         if not meta:
+
             LOG.warning(
                 "Missing Dhan security_id: %s",
                 symbol,
             )
+
             continue
 
         candidates.append(
@@ -167,9 +299,10 @@ def build_universe(dhan: DhanClient, as_of_date=None):
     # 3. Previous trading day
     # ---------------------------------------------------------
 
-    # Use TEST_DATE/as_of_date when supplied.
-    # Otherwise use today's IST date.
-    today = as_of_date or datetime.now(IST).date()
+    today = (
+        as_of_date
+        or datetime.now(IST).date()
+    )
 
     prev_day = previous_trading_day(today)
 
@@ -179,10 +312,10 @@ def build_universe(dhan: DhanClient, as_of_date=None):
     )
 
     # Dhan's toDate is non-inclusive.
-    # Therefore, to fetch the candle for prev_day,
-    # toDate must be the following calendar day.
     from_date = prev_day.isoformat()
-    to_date = (prev_day + timedelta(days=1)).isoformat()
+    to_date = (
+        prev_day + timedelta(days=1)
+    ).isoformat()
 
     LOG.info(
         "Daily historical range: from=%s to=%s",
