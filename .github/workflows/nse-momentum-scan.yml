@@ -1,16 +1,6 @@
 name: NSE Momentum - Scanner
 
 on:
-  schedule:
-    # 09:25 IST = 03:55 UTC
-    - cron: "55 3 * * 1-5"
-
-    # 09:30 IST through 14:55 IST
-    - cron: "*/5 4-8 * * 1-5"
-
-    # 15:00 IST and 15:05 IST
-    - cron: "30,35 9 * * 1-5"
-
   workflow_dispatch:
 
 permissions:
