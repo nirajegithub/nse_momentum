@@ -1369,6 +1369,146 @@
       "signal_time": "2026-09-04T13:55:00",
       "status": "ACTIVE",
       "setup_key": "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:55:00"
+    },
+    "BHARATFORG|SELL|CONTINUATION|2026-09-04T14:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T14:00:00",
+      "signal_price": 1956.6,
+      "rvol": 0.34887816526540966,
+      "rsi": 26.59138242294911,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1956.6,
+        "sl": 1966.9692455923303,
+        "risk": 10.369245592330344,
+        "t1": 1941.0461316115043,
+        "t2": 1930.6768860191742,
+        "t3": 1920.3076404268436
+      },
+      "symbol": "BHARATFORG",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1956.6,
+      "signal_time": "2026-09-04T14:00:00",
+      "status": "ACTIVE",
+      "setup_key": "BHARATFORG|SELL|CONTINUATION|2026-09-04T14:00:00"
+    },
+    "HONASA|SELL|CONTINUATION|2026-09-04T14:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T14:00:00",
+      "signal_price": 471.05,
+      "rvol": 0.8080332627284852,
+      "rsi": 30.21781132315091,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 471.05,
+        "sl": 473.8135757900156,
+        "risk": 2.7635757900155795,
+        "t1": 466.90463631497664,
+        "t2": 464.14106052496106,
+        "t3": 461.3774847349455
+      },
+      "symbol": "HONASA",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 471.05,
+      "signal_time": "2026-09-04T14:00:00",
+      "status": "ACTIVE",
+      "setup_key": "HONASA|SELL|CONTINUATION|2026-09-04T14:00:00"
+    },
+    "SAILIFE|SELL|CONTINUATION|2026-09-04T14:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T14:00:00",
+      "signal_price": 1586.6,
+      "rvol": 0.7994392836220604,
+      "rsi": 34.9740927124825,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1586.6,
+        "sl": 1595.465689364561,
+        "risk": 8.865689364561149,
+        "t1": 1573.3014659531582,
+        "t2": 1564.435776588597,
+        "t3": 1555.570087224036
+      },
+      "symbol": "SAILIFE",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1586.6,
+      "signal_time": "2026-09-04T14:00:00",
+      "status": "ACTIVE",
+      "setup_key": "SAILIFE|SELL|CONTINUATION|2026-09-04T14:00:00"
+    },
+    "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T14:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T14:00:00",
+      "signal_price": 1039.3,
+      "rvol": 0.6791342688830228,
+      "rsi": 39.544760361779744,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1039.3,
+        "sl": 1041.9118679460958,
+        "risk": 2.611867946095799,
+        "t1": 1035.3821980808561,
+        "t2": 1032.7703301347606,
+        "t3": 1030.1584621886645
+      },
+      "symbol": "SHRIRAMFIN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1039.3,
+      "signal_time": "2026-09-04T14:00:00",
+      "status": "ACTIVE",
+      "setup_key": "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T14:00:00"
     }
   }
 }
