@@ -1,5 +1,76 @@
 {
-  "date": "",
+  "date": "2026-09-04",
   "universe": [],
-  "signals": {}
+  "signals": {
+    "HONASA|SELL|CONTINUATION|2026-09-04T13:05:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:05:00",
+      "signal_price": 474.05,
+      "rvol": 0.12457664942634356,
+      "rsi": 37.915428646332074,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 474.05,
+        "sl": 474.7355648528417,
+        "risk": 0.6855648528417078,
+        "t1": 473.02165272073745,
+        "t2": 472.33608786789574,
+        "t3": 471.65052301505403
+      },
+      "symbol": "HONASA",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 474.05,
+      "signal_time": "2026-09-04T13:05:00",
+      "status": "ACTIVE",
+      "setup_key": "HONASA|SELL|CONTINUATION|2026-09-04T13:05:00"
+    },
+    "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:05:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:05:00",
+      "signal_price": 1041.0,
+      "rvol": 1.2349171835626296,
+      "rsi": 39.396237614526264,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1041.0,
+        "sl": 1045.8179163566167,
+        "risk": 4.817916356616706,
+        "t1": 1033.7731254650748,
+        "t2": 1028.9552091084583,
+        "t3": 1024.1372927518414
+      },
+      "symbol": "SHRIRAMFIN",
+      "score": 95,
+      "grade": "A+",
+      "ltp": 1041.0,
+      "signal_time": "2026-09-04T13:05:00",
+      "status": "ACTIVE",
+      "setup_key": "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:05:00"
+    }
+  }
 }
