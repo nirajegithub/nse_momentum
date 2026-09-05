@@ -7,7 +7,9 @@ import pandas as pd
 import requests
 from dhanhq import DhanContext, dhanhq
 
+
 LOG = logging.getLogger(__name__)
+
 
 DHAN_DETAILED_MASTER_URL = (
     "https://images.dhan.co/api-data/api-scrip-master-detailed.csv"
@@ -32,9 +34,10 @@ class DhanClient:
 
         self.dhan = dhanhq(self.context)
 
-    # ---------------------------------------------------------
-    # Dhan security master
-    # ---------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Dhan Security Master
+    # ------------------------------------------------------------------
+
     def security_master(self) -> pd.DataFrame:
         df = pd.read_csv(
             DHAN_DETAILED_MASTER_URL,
@@ -48,9 +51,6 @@ class DhanClient:
 
         return df
 
-    # ---------------------------------------------------------
-    # Build NSE equity symbol -> security ID mapping
-    # ---------------------------------------------------------
     def build_symbol_map(
         self,
         symbols: list[str],
@@ -77,14 +77,10 @@ class DhanClient:
                 f"Missing Dhan master columns: {missing}"
             )
 
+        # NSE Equity only
         df = df[
             (df["EXCH_ID"].astype(str).str.upper() == "NSE")
-            & (
-                df["SEGMENT"]
-                .astype(str)
-                .str.upper()
-                == "E"
-            )
+            & (df["SEGMENT"].astype(str).str.upper() == "E")
             & (
                 df["INSTRUMENT"]
                 .astype(str)
@@ -131,9 +127,10 @@ class DhanClient:
 
         return result
 
-    # ---------------------------------------------------------
-    # Historical DAILY data
-    # ---------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Daily Historical Data
+    # ------------------------------------------------------------------
+
     def historical_daily_df(
         self,
         security_id: str,
@@ -156,22 +153,7 @@ class DhanClient:
             "toDate": to_date,
         }
 
-        # -----------------------------------------------------
-        # TEMPORARY DIAGNOSTIC LOG
-        # -----------------------------------------------------
-        LOG.info(
-            "Dhan historical REQUEST: "
-            "security_id=%s from=%s to=%s "
-            "exchange=%s instrument=%s",
-            security_id,
-            from_date,
-            to_date,
-            payload["exchangeSegment"],
-            payload["instrument"],
-        )
-
         try:
-
             response = requests.post(
                 DHAN_HISTORICAL_URL,
                 headers=headers,
@@ -179,19 +161,7 @@ class DhanClient:
                 timeout=20,
             )
 
-            # -------------------------------------------------
-            # TEMPORARY DIAGNOSTIC LOG
-            # -------------------------------------------------
-            LOG.info(
-                "Dhan historical RESPONSE: "
-                "security_id=%s HTTP=%s body=%s",
-                security_id,
-                response.status_code,
-                response.text[:1000],
-            )
-
             if response.status_code != 200:
-
                 LOG.error(
                     "Dhan historical API failed: "
                     "security_id=%s HTTP=%s response=%s",
@@ -220,11 +190,9 @@ class DhanClient:
             ]
 
             if missing:
-
                 LOG.error(
-                    "Dhan historical response "
-                    "missing fields: security_id=%s "
-                    "missing=%s response=%s",
+                    "Dhan historical response missing fields: "
+                    "security_id=%s missing=%s response=%s",
                     security_id,
                     missing,
                     data,
@@ -238,11 +206,9 @@ class DhanClient:
             )
 
             if n == 0:
-
                 LOG.warning(
-                    "Dhan historical API returned "
-                    "no candles: security_id=%s "
-                    "from=%s to=%s",
+                    "Dhan historical API returned no candles: "
+                    "security_id=%s from=%s to=%s",
                     security_id,
                     from_date,
                     to_date,
@@ -275,16 +241,6 @@ class DhanClient:
                 .sort_index()
             )
 
-            LOG.info(
-                "Dhan historical parsed: "
-                "security_id=%s candles=%d "
-                "first=%s last=%s",
-                security_id,
-                len(df),
-                df.index.min(),
-                df.index.max(),
-            )
-
             return df
 
         except requests.RequestException as exc:
@@ -309,9 +265,10 @@ class DhanClient:
 
             return pd.DataFrame()
 
-    # ---------------------------------------------------------
-    # Intraday data
-    # ---------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Intraday Minute Data
+    # ------------------------------------------------------------------
+
     def intraday_df(
         self,
         security_id: str,
@@ -342,7 +299,56 @@ class DhanClient:
 
             return pd.DataFrame()
 
+        # --------------------------------------------------------------
+        # TEMPORARY DEBUG
+        #
+        # Only print the raw response for one security.
+        # This prevents the GitHub Actions log from becoming huge.
+        # --------------------------------------------------------------
+
+        if str(security_id) == "21614":
+
+            LOG.warning(
+                "========== DHAN INTRADAY RAW RESPONSE =========="
+            )
+
+            LOG.warning(
+                "security_id=%s",
+                security_id,
+            )
+
+            LOG.warning(
+                "response_type=%s",
+                type(payload).__name__,
+            )
+
+            try:
+                LOG.warning(
+                    "response=%s",
+                    repr(payload)[:5000],
+                )
+            except Exception:
+                LOG.warning(
+                    "response=<unable to repr payload>"
+                )
+
+            LOG.warning(
+                "========== END DHAN INTRADAY RAW RESPONSE =========="
+            )
+
+        # --------------------------------------------------------------
+        # Validate response
+        # --------------------------------------------------------------
+
         if not isinstance(payload, dict):
+
+            LOG.error(
+                "Dhan intraday response is not a dict: "
+                "security_id=%s type=%s",
+                security_id,
+                type(payload).__name__,
+            )
+
             return pd.DataFrame()
 
         keys = [
@@ -371,12 +377,25 @@ class DhanClient:
 
             return pd.DataFrame()
 
+        # --------------------------------------------------------------
+        # Build DataFrame
+        # --------------------------------------------------------------
+
         n = min(
             len(payload[key])
             for key in keys
         )
 
         if n == 0:
+
+            LOG.warning(
+                "Dhan intraday API returned no candles: "
+                "security_id=%s from=%s to=%s",
+                security_id,
+                from_date,
+                to_date,
+            )
+
             return pd.DataFrame()
 
         df = pd.DataFrame(
@@ -400,6 +419,10 @@ class DhanClient:
             .sort_index()
         )
 
+        # --------------------------------------------------------------
+        # Resample 1-minute candles
+        # --------------------------------------------------------------
+
         if interval == 5:
 
             df = resample_ohlcv(
@@ -417,9 +440,10 @@ class DhanClient:
         return df
 
 
-# -------------------------------------------------------------
-# OHLCV resampling
-# -------------------------------------------------------------
+# ----------------------------------------------------------------------
+# OHLCV Resampling
+# ----------------------------------------------------------------------
+
 def resample_ohlcv(
     df: pd.DataFrame,
     rule: str,
