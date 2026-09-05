@@ -26,16 +26,11 @@ class DhanClient:
         token = os.environ["DHAN_ACCESS_TOKEN"]
 
         self.access_token = token
-
-        self.context = DhanContext(
-            client_id,
-            token,
-        )
-
+        self.context = DhanContext(client_id, token)
         self.dhan = dhanhq(self.context)
 
     # ------------------------------------------------------------------
-    # Dhan Security Master
+    # Dhan security master
     # ------------------------------------------------------------------
 
     def security_master(self) -> pd.DataFrame:
@@ -77,9 +72,15 @@ class DhanClient:
                 f"Missing Dhan master columns: {missing}"
             )
 
+        # NSE cash equity
         df = df[
             (df["EXCH_ID"].astype(str).str.upper() == "NSE")
-            & (df["SEGMENT"].astype(str).str.upper() == "E")
+            & (
+                df["SEGMENT"]
+                .astype(str)
+                .str.upper()
+                == "E"
+            )
             & (
                 df["INSTRUMENT"]
                 .astype(str)
@@ -107,7 +108,6 @@ class DhanClient:
         result: dict[str, dict] = {}
 
         for _, row in matched.iterrows():
-
             symbol = row["UNDERLYING_SYMBOL"]
 
             result[symbol] = {
@@ -127,7 +127,7 @@ class DhanClient:
         return result
 
     # ------------------------------------------------------------------
-    # Daily Historical Data
+    # Daily historical data
     # ------------------------------------------------------------------
 
     def historical_daily_df(
@@ -168,6 +168,7 @@ class DhanClient:
                     response.status_code,
                     response.text,
                 )
+
                 return pd.DataFrame()
 
             data = response.json()
@@ -195,6 +196,7 @@ class DhanClient:
                     missing,
                     data,
                 )
+
                 return pd.DataFrame()
 
             n = min(
@@ -210,6 +212,7 @@ class DhanClient:
                     from_date,
                     to_date,
                 )
+
                 return pd.DataFrame()
 
             df = pd.DataFrame(
@@ -227,7 +230,9 @@ class DhanClient:
                 df["timestamp"],
                 unit="s",
                 utc=True,
-            ).dt.tz_convert("Asia/Kolkata")
+            ).dt.tz_convert(
+                "Asia/Kolkata"
+            )
 
             df = (
                 df
@@ -235,30 +240,36 @@ class DhanClient:
                 .sort_index()
             )
 
+            df = df[
+                ~df.index.duplicated(
+                    keep="last"
+                )
+            ]
+
             return df
 
         except requests.RequestException as exc:
-
             LOG.error(
                 "Dhan historical HTTP exception: "
                 "security_id=%s error=%s",
                 security_id,
                 exc,
             )
+
             return pd.DataFrame()
 
         except Exception as exc:
-
             LOG.exception(
                 "Dhan historical API exception: "
                 "security_id=%s error=%s",
                 security_id,
                 exc,
             )
+
             return pd.DataFrame()
 
     # ------------------------------------------------------------------
-    # Intraday Minute Data
+    # Intraday 1-minute data
     # ------------------------------------------------------------------
 
     def intraday_df(
@@ -280,34 +291,16 @@ class DhanClient:
             )
 
         except Exception as exc:
-
             LOG.exception(
                 "Dhan intraday API exception: "
                 "security_id=%s error=%s",
                 security_id,
                 exc,
             )
+
             return pd.DataFrame()
 
-        # --------------------------------------------------------------
-        # Dhan SDK response format:
-        #
-        # {
-        #     "status": "success",
-        #     "remarks": "",
-        #     "data": {
-        #         "open": [...],
-        #         "high": [...],
-        #         "low": [...],
-        #         "close": [...],
-        #         "volume": [...],
-        #         "timestamp": [...]
-        #     }
-        # }
-        # --------------------------------------------------------------
-
         if not isinstance(payload, dict):
-
             LOG.error(
                 "Dhan intraday response is not a dict: "
                 "security_id=%s type=%s",
@@ -317,11 +310,9 @@ class DhanClient:
 
             return pd.DataFrame()
 
-        # Check API status
         status = payload.get("status")
 
         if status != "success":
-
             LOG.error(
                 "Dhan intraday API unsuccessful: "
                 "security_id=%s status=%s remarks=%s",
@@ -332,11 +323,10 @@ class DhanClient:
 
             return pd.DataFrame()
 
-        # Extract nested data
+        # Dhan returns OHLCV inside "data"
         data = payload.get("data")
 
         if not isinstance(data, dict):
-
             LOG.error(
                 "Dhan intraday response missing data object: "
                 "security_id=%s",
@@ -345,12 +335,16 @@ class DhanClient:
 
             return pd.DataFrame()
 
-        # --------------------------------------------------------------
-        # Temporary concise validation log
-        # --------------------------------------------------------------
+        keys = [
+            "timestamp",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+        ]
 
         if str(security_id) == "21614":
-
             LOG.info(
                 "Dhan intraday response validated: "
                 "security_id=%s data_keys=%s",
@@ -369,19 +363,6 @@ class DhanClient:
                 },
             )
 
-        # --------------------------------------------------------------
-        # Required OHLCV fields
-        # --------------------------------------------------------------
-
-        keys = [
-            "timestamp",
-            "open",
-            "high",
-            "low",
-            "close",
-            "volume",
-        ]
-
         missing = [
             key
             for key in keys
@@ -389,7 +370,6 @@ class DhanClient:
         ]
 
         if missing:
-
             LOG.error(
                 "Dhan intraday data missing fields: "
                 "security_id=%s missing=%s",
@@ -399,15 +379,10 @@ class DhanClient:
 
             return pd.DataFrame()
 
-        # --------------------------------------------------------------
-        # Validate arrays
-        # --------------------------------------------------------------
-
         if not all(
             isinstance(data[key], list)
             for key in keys
         ):
-
             LOG.error(
                 "Dhan intraday OHLCV fields are not lists: "
                 "security_id=%s",
@@ -422,7 +397,6 @@ class DhanClient:
         )
 
         if n == 0:
-
             LOG.warning(
                 "Dhan intraday API returned no candles: "
                 "security_id=%s from=%s to=%s",
@@ -433,10 +407,6 @@ class DhanClient:
 
             return pd.DataFrame()
 
-        # --------------------------------------------------------------
-        # Build DataFrame
-        # --------------------------------------------------------------
-
         df = pd.DataFrame(
             {
                 key: data[key][:n]
@@ -444,10 +414,7 @@ class DhanClient:
             }
         )
 
-        # --------------------------------------------------------------
-        # Convert timestamp
-        # --------------------------------------------------------------
-
+        # Convert epoch seconds to IST
         df["timestamp"] = pd.to_datetime(
             df["timestamp"],
             unit="s",
@@ -462,10 +429,7 @@ class DhanClient:
             .sort_index()
         )
 
-        # --------------------------------------------------------------
         # Remove duplicate timestamps
-        # --------------------------------------------------------------
-
         df = df[
             ~df.index.duplicated(
                 keep="last"
@@ -473,28 +437,58 @@ class DhanClient:
         ]
 
         # --------------------------------------------------------------
+        # Raw 1-minute validation
+        # --------------------------------------------------------------
+
+        if str(security_id) == "21614":
+            LOG.info(
+                "Dhan 1M dataframe: "
+                "security_id=%s rows=%d first=%s last=%s",
+                security_id,
+                len(df),
+                df.index.min(),
+                df.index.max(),
+            )
+
+        # --------------------------------------------------------------
         # Resample
         # --------------------------------------------------------------
 
         if interval == 5:
-
-            df = resample_ohlcv(
+            result = resample_ohlcv(
                 df,
                 "5min",
             )
 
-        elif interval == 15:
+            if str(security_id) == "21614":
+                log_resample_validation(
+                    security_id,
+                    "5M",
+                    result,
+                )
 
-            df = resample_ohlcv(
+            return result
+
+        if interval == 15:
+            result = resample_ohlcv(
                 df,
                 "15min",
             )
+
+            if str(security_id) == "21614":
+                log_resample_validation(
+                    security_id,
+                    "15M",
+                    result,
+                )
+
+            return result
 
         return df
 
 
 # ----------------------------------------------------------------------
-# OHLCV Resampling
+# OHLCV resampling
 # ----------------------------------------------------------------------
 
 def resample_ohlcv(
@@ -533,3 +527,90 @@ def resample_ohlcv(
     )
 
     return out
+
+
+# ----------------------------------------------------------------------
+# Temporary diagnostic logging
+# ----------------------------------------------------------------------
+
+def log_resample_validation(
+    security_id: str,
+    timeframe: str,
+    df: pd.DataFrame,
+) -> None:
+
+    if df.empty:
+        LOG.error(
+            "Dhan %s dataframe EMPTY: security_id=%s",
+            timeframe,
+            security_id,
+        )
+        return
+
+    LOG.info(
+        "Dhan %s dataframe: "
+        "security_id=%s rows=%d first=%s last=%s",
+        timeframe,
+        security_id,
+        len(df),
+        df.index.min(),
+        df.index.max(),
+    )
+
+    # First 5 timestamps
+    first_timestamps = [
+        ts.strftime(
+            "%Y-%m-%d %H:%M:%S %Z"
+        )
+        for ts in df.index[:5]
+    ]
+
+    # Last 5 timestamps
+    last_timestamps = [
+        ts.strftime(
+            "%Y-%m-%d %H:%M:%S %Z"
+        )
+        for ts in df.index[-5:]
+    ]
+
+    LOG.info(
+        "Dhan %s first timestamps: %s",
+        timeframe,
+        first_timestamps,
+    )
+
+    LOG.info(
+        "Dhan %s last timestamps: %s",
+        timeframe,
+        last_timestamps,
+    )
+
+    # Show first candle OHLCV
+    first = df.iloc[0]
+
+    LOG.info(
+        "Dhan %s first candle: "
+        "timestamp=%s open=%s high=%s low=%s close=%s volume=%s",
+        timeframe,
+        df.index[0],
+        first["open"],
+        first["high"],
+        first["low"],
+        first["close"],
+        first["volume"],
+    )
+
+    # Show last candle OHLCV
+    last = df.iloc[-1]
+
+    LOG.info(
+        "Dhan %s last candle: "
+        "timestamp=%s open=%s high=%s low=%s close=%s volume=%s",
+        timeframe,
+        df.index[-1],
+        last["open"],
+        last["high"],
+        last["low"],
+        last["close"],
+        last["volume"],
+    )
