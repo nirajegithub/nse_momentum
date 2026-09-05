@@ -1719,6 +1719,111 @@
       "signal_time": "2026-09-04T12:25:00",
       "status": "ACTIVE",
       "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-04T12:25:00"
+    },
+    "CGPOWER|BUY|CONTINUATION|2026-09-04T12:15:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T12:15:00",
+      "signal_price": 896.3,
+      "rvol": 1.0418895625297193,
+      "rsi": 55.61031626651735,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 896.3,
+        "sl": 892.2124329660796,
+        "risk": 4.0875670339203225,
+        "t1": 902.4313505508804,
+        "t2": 906.5189175848008,
+        "t3": 910.6064846187211
+      },
+      "symbol": "CGPOWER",
+      "score": 92,
+      "grade": "A+",
+      "ltp": 896.3,
+      "signal_time": "2026-09-04T12:15:00",
+      "status": "ACTIVE",
+      "setup_key": "CGPOWER|BUY|CONTINUATION|2026-09-04T12:15:00"
+    },
+    "NLCINDIA|SELL|BREAKOUT|2026-09-04T12:15:00": {
+      "direction": "SELL",
+      "setup": "BREAKOUT",
+      "candle_time": "2026-09-04T12:15:00",
+      "signal_price": 272.55,
+      "rvol": 2.0808155115338134,
+      "rsi": 27.656015152677597,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 272.55,
+        "sl": 273.62579316626756,
+        "risk": 1.0757931662675446,
+        "t1": 270.9363102505987,
+        "t2": 269.86051708433115,
+        "t3": 268.7847239180636
+      },
+      "symbol": "NLCINDIA",
+      "score": 100,
+      "grade": "A+",
+      "ltp": 272.55,
+      "signal_time": "2026-09-04T12:15:00",
+      "status": "ACTIVE",
+      "setup_key": "NLCINDIA|SELL|BREAKOUT|2026-09-04T12:15:00"
+    },
+    "WELCORP|SELL|CONTINUATION|2026-09-04T12:15:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T12:15:00",
+      "signal_price": 2602.9,
+      "rvol": 1.1809960340957015,
+      "rsi": 34.71157028196285,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 2602.9,
+        "sl": 2619.103620661065,
+        "risk": 16.203620661065088,
+        "t1": 2578.5945690084027,
+        "t2": 2562.390948347337,
+        "t3": 2546.1873276862725
+      },
+      "symbol": "WELCORP",
+      "score": 92,
+      "grade": "A+",
+      "ltp": 2602.9,
+      "signal_time": "2026-09-04T12:15:00",
+      "status": "ACTIVE",
+      "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-04T12:15:00"
     }
   }
 }
