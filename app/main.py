@@ -101,7 +101,7 @@ def validate_scan_time(scan_time: datetime):
 def create_universe(dhan: DhanClient, scan_date: str):
     logger.info("Creating daily universe for %s", scan_date)
 
-    state = load()
+    load(day)
 
     universe = build_universe(
         dhan,
