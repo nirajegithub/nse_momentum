@@ -293,8 +293,13 @@ def process_signal(symbol, df5, df15):
         signal,
     )
 
-    signal["score"] = score
-    signal["grade"] = grade
+    # Build the complete signal object expected by Telegram/state.
+    signal = build_signal(
+        symbol,
+        signal,
+        score,
+        grade,
+    )
 
     logger.info(
         "%s | SIGNAL | direction=%s | setup=%s | "
@@ -470,12 +475,7 @@ def run_scan(dhan: DhanClient, scan_time: datetime):
             state.setdefault("signals", {})[state_key] = signal
 
             try:
-                telegram.send(
-                    telegram.signal_message(
-                        symbol,
-                        signal,
-                    )
-                )
+                send(signal_message(signal))
                 signals_sent += 1
             except Exception:
                 logger.exception(
