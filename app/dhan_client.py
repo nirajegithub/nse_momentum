@@ -19,6 +19,11 @@ DHAN_HISTORICAL_URL = (
     "https://api.dhan.co/v2/charts/historical"
 )
 
+IST = "Asia/Kolkata"
+
+MARKET_OPEN = "09:15"
+MARKET_CLOSE = "15:30"
+
 
 class DhanClient:
     def __init__(self) -> None:
@@ -30,7 +35,7 @@ class DhanClient:
         self.dhan = dhanhq(self.context)
 
     # ------------------------------------------------------------------
-    # Dhan security master
+    # Dhan Security Master
     # ------------------------------------------------------------------
 
     def security_master(self) -> pd.DataFrame:
@@ -72,7 +77,7 @@ class DhanClient:
                 f"Missing Dhan master columns: {missing}"
             )
 
-        # NSE cash equity
+        # NSE cash-equity instruments only.
         df = df[
             (df["EXCH_ID"].astype(str).str.upper() == "NSE")
             & (
@@ -111,9 +116,7 @@ class DhanClient:
             symbol = row["UNDERLYING_SYMBOL"]
 
             result[symbol] = {
-                "security_id": str(
-                    row["SECURITY_ID"]
-                ),
+                "security_id": str(row["SECURITY_ID"]),
                 "exchange_segment": "NSE_EQ",
                 "instrument": "EQUITY",
             }
@@ -127,7 +130,7 @@ class DhanClient:
         return result
 
     # ------------------------------------------------------------------
-    # Daily historical data
+    # Daily Historical Data
     # ------------------------------------------------------------------
 
     def historical_daily_df(
@@ -230,9 +233,7 @@ class DhanClient:
                 df["timestamp"],
                 unit="s",
                 utc=True,
-            ).dt.tz_convert(
-                "Asia/Kolkata"
-            )
+            ).dt.tz_convert(IST)
 
             df = (
                 df
@@ -269,7 +270,7 @@ class DhanClient:
             return pd.DataFrame()
 
     # ------------------------------------------------------------------
-    # Intraday 1-minute data
+    # Intraday Data
     # ------------------------------------------------------------------
 
     def intraday_df(
@@ -323,7 +324,7 @@ class DhanClient:
 
             return pd.DataFrame()
 
-        # Dhan returns OHLCV inside "data"
+        # Dhan returns OHLCV inside the "data" object.
         data = payload.get("data")
 
         if not isinstance(data, dict):
@@ -414,14 +415,12 @@ class DhanClient:
             }
         )
 
-        # Convert epoch seconds to IST
+        # Epoch seconds -> IST.
         df["timestamp"] = pd.to_datetime(
             df["timestamp"],
             unit="s",
             utc=True,
-        ).dt.tz_convert(
-            "Asia/Kolkata"
-        )
+        ).dt.tz_convert(IST)
 
         df = (
             df
@@ -429,7 +428,7 @@ class DhanClient:
             .sort_index()
         )
 
-        # Remove duplicate timestamps
+        # Remove duplicate timestamps.
         df = df[
             ~df.index.duplicated(
                 keep="last"
@@ -437,12 +436,23 @@ class DhanClient:
         ]
 
         # --------------------------------------------------------------
-        # Raw 1-minute validation
+        # Keep only NSE regular trading session.
         # --------------------------------------------------------------
+
+        df = filter_market_session(df)
+
+        if df.empty:
+            LOG.warning(
+                "No NSE regular-session candles after filtering: "
+                "security_id=%s",
+                security_id,
+            )
+
+            return pd.DataFrame()
 
         if str(security_id) == "21614":
             LOG.info(
-                "Dhan 1M dataframe: "
+                "Dhan 1M dataframe after session filter: "
                 "security_id=%s rows=%d first=%s last=%s",
                 security_id,
                 len(df),
@@ -451,7 +461,7 @@ class DhanClient:
             )
 
         # --------------------------------------------------------------
-        # Resample
+        # Return requested timeframe.
         # --------------------------------------------------------------
 
         if interval == 5:
@@ -488,6 +498,36 @@ class DhanClient:
 
 
 # ----------------------------------------------------------------------
+# NSE regular-session filter
+# ----------------------------------------------------------------------
+
+def filter_market_session(
+    df: pd.DataFrame,
+) -> pd.DataFrame:
+
+    if df.empty:
+        return df
+
+    # Work with local IST timestamps.
+    local_time = df.index.time
+
+    market_open = pd.Timestamp(
+        MARKET_OPEN
+    ).time()
+
+    market_close = pd.Timestamp(
+        MARKET_CLOSE
+    ).time()
+
+    mask = (
+        (local_time >= market_open)
+        & (local_time < market_close)
+    )
+
+    return df.loc[mask].copy()
+
+
+# ----------------------------------------------------------------------
 # OHLCV resampling
 # ----------------------------------------------------------------------
 
@@ -499,13 +539,33 @@ def resample_ohlcv(
     if df.empty:
         return df
 
+    # --------------------------------------------------------------
+    # IMPORTANT:
+    #
+    # We use closed="left" and label="right".
+    #
+    # Therefore:
+    #
+    # 09:15, 09:16, 09:17, 09:18, 09:19
+    #        ↓
+    #      09:20
+    #
+    # and:
+    #
+    # 09:20 ... 09:24
+    #        ↓
+    #      09:25
+    #
+    # This prevents the incorrect 09:15 partial candle.
+    # --------------------------------------------------------------
+
     out = (
         df.resample(
             rule,
             origin="start_day",
             offset="15min",
             label="right",
-            closed="right",
+            closed="left",
         )
         .agg(
             {
@@ -526,11 +586,35 @@ def resample_ohlcv(
         )
     )
 
+    # --------------------------------------------------------------
+    # Keep only candles whose labels are valid NSE candle closes.
+    # --------------------------------------------------------------
+
+    if rule == "5min":
+        valid_minutes = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55}
+
+        out = out[
+            out.index.minute.isin(valid_minutes)
+        ]
+
+    elif rule == "15min":
+        valid_minutes = {0, 15, 30, 45}
+
+        out = out[
+            out.index.minute.isin(valid_minutes)
+        ]
+
+    # No candle should be labelled after 15:30.
+    out = out[
+        out.index.time
+        <= pd.Timestamp("15:30").time()
+    ]
+
     return out
 
 
 # ----------------------------------------------------------------------
-# Temporary diagnostic logging
+# Diagnostic validation
 # ----------------------------------------------------------------------
 
 def log_resample_validation(
@@ -557,7 +641,6 @@ def log_resample_validation(
         df.index.max(),
     )
 
-    # First 5 timestamps
     first_timestamps = [
         ts.strftime(
             "%Y-%m-%d %H:%M:%S %Z"
@@ -565,7 +648,6 @@ def log_resample_validation(
         for ts in df.index[:5]
     ]
 
-    # Last 5 timestamps
     last_timestamps = [
         ts.strftime(
             "%Y-%m-%d %H:%M:%S %Z"
@@ -585,7 +667,6 @@ def log_resample_validation(
         last_timestamps,
     )
 
-    # Show first candle OHLCV
     first = df.iloc[0]
 
     LOG.info(
@@ -600,7 +681,6 @@ def log_resample_validation(
         first["volume"],
     )
 
-    # Show last candle OHLCV
     last = df.iloc[-1]
 
     LOG.info(
