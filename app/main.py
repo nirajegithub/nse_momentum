@@ -184,8 +184,9 @@ def filter_completed_candles(
     """
     Keep only candles from the scan date and only completed candles.
 
-    This prevents previous-day candles from being treated as the
-    current scan's latest candle.
+    If cutoff is None, no candle for that timeframe is considered
+    completed yet. This is required for 15M at 09:25 because the
+    first 15M candle completes at 09:30.
     """
     if df is None or df.empty:
         return df
@@ -202,18 +203,30 @@ def filter_completed_candles(
     # Current scan day only.
     df = df[df.index.date == scan_day]
 
-    if cutoff is not None:
-        cutoff_naive = cutoff.replace(
-            tzinfo=None
+    # No completed candle exists yet for this timeframe.
+    # Example: 15M at 09:25 -> first completed candle is 09:30.
+    if cutoff is None:
+        df = df.iloc[0:0].copy()
+
+        logger.info(
+            "%s completed candles | date=%s | cutoff=NONE | rows=0 | latest=NONE",
+            timeframe,
+            scan_date,
         )
 
-        df = df[df.index <= cutoff_naive]
+        return df
+
+    cutoff_naive = cutoff.replace(
+        tzinfo=None
+    )
+
+    df = df[df.index <= cutoff_naive]
 
     logger.info(
         "%s completed candles | date=%s | cutoff=%s | rows=%d | latest=%s",
         timeframe,
         scan_date,
-        cutoff.strftime("%H:%M") if cutoff else "NONE",
+        cutoff.strftime("%H:%M"),
         len(df),
         df.index[-1] if not df.empty else "NONE",
     )
