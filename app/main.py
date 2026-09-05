@@ -589,7 +589,11 @@ def run_summary(dhan: DhanClient, scan_time: datetime):
 
 def main():
     scan_time = get_scan_time()
-    validate_scan_time(scan_time)
+
+    # Never fail the scheduled job because it was invoked outside
+    # the application window.
+    if not validate_scan_time(scan_time):
+        return
 
     action = os.getenv(
         "SCANNER_ACTION",
