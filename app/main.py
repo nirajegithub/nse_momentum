@@ -58,13 +58,12 @@ def get_completed_5m_cutoff(scan_time):
     """
     Return the latest completed 5M candle timestamp.
 
-    Example:
+    Examples:
         09:25 -> 09:25
         09:26 -> 09:25
         09:30 -> 09:30
 
-    A candle labelled 09:25 represents
-    the 09:20-09:25 interval.
+    Candle labelled 09:25 represents 09:20-09:25.
     """
     minute = (scan_time.minute // 5) * 5
 
@@ -86,8 +85,7 @@ def get_completed_15m_cutoff(scan_time):
         15:25 -> 15:15
         15:30 -> 15:30
 
-    A candle labelled 09:30 represents
-    the 09:15-09:30 interval.
+    Candle labelled 09:30 represents 09:15-09:30.
     """
     minute = scan_time.minute
 
@@ -143,7 +141,10 @@ def create_universe(dhan, state, as_of_date):
         as_of_date=as_of_date,
     )
 
-    save(state)
+    save(
+        state,
+        as_of_date,
+    )
 
     LOG.info(
         "Universe size: %d",
@@ -209,7 +210,6 @@ def main():
                 test_date,
             )
             return
-
     else:
         today = scan_time.date()
 
@@ -231,9 +231,11 @@ def main():
         action,
     )
 
+    # Existing DhanClient takes no positional arguments.
     dhan = DhanClient()
-    
-    state = load()
+
+    # Existing state API requires the trading day.
+    state = load(today)
 
     # ---------------------------------------------------------
     # UNIVERSE
@@ -271,9 +273,8 @@ def main():
 
         # Strategy integration will be added next.
         #
-        # For now this test verifies that the scanner
-        # correctly determines which completed 5M and
-        # 15M candles are allowed at the requested scan time.
+        # For now this validates the scan time and
+        # completed-candle cutoffs only.
 
         return
 
