@@ -704,6 +704,146 @@
       "signal_time": "2026-09-04T13:10:00",
       "status": "ACTIVE",
       "setup_key": "RRKABEL|SELL|BREAKOUT|2026-09-04T13:10:00"
+    },
+    "ADANIGREEN|BUY|CONTINUATION|2026-09-04T13:30:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:30:00",
+      "signal_price": 1300.6,
+      "rvol": 0.9299512083773219,
+      "rsi": 61.65033792258513,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 1300.6,
+        "sl": 1297.9999119052186,
+        "risk": 2.600088094781313,
+        "t1": 1304.5001321421719,
+        "t2": 1307.1002202369532,
+        "t3": 1309.7003083317345
+      },
+      "symbol": "ADANIGREEN",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1300.6,
+      "signal_time": "2026-09-04T13:30:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|BUY|CONTINUATION|2026-09-04T13:30:00"
+    },
+    "HONASA|SELL|CONTINUATION|2026-09-04T13:30:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:30:00",
+      "signal_price": 472.5,
+      "rvol": 0.3725825033295476,
+      "rsi": 33.87522937292556,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 472.5,
+        "sl": 475.62174090577247,
+        "risk": 3.1217409057724694,
+        "t1": 467.81738864134127,
+        "t2": 464.69564773556885,
+        "t3": 461.57390682979633
+      },
+      "symbol": "HONASA",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 472.5,
+      "signal_time": "2026-09-04T13:30:00",
+      "status": "ACTIVE",
+      "setup_key": "HONASA|SELL|CONTINUATION|2026-09-04T13:30:00"
+    },
+    "RRKABEL|SELL|CONTINUATION|2026-09-04T13:30:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:30:00",
+      "signal_price": 2418.8,
+      "rvol": 0.4564699032072218,
+      "rsi": 33.00749462030407,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 2418.8,
+        "sl": 2444.2600104884,
+        "risk": 25.460010488399803,
+        "t1": 2380.6099842674003,
+        "t2": 2355.149973779001,
+        "t3": 2329.6899632906006
+      },
+      "symbol": "RRKABEL",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 2418.8,
+      "signal_time": "2026-09-04T13:30:00",
+      "status": "ACTIVE",
+      "setup_key": "RRKABEL|SELL|CONTINUATION|2026-09-04T13:30:00"
+    },
+    "WELCORP|SELL|CONTINUATION|2026-09-04T13:30:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-04T13:30:00",
+      "signal_price": 2594.0,
+      "rvol": 0.4439931795231184,
+      "rsi": 37.648589525699975,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true
+      },
+      "risk": {
+        "entry": 2594.0,
+        "sl": 2609.6510082229256,
+        "risk": 15.651008222925611,
+        "t1": 2570.5234876656114,
+        "t2": 2554.872479442686,
+        "t3": 2539.22147121976
+      },
+      "symbol": "WELCORP",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 2594.0,
+      "signal_time": "2026-09-04T13:30:00",
+      "status": "ACTIVE",
+      "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-04T13:30:00"
     }
   }
 }
