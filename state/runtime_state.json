@@ -961,8 +961,10 @@
       "grade": "WATCH",
       "ltp": 332.6,
       "signal_time": "2026-09-07T10:30:00",
-      "status": "ACTIVE",
-      "setup_key": "NTPC|BUY|CONTINUATION|2026-09-07T10:30:00"
+      "status": "REVERSED",
+      "setup_key": "NTPC|BUY|CONTINUATION|2026-09-07T10:30:00",
+      "exit_time": "2026-09-07T22:04:47.304519+05:30",
+      "exit_reason": "Confirmed opposite-direction signal"
     },
     "RRKABEL|SELL|CONTINUATION|2026-09-07T10:30:00": {
       "direction": "SELL",
@@ -1146,8 +1148,10 @@
       "grade": "WATCH",
       "ltp": 332.75,
       "signal_time": "2026-09-07T10:35:00",
-      "status": "ACTIVE",
-      "setup_key": "NTPC|BUY|CONTINUATION|2026-09-07T10:35:00"
+      "status": "REVERSED",
+      "setup_key": "NTPC|BUY|CONTINUATION|2026-09-07T10:35:00",
+      "exit_time": "2026-09-07T22:04:47.304519+05:30",
+      "exit_reason": "Confirmed opposite-direction signal"
     },
     "RRKABEL|SELL|BREAKOUT|2026-09-07T10:35:00": {
       "direction": "SELL",
@@ -5070,6 +5074,213 @@
       "signal_time": "2026-09-07T15:05:00",
       "status": "ACTIVE",
       "setup_key": "SYRMA|BUY|BREAKOUT|2026-09-07T15:05:00"
+    },
+    "ABCAPITAL|SELL|CONTINUATION|07 Sep 2026, 03:15 PM IST": {
+      "symbol": "ABCAPITAL",
+      "security_id": "21614",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "07 Sep 2026, 03:15 PM IST",
+      "signal_price": 400.35,
+      "score": 88,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 400.35,
+        "sl": 402.13384195251155,
+        "risk": 1.7838419525115228,
+        "t1": 397.6742370712327,
+        "t2": 395.89039511872124,
+        "t3": 394.10655316620966
+      },
+      "rvol": 1.973065374702178,
+      "rsi": 35.84015261197783,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 400.35
+    },
+    "ADANIENSOL|SELL|CONTINUATION|07 Sep 2026, 03:15 PM IST": {
+      "symbol": "ADANIENSOL",
+      "security_id": "10217",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "07 Sep 2026, 03:15 PM IST",
+      "signal_price": 1390.0,
+      "score": 90,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1390.0,
+        "sl": 1394.6608006157055,
+        "risk": 4.6608006157055115,
+        "t1": 1383.0087990764418,
+        "t2": 1378.347998460736,
+        "t3": 1373.6871978450308
+      },
+      "rvol": 2.9046961436223286,
+      "rsi": 34.95053961779905,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 1390.0
+    },
+    "GMDCLTD|SELL|CONTINUATION|07 Sep 2026, 03:30 PM IST": {
+      "symbol": "GMDCLTD",
+      "security_id": "5204",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "07 Sep 2026, 03:30 PM IST",
+      "signal_price": 557.5,
+      "score": 90,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 557.5,
+        "sl": 559.1043058641527,
+        "risk": 1.6043058641527068,
+        "t1": 555.0935412037709,
+        "t2": 553.4892353396183,
+        "t3": 551.8849294754655
+      },
+      "rvol": 2.8868447301341016,
+      "rsi": 44.000707471998886,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 557.5
+    },
+    "NATIONALUM|SELL|CONTINUATION|07 Sep 2026, 03:15 PM IST": {
+      "symbol": "NATIONALUM",
+      "security_id": "6364",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "07 Sep 2026, 03:15 PM IST",
+      "signal_price": 368.4,
+      "score": 80,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 368.4,
+        "sl": 369.50352206939095,
+        "risk": 1.1035220693909764,
+        "t1": 366.7447168959135,
+        "t2": 365.64119482652256,
+        "t3": 364.53767275713153
+      },
+      "rvol": 2.262118566818729,
+      "rsi": 40.883731037196135,
+      "regime": {
+        "direction": "SELL",
+        "structure": "NEUTRAL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "ltp": 368.4
+    },
+    "NTPC|SELL|CONTINUATION|07 Sep 2026, 03:15 PM IST": {
+      "symbol": "NTPC",
+      "security_id": "11630",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "07 Sep 2026, 03:15 PM IST",
+      "signal_price": 330.75,
+      "score": 90,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 330.75,
+        "sl": 331.75715695219156,
+        "risk": 1.0071569521915649,
+        "t1": 329.2392645717126,
+        "t2": 328.2321076195211,
+        "t3": 327.2249506673295
+      },
+      "rvol": 2.988427789496409,
+      "rsi": 37.85404723777633,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 330.75
+    }
+  },
+  "alert_state": {
+    "ABCAPITAL": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 88,
+      "rvol": 1.973065374702178,
+      "alerted_at": "2026-09-07T22:04:47.304519+05:30",
+      "candle_time": "07 Sep 2026, 03:15 PM IST"
+    },
+    "ADANIENSOL": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 90,
+      "rvol": 2.9046961436223286,
+      "alerted_at": "2026-09-07T22:04:47.304519+05:30",
+      "candle_time": "07 Sep 2026, 03:15 PM IST"
+    },
+    "GMDCLTD": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 90,
+      "rvol": 2.8868447301341016,
+      "alerted_at": "2026-09-07T22:04:47.304519+05:30",
+      "candle_time": "07 Sep 2026, 03:30 PM IST"
+    },
+    "NATIONALUM": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 80,
+      "rvol": 2.262118566818729,
+      "alerted_at": "2026-09-07T22:04:47.304519+05:30",
+      "candle_time": "07 Sep 2026, 03:15 PM IST"
+    },
+    "NTPC": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 90,
+      "rvol": 2.988427789496409,
+      "alerted_at": "2026-09-07T22:04:47.304519+05:30",
+      "candle_time": "07 Sep 2026, 03:15 PM IST"
     }
   }
 }
