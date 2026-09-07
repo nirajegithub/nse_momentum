@@ -1,80 +1,449 @@
 {
-  "date": "2026-09-04",
-  "universe": [],
-  "signals": {
-    "HONASA|SELL|CONTINUATION|2026-09-04T13:05:00": {
-      "direction": "SELL",
-      "setup": "CONTINUATION",
-      "candle_time": "2026-09-04T13:05:00",
-      "signal_price": 474.05,
-      "rvol": 0.12457664942634356,
-      "rsi": 37.915428646332074,
-      "ema_ok": true,
-      "vwap_ok": true,
-      "rsi_ok": true,
-      "regime": {
-        "direction": "SELL",
-        "structure": "BEARISH_LH_LL",
-        "price_above_vwap": false,
-        "ema9_gt_ema20": false,
-        "ema20_rising": false,
-        "rsi_ok": true,
-        "structure_ok": true,
-        "bullish_points": 0,
-        "bearish_points": 5
-      },
-      "risk": {
-        "entry": 474.05,
-        "sl": 474.7355648528417,
-        "risk": 0.6855648528417078,
-        "t1": 473.02165272073745,
-        "t2": 472.33608786789574,
-        "t3": 471.65052301505403
-      },
-      "symbol": "HONASA",
-      "score": 90,
-      "grade": "A+",
-      "ltp": 474.05,
-      "signal_time": "2026-09-04T13:05:00",
-      "status": "ACTIVE",
-      "setup_key": "HONASA|SELL|CONTINUATION|2026-09-04T13:05:00"
+  "date": "2026-09-07",
+  "universe": [
+    {
+      "symbol": "ABCAPITAL",
+      "security_id": "21614",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 404.9,
+      "prev_volume": 2167785,
+      "prev_trading_day": "2026-09-04"
     },
-    "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:05:00": {
-      "direction": "SELL",
-      "setup": "CONTINUATION",
-      "candle_time": "2026-09-04T13:05:00",
-      "signal_price": 1041.0,
-      "rvol": 1.2349171835626296,
-      "rsi": 39.396237614526264,
-      "ema_ok": true,
-      "vwap_ok": true,
-      "rsi_ok": true,
-      "regime": {
-        "direction": "SELL",
-        "structure": "BEARISH_LH_LL",
-        "price_above_vwap": false,
-        "ema9_gt_ema20": false,
-        "ema20_rising": false,
-        "rsi_ok": true,
-        "structure_ok": true,
-        "bullish_points": 0,
-        "bearish_points": 5
-      },
-      "risk": {
-        "entry": 1041.0,
-        "sl": 1045.8179163566167,
-        "risk": 4.817916356616706,
-        "t1": 1033.7731254650748,
-        "t2": 1028.9552091084583,
-        "t3": 1024.1372927518414
-      },
+    {
+      "symbol": "ADANIENSOL",
+      "security_id": "10217",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 1409.6,
+      "prev_volume": 1386991,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "ADANIGREEN",
+      "security_id": "3563",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1,
+      "prev_close": 1301.3,
+      "prev_volume": 768437,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "ATHERENERG",
+      "security_id": "757645",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 1584.0,
+      "prev_volume": 5585636,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "BHARATFORG",
+      "security_id": "422",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 1956.0,
+      "prev_volume": 1526364,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "BHEL",
+      "security_id": "438",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 431.1,
+      "prev_volume": 5925391,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "BSE",
+      "security_id": "19585",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 3409.8,
+      "prev_volume": 7975058,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "CGPOWER",
+      "security_id": "760",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 891.0,
+      "prev_volume": 2159759,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "FEDERALBNK",
+      "security_id": "1023",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 343.0,
+      "prev_volume": 4115397,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "FINCABLES",
+      "security_id": "1038",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 1220.2,
+      "prev_volume": 1492429,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "GESHIP",
+      "security_id": "13776",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 1369.7,
+      "prev_volume": 1043987,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "GMDCLTD",
+      "security_id": "5204",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 562.95,
+      "prev_volume": 503162,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "GRANULES",
+      "security_id": "11872",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 848.3,
+      "prev_volume": 1172635,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "HINDALCO",
+      "security_id": "1363",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 1011.0,
+      "prev_volume": 3682428,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "HINDCOPPER",
+      "security_id": "17939",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 521.65,
+      "prev_volume": 3802351,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "HONASA",
+      "security_id": "19813",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 471.05,
+      "prev_volume": 996548,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "KARURVYSYA",
+      "security_id": "1838",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 348.85,
+      "prev_volume": 955056,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "KEI",
+      "security_id": "13310",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 4850.0,
+      "prev_volume": 2381568,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "LAURUSLABS",
+      "security_id": "19234",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 1840.0,
+      "prev_volume": 1075943,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "LTF",
+      "security_id": "24948",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1,
+      "prev_close": 314.0,
+      "prev_volume": 3279672,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "MCX",
+      "security_id": "31181",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 3275.4,
+      "prev_volume": 2485731,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "NATIONALUM",
+      "security_id": "6364",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 374.1,
+      "prev_volume": 5517970,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "NETWEB",
+      "security_id": "17433",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 5193.0,
+      "prev_volume": 1816227,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "NLCINDIA",
+      "security_id": "8585",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 273.05,
+      "prev_volume": 714404,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "NTPC",
+      "security_id": "11630",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1,
+      "prev_close": 332.5,
+      "prev_volume": 7032282,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "POLYCAB",
+      "security_id": "9590",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 8300.0,
+      "prev_volume": 1559741,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "RBLBANK",
+      "security_id": "18391",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 414.35,
+      "prev_volume": 7858699,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "RRKABEL",
+      "security_id": "18566",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 2454.1,
+      "prev_volume": 2596720,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "SAILIFE",
+      "security_id": "27839",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 1584.3,
+      "prev_volume": 561938,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
       "symbol": "SHRIRAMFIN",
-      "score": 95,
-      "grade": "A+",
-      "ltp": 1041.0,
-      "signal_time": "2026-09-04T13:05:00",
-      "status": "ACTIVE",
-      "setup_key": "SHRIRAMFIN|SELL|CONTINUATION|2026-09-04T13:05:00"
+      "security_id": "4306",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30",
+        "M50"
+      ],
+      "membership_count": 2,
+      "prev_close": 1041.0,
+      "prev_volume": 4135730,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "SYRMA",
+      "security_id": "10793",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 1457.3,
+      "prev_volume": 569018,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "VEDL",
+      "security_id": "3063",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M30"
+      ],
+      "membership_count": 1,
+      "prev_close": 272.1,
+      "prev_volume": 5992724,
+      "prev_trading_day": "2026-09-04"
+    },
+    {
+      "symbol": "WELCORP",
+      "security_id": "11821",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "M50"
+      ],
+      "membership_count": 1,
+      "prev_close": 2590.6,
+      "prev_volume": 1247810,
+      "prev_trading_day": "2026-09-04"
     }
-  }
+  ],
+  "signals": {}
 }
