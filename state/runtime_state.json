@@ -2628,6 +2628,80 @@
       "signal_time": "2026-09-07T13:40:00",
       "status": "ACTIVE",
       "setup_key": "POLYCAB|SELL|CONTINUATION|2026-09-07T13:40:00"
+    },
+    "ADANIGREEN|SELL|CONTINUATION|2026-09-07T13:45:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T13:45:00",
+      "signal_price": 1294.5,
+      "rvol": 0.776743302299069,
+      "rsi": 34.892474223248016,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 1294.5,
+        "sl": 1298.212506129721,
+        "risk": 3.7125061297210777,
+        "t1": 1288.9312408054184,
+        "t2": 1285.2187346756973,
+        "t3": 1281.5062285459762
+      },
+      "symbol": "ADANIGREEN",
+      "score": 80,
+      "grade": "A",
+      "ltp": 1294.5,
+      "signal_time": "2026-09-07T13:45:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|SELL|CONTINUATION|2026-09-07T13:45:00"
+    },
+    "KEI|SELL|CONTINUATION|2026-09-07T13:45:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T13:45:00",
+      "signal_price": 4691.0,
+      "rvol": 0.5439664273823354,
+      "rsi": 33.11637804200454,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 4691.0,
+        "sl": 4707.758243182311,
+        "risk": 16.758243182311162,
+        "t1": 4665.862635226533,
+        "t2": 4649.104392044223,
+        "t3": 4632.3461488619105
+      },
+      "symbol": "KEI",
+      "score": 70,
+      "grade": "WATCH",
+      "ltp": 4691.0,
+      "signal_time": "2026-09-07T13:45:00",
+      "status": "ACTIVE",
+      "setup_key": "KEI|SELL|CONTINUATION|2026-09-07T13:45:00"
     }
   }
 }
