@@ -482,6 +482,43 @@
       "signal_time": "2026-09-07T09:30:00",
       "status": "ACTIVE",
       "setup_key": "FINCABLES|SELL|CONTINUATION|2026-09-07T09:30:00"
+    },
+    "NLCINDIA|BUY|CONTINUATION|2026-09-07T09:55:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T09:55:00",
+      "signal_price": 275.6,
+      "rvol": 0.6309026792590491,
+      "rsi": 60.634231176279776,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "risk": {
+        "entry": 275.6,
+        "sl": 273.5326189320601,
+        "risk": 2.067381067939948,
+        "t1": 278.7010716019099,
+        "t2": 280.7684526698499,
+        "t3": 282.8358337377898
+      },
+      "symbol": "NLCINDIA",
+      "score": 80,
+      "grade": "A",
+      "ltp": 275.6,
+      "signal_time": "2026-09-07T09:55:00",
+      "status": "ACTIVE",
+      "setup_key": "NLCINDIA|BUY|CONTINUATION|2026-09-07T09:55:00"
     }
   }
 }
