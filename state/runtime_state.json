@@ -4848,6 +4848,117 @@
       "signal_time": "2026-09-07T14:55:00",
       "status": "ACTIVE",
       "setup_key": "RBLBANK|BUY|CONTINUATION|2026-09-07T14:55:00"
+    },
+    "ADANIENSOL|SELL|CONTINUATION|2026-09-07T15:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T15:00:00",
+      "signal_price": 1391.6,
+      "rvol": 2.050732720953927,
+      "rsi": 38.56692590522442,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 1391.6,
+        "sl": 1394.630217063949,
+        "risk": 3.030217063949067,
+        "t1": 1387.0546744040762,
+        "t2": 1384.0244573401274,
+        "t3": 1380.994240276178
+      },
+      "symbol": "ADANIENSOL",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1391.6,
+      "signal_time": "2026-09-07T15:00:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIENSOL|SELL|CONTINUATION|2026-09-07T15:00:00"
+    },
+    "SYRMA|BUY|CONTINUATION|2026-09-07T15:00:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T15:00:00",
+      "signal_price": 1628.8,
+      "rvol": 1.7323516640332757,
+      "rsi": 70.01117107570681,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "risk": {
+        "entry": 1628.8,
+        "sl": 1612.7119192935306,
+        "risk": 16.088080706469327,
+        "t1": 1652.932121059704,
+        "t2": 1669.0202017661732,
+        "t3": 1685.1082824726427
+      },
+      "symbol": "SYRMA",
+      "score": 88,
+      "grade": "A",
+      "ltp": 1628.8,
+      "signal_time": "2026-09-07T15:00:00",
+      "status": "ACTIVE",
+      "setup_key": "SYRMA|BUY|CONTINUATION|2026-09-07T15:00:00"
+    },
+    "VEDL|SELL|CONTINUATION|2026-09-07T15:00:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T15:00:00",
+      "signal_price": 268.7,
+      "rvol": 1.5287056689600813,
+      "rsi": 42.92655802877276,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 1,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 268.7,
+        "sl": 269.384331174709,
+        "risk": 0.6843311747090297,
+        "t1": 267.6735032379364,
+        "t2": 266.98917206322744,
+        "t3": 266.30484088851836
+      },
+      "symbol": "VEDL",
+      "score": 78,
+      "grade": "WATCH",
+      "ltp": 268.7,
+      "signal_time": "2026-09-07T15:00:00",
+      "status": "ACTIVE",
+      "setup_key": "VEDL|SELL|CONTINUATION|2026-09-07T15:00:00"
     }
   }
 }
