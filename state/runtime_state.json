@@ -3183,6 +3183,117 @@
       "signal_time": "2026-09-07T14:05:00",
       "status": "ACTIVE",
       "setup_key": "KEI|SELL|CONTINUATION|2026-09-07T14:05:00"
+    },
+    "ABCAPITAL|BUY|CONTINUATION|2026-09-07T14:10:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:10:00",
+      "signal_price": 403.25,
+      "rvol": 1.0584553213558734,
+      "rsi": 55.530040534717415,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "risk": {
+        "entry": 403.25,
+        "sl": 402.1224689557222,
+        "risk": 1.1275310442778164,
+        "t1": 404.9412965664167,
+        "t2": 406.06882761069454,
+        "t3": 407.19635865497236
+      },
+      "symbol": "ABCAPITAL",
+      "score": 72,
+      "grade": "WATCH",
+      "ltp": 403.25,
+      "signal_time": "2026-09-07T14:10:00",
+      "status": "ACTIVE",
+      "setup_key": "ABCAPITAL|BUY|CONTINUATION|2026-09-07T14:10:00"
+    },
+    "ADANIGREEN|SELL|CONTINUATION|2026-09-07T14:10:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:10:00",
+      "signal_price": 1294.7,
+      "rvol": 1.517615714967393,
+      "rsi": 38.20855490646877,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 1294.7,
+        "sl": 1297.3792934369283,
+        "risk": 2.6792934369282193,
+        "t1": 1290.6810598446077,
+        "t2": 1288.0017664076795,
+        "t3": 1285.3224729707513
+      },
+      "symbol": "ADANIGREEN",
+      "score": 88,
+      "grade": "A",
+      "ltp": 1294.7,
+      "signal_time": "2026-09-07T14:10:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIGREEN|SELL|CONTINUATION|2026-09-07T14:10:00"
+    },
+    "SHRIRAMFIN|SELL|CONTINUATION|2026-09-07T14:10:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:10:00",
+      "signal_price": 1034.0,
+      "rvol": 1.2777917157583514,
+      "rsi": 43.70288167867671,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 1,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 1034.0,
+        "sl": 1037.7815513094986,
+        "risk": 3.7815513094985818,
+        "t1": 1028.327673035752,
+        "t2": 1024.5461217262537,
+        "t3": 1020.764570416755
+      },
+      "symbol": "SHRIRAMFIN",
+      "score": 75,
+      "grade": "WATCH",
+      "ltp": 1034.0,
+      "signal_time": "2026-09-07T14:10:00",
+      "status": "ACTIVE",
+      "setup_key": "SHRIRAMFIN|SELL|CONTINUATION|2026-09-07T14:10:00"
     }
   }
 }
