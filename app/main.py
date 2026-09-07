@@ -32,6 +32,24 @@ def now():
     return datetime.now(IST)
 
 
+def format_signal_time(value):
+    """Convert a candle timestamp to a readable IST display string."""
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        text = str(value)
+        try:
+            dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        except ValueError:
+            return text
+
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=IST)
+
+    dt = dt.astimezone(IST)
+    return dt.strftime("%d %b %Y, %I:%M %p IST")
+
+
 def ltp_batch(dhan, ids):
     if not ids:
         return {}
@@ -98,7 +116,7 @@ def scan(dhan, state, ts):
                 "security_id": item["security_id"],
                 "direction": result["direction"],
                 "setup": result["setup"],
-                "signal_time": result["candle_time"],
+                "signal_time": format_signal_time(result["candle_time"]),
                 "signal_price": result["signal_price"],
                 "score": score,
                 "grade": grade,
@@ -175,11 +193,11 @@ def scan(dhan, state, ts):
                         state,
                         symbol,
                         signal["direction"],
-                        signal["signal_time"],
+                        ts,
                     )
 
                 state["signals"][k] = signal
-                record_alert(state, signal)
+                record_alert(state, signal, ts)
                 changed = True
 
                 LOG.info(
