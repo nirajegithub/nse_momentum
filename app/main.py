@@ -109,8 +109,15 @@ def scan(dhan, state, ts):
                 "regime": result["regime"],
             }
 
-            # Apply alert quality/cooldown/reversal filters first.
-            allowed, reason = alert_allowed(state, signal)
+            # The state.py alert filter requires the current timestamp
+            # and the Settings object.
+            allowed, reason = alert_allowed(
+                state,
+                signal,
+                ts,
+                SETTINGS,
+            )
+
             if not allowed:
                 LOG.info(
                     "%s | ALERT SUPPRESSED | %s",
@@ -119,14 +126,13 @@ def scan(dhan, state, ts):
                 )
                 continue
 
-            # Live quote is preferred for the alert price. If unavailable,
-            # use the latest completed 5-minute candle close already returned
-            # by the historical API. This keeps alert testing independent of
-            # the separate live-quote endpoint.
-            q = ltp_batch(dhan, [item["security_id"]]).get(
-                str(item["security_id"]),
-                {},
-            )
+            # Prefer live LTP. If the separate quote endpoint does not
+            # return an LTP, use the completed 5M candle close.
+            q = ltp_batch(
+                dhan,
+                [item["security_id"]],
+            ).get(str(item["security_id"]), {})
+
             ltp = q.get("last_price", q.get("ltp"))
 
             if ltp is not None:
@@ -153,11 +159,13 @@ def scan(dhan, state, ts):
                 )
                 continue
 
-            # Send first. Only after Telegram succeeds do we change the
-            # previous active signal to REVERSED. This prevents state
-            # corruption when Telegram delivery fails.
+            # Send first. Change the previous active signal only after
+            # Telegram successfully accepts the new alert.
             if send(signal_message(signal)):
-                previous = active_signal_for_symbol(state, symbol)
+                previous = active_signal_for_symbol(
+                    state,
+                    symbol,
+                )
 
                 if (
                     previous
