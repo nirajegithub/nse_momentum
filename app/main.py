@@ -35,11 +35,16 @@ def now():
 def ltp_batch(dhan, ids):
     if not ids:
         return {}
+
     response = dhan.dhan.ohlc_data(
         securities={
-            "NSE_EQ": [int(x) if str(x).isdigit() else str(x) for x in ids]
+            "NSE_EQ": [
+                int(x) if str(x).isdigit() else str(x)
+                for x in ids
+            ]
         }
     )
+
     data = response.get("data", response) if isinstance(response, dict) else {}
     block = data.get("NSE_EQ", {}) if isinstance(data, dict) else {}
     return block if isinstance(block, dict) else {}
@@ -48,6 +53,7 @@ def ltp_batch(dhan, ids):
 def create_universe(dhan, state):
     if state["universe"]:
         return
+
     state["universe"] = build_universe(dhan)
     save(state)
     LOG.info("Universe size: %d", len(state["universe"]))
@@ -59,6 +65,7 @@ def scan(dhan, state, ts):
 
     for item in state["universe"]:
         symbol = item["symbol"]
+
         try:
             df5 = add_indicators(
                 dhan.intraday_df(
@@ -69,6 +76,7 @@ def scan(dhan, state, ts):
                 ),
                 SETTINGS.rvol_lookback,
             )
+
             df15 = add_indicators(
                 dhan.intraday_df(
                     item["security_id"],
@@ -85,7 +93,7 @@ def scan(dhan, state, ts):
 
             score, grade = score_signal(result["regime"], result)
 
-            s = {
+            signal = {
                 "symbol": symbol,
                 "security_id": item["security_id"],
                 "direction": result["direction"],
@@ -101,66 +109,77 @@ def scan(dhan, state, ts):
                 "regime": result["regime"],
             }
 
-            # Alert gate: this is where noise is reduced.
-            allowed, reason = alert_allowed(state, s, ts, SETTINGS)
+            # Apply alert quality/cooldown/reversal filters first.
+            allowed, reason = alert_allowed(state, signal)
             if not allowed:
                 LOG.info(
-                    "%s | ALERT SUPPRESSED | direction=%s | setup=%s | score=%s | rvol=%.2f | reason=%s",
+                    "%s | ALERT SUPPRESSED | %s",
                     symbol,
-                    s["direction"],
-                    s["setup"],
-                    score,
-                    s["rvol"],
                     reason,
                 )
                 continue
 
+            # Live quote is preferred for the alert price. If unavailable,
+            # use the latest completed 5-minute candle close already returned
+            # by the historical API. This keeps alert testing independent of
+            # the separate live-quote endpoint.
             q = ltp_batch(dhan, [item["security_id"]]).get(
-                str(item["security_id"]), {}
+                str(item["security_id"]),
+                {},
             )
             ltp = q.get("last_price", q.get("ltp"))
-            if ltp is None:
-                LOG.info("%s | ALERT SUPPRESSED | LTP unavailable", symbol)
-                continue
 
-            s["ltp"] = float(ltp)
-            k = key(symbol, s["direction"], s["setup"], s["signal_time"])
+            if ltp is not None:
+                signal["ltp"] = float(ltp)
+            else:
+                signal["ltp"] = float(result["signal_price"])
+                LOG.info(
+                    "%s | LTP unavailable | using 5M close %.2f",
+                    symbol,
+                    signal["ltp"],
+                )
+
+            k = key(
+                symbol,
+                signal["direction"],
+                signal["setup"],
+                signal["signal_time"],
+            )
 
             if k in state["signals"]:
-                continue
-
-            active = active_signal_for_symbol(state, symbol)
-            if active and active.get("direction") == s["direction"]:
                 LOG.info(
-                    "%s | ALERT SUPPRESSED | same-direction active signal",
+                    "%s | ALERT SUPPRESSED | duplicate signal",
                     symbol,
                 )
                 continue
 
-            # Confirmed opposite direction = reversal.
-            if active and active.get("direction") != s["direction"]:
-                reverse_active_signal(state, symbol, s["direction"], ts)
-                LOG.info(
-                    "%s | REVERSAL | %s -> %s | score=%s | rvol=%.2f",
-                    symbol,
-                    active.get("direction"),
-                    s["direction"],
-                    score,
-                    s["rvol"],
-                )
+            # Send first. Only after Telegram succeeds do we change the
+            # previous active signal to REVERSED. This prevents state
+            # corruption when Telegram delivery fails.
+            if send(signal_message(signal)):
+                previous = active_signal_for_symbol(state, symbol)
 
-            if send(signal_message(s)):
-                state["signals"][k] = s
-                record_alert(state, s, ts)
+                if (
+                    previous
+                    and previous.get("direction") != signal["direction"]
+                ):
+                    reverse_active_signal(
+                        state,
+                        symbol,
+                        signal["direction"],
+                        signal["signal_time"],
+                    )
+
+                state["signals"][k] = signal
+                record_alert(state, signal)
                 changed = True
+
                 LOG.info(
-                    "%s | ALERT SENT | direction=%s | setup=%s | score=%s | grade=%s | rvol=%.2f",
+                    "%s | ALERT SENT | %s | score=%s | RVOL=%.2f",
                     symbol,
-                    s["direction"],
-                    s["setup"],
-                    score,
-                    grade,
-                    s["rvol"],
+                    signal["direction"],
+                    signal["score"],
+                    signal["rvol"],
                 )
 
         except Exception:
@@ -172,30 +191,44 @@ def scan(dhan, state, ts):
 
 def monitor(dhan, state, ts):
     active = [
-        s for s in state["signals"].values()
+        s
+        for s in state["signals"].values()
         if s.get("status") == "ACTIVE"
     ]
+
     if not active:
         return
 
-    quotes = ltp_batch(dhan, [s["security_id"] for s in active])
+    quotes = ltp_batch(
+        dhan,
+        [s["security_id"] for s in active],
+    )
+
     changed = False
 
     for s in active:
         q = quotes.get(str(s["security_id"]), {})
         px = q.get("last_price", q.get("ltp"))
+
         if px is None:
             continue
 
         px = float(px)
         reason = None
+
         if s["direction"] == "BUY" and px <= s["risk"]["sl"]:
             reason = "Stop loss reached"
+
         if s["direction"] == "SELL" and px >= s["risk"]["sl"]:
             reason = "Stop loss reached"
 
         if reason and send(
-            exit_message(s, px, reason, ts.strftime("%H:%M:%S"))
+            exit_message(
+                s,
+                px,
+                reason,
+                ts.strftime("%H:%M:%S"),
+            )
         ):
             s["status"] = "EXITED"
             s["exit_price"] = px
@@ -209,15 +242,22 @@ def monitor(dhan, state, ts):
 
 def summary(dhan, state, ts):
     active = [
-        s for s in state["signals"].values()
+        s
+        for s in state["signals"].values()
         if s.get("status") == "ACTIVE"
     ]
-    quotes = ltp_batch(dhan, [s["security_id"] for s in active])
+
+    quotes = ltp_batch(
+        dhan,
+        [s["security_id"] for s in active],
+    )
+
     prices = {}
 
     for s in active:
         q = quotes.get(str(s["security_id"]), {})
         px = q.get("last_price", q.get("ltp"))
+
         if px is not None:
             s["status"] = "CLOSED_EOD"
             s["exit_price"] = float(px)
@@ -226,11 +266,14 @@ def summary(dhan, state, ts):
             prices[s["symbol"]] = float(px)
 
     send(build_summary(state, prices))
-    save({"date": "", "universe": [], "signals": {}, "alert_state": {}})
+    save({"date": "", "universe": [], "signals": {}})
 
 
 def main():
-    logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO")
+    )
+
     ts = now()
     action = os.getenv("SCANNER_ACTION", "auto").lower()
     hhmm = ts.hour * 100 + ts.minute
@@ -247,14 +290,24 @@ def main():
         return
 
     if not state["universe"]:
-        LOG.warning("Universe missing; refusing to scan")
+        LOG.warning(
+            "Universe missing; refusing to scan"
+        )
         return
 
-    if action == "scan" or (action == "auto" and 925 <= hhmm <= 1505):
+    if action == "scan" or (
+        action == "auto" and 925 <= hhmm <= 1505
+    ):
         scan(dhan, state, ts)
-    elif action == "monitor" or (action == "auto" and 1510 <= hhmm <= 1525):
+
+    elif action == "monitor" or (
+        action == "auto" and 1510 <= hhmm <= 1525
+    ):
         monitor(dhan, state, ts)
-    elif action == "summary" or (action == "auto" and hhmm == 1530):
+
+    elif action == "summary" or (
+        action == "auto" and hhmm == 1530
+    ):
         summary(dhan, state, ts)
 
 
