@@ -4959,6 +4959,117 @@
       "signal_time": "2026-09-07T15:00:00",
       "status": "ACTIVE",
       "setup_key": "VEDL|SELL|CONTINUATION|2026-09-07T15:00:00"
+    },
+    "ADANIENSOL|SELL|CONTINUATION|2026-09-07T15:05:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T15:05:00",
+      "signal_price": 1391.4,
+      "rvol": 4.87112206267082,
+      "rsi": 38.03909388631365,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 1391.4,
+        "sl": 1394.6280587022384,
+        "risk": 3.228058702238286,
+        "t1": 1386.5579119466427,
+        "t2": 1383.3298532444044,
+        "t3": 1380.101794542166
+      },
+      "symbol": "ADANIENSOL",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 1391.4,
+      "signal_time": "2026-09-07T15:05:00",
+      "status": "ACTIVE",
+      "setup_key": "ADANIENSOL|SELL|CONTINUATION|2026-09-07T15:05:00"
+    },
+    "GMDCLTD|SELL|CONTINUATION|2026-09-07T15:05:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T15:05:00",
+      "signal_price": 557.6,
+      "rvol": 3.274750721482019,
+      "rsi": 40.96672802922716,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 557.6,
+        "sl": 559.1627395603529,
+        "risk": 1.5627395603528385,
+        "t1": 555.2558906594708,
+        "t2": 553.6931510991179,
+        "t3": 552.1304115387651
+      },
+      "symbol": "GMDCLTD",
+      "score": 90,
+      "grade": "A+",
+      "ltp": 557.6,
+      "signal_time": "2026-09-07T15:05:00",
+      "status": "ACTIVE",
+      "setup_key": "GMDCLTD|SELL|CONTINUATION|2026-09-07T15:05:00"
+    },
+    "SYRMA|BUY|BREAKOUT|2026-09-07T15:05:00": {
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "candle_time": "2026-09-07T15:05:00",
+      "signal_price": 1631.7,
+      "rvol": 3.0243975132411767,
+      "rsi": 71.95092158739422,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "risk": {
+        "entry": 1631.7,
+        "sl": 1613.0539250582785,
+        "risk": 18.64607494172151,
+        "t1": 1659.6691124125823,
+        "t2": 1678.3151873543038,
+        "t3": 1696.9612622960253
+      },
+      "symbol": "SYRMA",
+      "score": 100,
+      "grade": "A+",
+      "ltp": 1631.7,
+      "signal_time": "2026-09-07T15:05:00",
+      "status": "ACTIVE",
+      "setup_key": "SYRMA|BUY|BREAKOUT|2026-09-07T15:05:00"
     }
   }
 }
