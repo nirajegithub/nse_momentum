@@ -3442,6 +3442,43 @@
       "signal_time": "2026-09-07T14:15:00",
       "status": "ACTIVE",
       "setup_key": "RBLBANK|BUY|CONTINUATION|2026-09-07T14:15:00"
+    },
+    "KARURVYSYA|SELL|CONTINUATION|2026-09-07T14:20:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:20:00",
+      "signal_price": 344.75,
+      "rvol": 0.42479951226375273,
+      "rsi": 40.72329646696964,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "NEUTRAL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 344.75,
+        "sl": 345.83810568398184,
+        "risk": 1.088105683981837,
+        "t1": 343.1178414740273,
+        "t2": 342.0297357900454,
+        "t3": 340.9416301060636
+      },
+      "symbol": "KARURVYSYA",
+      "score": 70,
+      "grade": "WATCH",
+      "ltp": 344.75,
+      "signal_time": "2026-09-07T14:20:00",
+      "status": "ACTIVE",
+      "setup_key": "KARURVYSYA|SELL|CONTINUATION|2026-09-07T14:20:00"
     }
   }
 }
