@@ -445,5 +445,43 @@
       "prev_trading_day": "2026-09-04"
     }
   ],
-  "signals": {}
+  "signals": {
+    "FINCABLES|SELL|CONTINUATION|2026-09-07T09:30:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T09:30:00",
+      "signal_price": 1217.4,
+      "rvol": 0.6597676467846176,
+      "rsi": 41.389526028057,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 1217.4,
+        "sl": 1227.6755116353995,
+        "risk": 10.275511635399425,
+        "t1": 1201.9867325469008,
+        "t2": 1191.7112209115016,
+        "t3": 1181.435709276102
+      },
+      "symbol": "FINCABLES",
+      "score": 80,
+      "grade": "A",
+      "ltp": 1217.4,
+      "signal_time": "2026-09-07T09:30:00",
+      "status": "ACTIVE",
+      "setup_key": "FINCABLES|SELL|CONTINUATION|2026-09-07T09:30:00"
+    }
+  }
 }
