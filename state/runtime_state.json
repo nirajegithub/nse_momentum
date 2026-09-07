@@ -2702,6 +2702,43 @@
       "signal_time": "2026-09-07T13:45:00",
       "status": "ACTIVE",
       "setup_key": "KEI|SELL|CONTINUATION|2026-09-07T13:45:00"
+    },
+    "BHARATFORG|SELL|CONTINUATION|2026-09-07T13:50:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T13:50:00",
+      "signal_price": 1941.0,
+      "rvol": 0.935754143080996,
+      "rsi": 44.37768300148322,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 1941.0,
+        "sl": 1945.9625411606394,
+        "risk": 4.9625411606393754,
+        "t1": 1933.556188259041,
+        "t2": 1928.5936470984016,
+        "t3": 1923.6311059377622
+      },
+      "symbol": "BHARATFORG",
+      "score": 70,
+      "grade": "WATCH",
+      "ltp": 1941.0,
+      "signal_time": "2026-09-07T13:50:00",
+      "status": "ACTIVE",
+      "setup_key": "BHARATFORG|SELL|CONTINUATION|2026-09-07T13:50:00"
     }
   }
 }
