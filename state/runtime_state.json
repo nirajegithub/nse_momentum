@@ -1185,6 +1185,117 @@
       "signal_time": "2026-09-07T10:35:00",
       "status": "ACTIVE",
       "setup_key": "RRKABEL|SELL|BREAKOUT|2026-09-07T10:35:00"
+    },
+    "ABCAPITAL|SELL|CONTINUATION|2026-09-07T10:40:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T10:40:00",
+      "signal_price": 400.5,
+      "rvol": 0.5266341836764277,
+      "rsi": 32.25607475136226,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "NEUTRAL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 400.5,
+        "sl": 402.2538909431812,
+        "risk": 1.7538909431812044,
+        "t1": 397.8691635852282,
+        "t2": 396.115272642047,
+        "t3": 394.3613816988658
+      },
+      "symbol": "ABCAPITAL",
+      "score": 70,
+      "grade": "WATCH",
+      "ltp": 400.5,
+      "signal_time": "2026-09-07T10:40:00",
+      "status": "ACTIVE",
+      "setup_key": "ABCAPITAL|SELL|CONTINUATION|2026-09-07T10:40:00"
+    },
+    "GESHIP|BUY|CONTINUATION|2026-09-07T10:40:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T10:40:00",
+      "signal_price": 1369.3,
+      "rvol": 0.7168725204629333,
+      "rsi": 58.71042853107048,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "NEUTRAL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "risk": {
+        "entry": 1369.3,
+        "sl": 1359.963431402161,
+        "risk": 9.336568597839005,
+        "t1": 1383.3048528967583,
+        "t2": 1392.6414214945976,
+        "t3": 1401.9779900924364
+      },
+      "symbol": "GESHIP",
+      "score": 70,
+      "grade": "WATCH",
+      "ltp": 1369.3,
+      "signal_time": "2026-09-07T10:40:00",
+      "status": "ACTIVE",
+      "setup_key": "GESHIP|BUY|CONTINUATION|2026-09-07T10:40:00"
+    },
+    "KARURVYSYA|SELL|CONTINUATION|2026-09-07T10:40:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T10:40:00",
+      "signal_price": 347.0,
+      "rvol": 0.36647155449644864,
+      "rsi": 34.3550255041675,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 347.0,
+        "sl": 348.62971956567736,
+        "risk": 1.6297195656773624,
+        "t1": 344.5554206514839,
+        "t2": 342.9257010858066,
+        "t3": 341.2959815201292
+      },
+      "symbol": "KARURVYSYA",
+      "score": 80,
+      "grade": "A",
+      "ltp": 347.0,
+      "signal_time": "2026-09-07T10:40:00",
+      "status": "ACTIVE",
+      "setup_key": "KARURVYSYA|SELL|CONTINUATION|2026-09-07T10:40:00"
     }
   }
 }
