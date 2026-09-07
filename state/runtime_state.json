@@ -3701,6 +3701,117 @@
       "signal_time": "2026-09-07T14:25:00",
       "status": "ACTIVE",
       "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-07T14:25:00"
+    },
+    "GRANULES|BUY|CONTINUATION|2026-09-07T14:30:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:30:00",
+      "signal_price": 869.1,
+      "rvol": 2.836318378272396,
+      "rsi": 57.22649839672046,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "NEUTRAL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "risk": {
+        "entry": 869.1,
+        "sl": 865.5635870148394,
+        "risk": 3.5364129851606094,
+        "t1": 874.4046194777409,
+        "t2": 877.9410324629016,
+        "t3": 881.4774454480621
+      },
+      "symbol": "GRANULES",
+      "score": 80,
+      "grade": "A",
+      "ltp": 869.1,
+      "signal_time": "2026-09-07T14:30:00",
+      "status": "ACTIVE",
+      "setup_key": "GRANULES|BUY|CONTINUATION|2026-09-07T14:30:00"
+    },
+    "KEI|SELL|CONTINUATION|2026-09-07T14:30:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:30:00",
+      "signal_price": 4682.5,
+      "rvol": 0.9975974093805495,
+      "rsi": 35.09488737482117,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 4682.5,
+        "sl": 4697.972087012652,
+        "risk": 15.472087012652082,
+        "t1": 4659.291869481021,
+        "t2": 4643.81978246837,
+        "t3": 4628.347695455717
+      },
+      "symbol": "KEI",
+      "score": 80,
+      "grade": "A",
+      "ltp": 4682.5,
+      "signal_time": "2026-09-07T14:30:00",
+      "status": "ACTIVE",
+      "setup_key": "KEI|SELL|CONTINUATION|2026-09-07T14:30:00"
+    },
+    "WELCORP|SELL|CONTINUATION|2026-09-07T14:30:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:30:00",
+      "signal_price": 2603.3,
+      "rvol": 0.7529181990944186,
+      "rsi": 29.12635539232987,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "risk": {
+        "entry": 2603.3,
+        "sl": 2622.097087147518,
+        "risk": 18.797087147517686,
+        "t1": 2575.1043692787234,
+        "t2": 2556.307282131206,
+        "t3": 2537.510194983688
+      },
+      "symbol": "WELCORP",
+      "score": 80,
+      "grade": "A",
+      "ltp": 2603.3,
+      "signal_time": "2026-09-07T14:30:00",
+      "status": "ACTIVE",
+      "setup_key": "WELCORP|SELL|CONTINUATION|2026-09-07T14:30:00"
     }
   }
 }
