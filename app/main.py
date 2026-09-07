@@ -225,18 +225,22 @@ def monitor(dhan, state, ts):
     if not active:
         return
 
-    quotes = ltp_batch(
-        dhan,
-        [s["security_id"] for s in active],
-    )
+    quote_ids = [
+        s.get("security_id")
+        for s in active
+        if s.get("security_id") is not None
+    ]
+    quotes = ltp_batch(dhan, quote_ids) if quote_ids else {}
 
     changed = False
 
     for s in active:
-        q = quotes.get(str(s["security_id"]), {})
+        security_id = s.get("security_id")
+        q = quotes.get(str(security_id), {}) if security_id is not None else {}
         px = q.get("last_price", q.get("ltp"))
 
         if px is None:
+            # Legacy signals have no security_id; do not crash the monitor.
             continue
 
         px = float(px)
@@ -273,26 +277,45 @@ def summary(dhan, state, ts):
         if s.get("status") == "ACTIVE"
     ]
 
-    quotes = ltp_batch(
-        dhan,
-        [s["security_id"] for s in active],
-    )
+    # Backward compatibility: older ACTIVE signals may not have a
+    # security_id because that field was added in a later version.
+    # Never let one legacy signal crash the EOD summary.
+    quote_ids = [
+        s.get("security_id")
+        for s in active
+        if s.get("security_id") is not None
+    ]
+    quotes = ltp_batch(dhan, quote_ids) if quote_ids else {}
 
     prices = {}
 
     for s in active:
-        q = quotes.get(str(s["security_id"]), {})
+        security_id = s.get("security_id")
+        q = quotes.get(str(security_id), {}) if security_id is not None else {}
         px = q.get("last_price", q.get("ltp"))
 
+        # Legacy signals: use the last stored price if live LTP is
+        # unavailable. This keeps the summary useful and prevents a crash.
+        if px is None:
+            px = s.get("ltp", s.get("signal_price"))
+
         if px is not None:
+            px = float(px)
             s["status"] = "CLOSED_EOD"
-            s["exit_price"] = float(px)
+            s["exit_price"] = px
             s["exit_time"] = ts.isoformat()
             s["exit_reason"] = "END_OF_DAY"
-            prices[s["symbol"]] = float(px)
+            prices[s["symbol"]] = px
 
     send(build_summary(state, prices))
-    save({"date": "", "universe": [], "signals": {}})
+
+    # Reset the day while preserving the newer alert_state schema.
+    save({
+        "date": "",
+        "universe": [],
+        "signals": {},
+        "alert_state": {},
+    })
 
 
 def main():
