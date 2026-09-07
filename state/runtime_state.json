@@ -3109,6 +3109,80 @@
       "signal_time": "2026-09-07T14:00:00",
       "status": "ACTIVE",
       "setup_key": "NETWEB|SELL|CONTINUATION|2026-09-07T14:00:00"
+    },
+    "CGPOWER|BUY|CONTINUATION|2026-09-07T14:05:00": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:05:00",
+      "signal_price": 905.05,
+      "rvol": 1.1662278694114792,
+      "rsi": 64.93355983045552,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 4,
+        "bearish_points": 1
+      },
+      "risk": {
+        "entry": 905.05,
+        "sl": 901.6009416724331,
+        "risk": 3.4490583275668314,
+        "t1": 910.2235874913501,
+        "t2": 913.6726458189171,
+        "t3": 917.1217041464838
+      },
+      "symbol": "CGPOWER",
+      "score": 72,
+      "grade": "WATCH",
+      "ltp": 905.05,
+      "signal_time": "2026-09-07T14:05:00",
+      "status": "ACTIVE",
+      "setup_key": "CGPOWER|BUY|CONTINUATION|2026-09-07T14:05:00"
+    },
+    "KEI|SELL|CONTINUATION|2026-09-07T14:05:00": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "candle_time": "2026-09-07T14:05:00",
+      "signal_price": 4688.5,
+      "rvol": 0.6464425172091777,
+      "rsi": 34.64577354543377,
+      "ema_ok": true,
+      "vwap_ok": true,
+      "rsi_ok": true,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "risk": {
+        "entry": 4688.5,
+        "sl": 4705.58428281263,
+        "risk": 17.08428281262968,
+        "t1": 4662.8735757810555,
+        "t2": 4645.789292968426,
+        "t3": 4628.705010155796
+      },
+      "symbol": "KEI",
+      "score": 70,
+      "grade": "WATCH",
+      "ltp": 4688.5,
+      "signal_time": "2026-09-07T14:05:00",
+      "status": "ACTIVE",
+      "setup_key": "KEI|SELL|CONTINUATION|2026-09-07T14:05:00"
     }
   }
 }
