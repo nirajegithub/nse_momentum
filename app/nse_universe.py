@@ -504,8 +504,8 @@ def fetch_volume_gainer_symbols(session):
 
 
 def refresh_dynamic_volume_gainers(dhan, state, ts):
-    """Refresh Volume Gainers every 15 minutes and append new stocks to today's universe."""
-    minute_bucket = ts.replace(minute=(ts.minute // 15) * 15, second=0, microsecond=0)
+    """Refresh Volume Gainers every 10 minutes and append new stocks to today's universe."""
+    minute_bucket = ts.replace(minute=(ts.minute // 10) * 10, second=0, microsecond=0)
     bucket_key = minute_bucket.isoformat()
     if state.get("volume_gainers_last_refresh") == bucket_key:
         return False
