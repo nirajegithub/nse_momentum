@@ -518,6 +518,39 @@
         "bearish_points": 0
       },
       "ltp": 331.95
+    },
+    "RBLBANK|BUY|BREAKOUT|08 Sep 2026, 02:15 PM IST": {
+      "symbol": "RBLBANK",
+      "security_id": "18391",
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "signal_time": "08 Sep 2026, 02:15 PM IST",
+      "signal_price": 418.8,
+      "score": 98,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 418.8,
+        "sl": 417.5925356615281,
+        "risk": 1.2074643384719366,
+        "t1": 420.6111965077079,
+        "t2": 421.81866084617985,
+        "t3": 423.0261251846518
+      },
+      "rvol": 1.588958780916351,
+      "rsi": 66.9938497626259,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "ltp": 418.8
     }
   },
   "alert_state": {
@@ -544,6 +577,14 @@
       "rvol": 1.0878288586569798,
       "alerted_at": "2026-09-08T14:05:31.460193+05:30",
       "candle_time": "08 Sep 2026, 02:10 PM IST"
+    },
+    "RBLBANK": {
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "score": 98,
+      "rvol": 1.588958780916351,
+      "alerted_at": "2026-09-08T14:10:31.091978+05:30",
+      "candle_time": "08 Sep 2026, 02:15 PM IST"
     }
   }
 }
