@@ -417,7 +417,7 @@ def build_universe(dhan: DhanClient, as_of_date=None):
                 volume_rejected += 1
 
                 LOG.info(
-                    "%s rejected: volume %d < %d",
+                    "%s rejected: volume %d <= %d",
                     symbol,
                     prev_volume,
                     SETTINGS.min_prev_volume,
