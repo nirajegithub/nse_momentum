@@ -419,6 +419,49 @@
       "prev_trading_day": "2026-09-07"
     }
   ],
-  "signals": {},
-  "alert_state": {}
+  "signals": {
+    "ATHERENERG|SELL|BREAKOUT|08 Sep 2026, 11:15 AM IST": {
+      "symbol": "ATHERENERG",
+      "security_id": "757645",
+      "direction": "SELL",
+      "setup": "BREAKOUT",
+      "signal_time": "08 Sep 2026, 11:15 AM IST",
+      "signal_price": 1578.5,
+      "score": 82,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1578.5,
+        "sl": 1586.1873447649962,
+        "risk": 7.687344764996169,
+        "t1": 1566.9689828525056,
+        "t2": 1559.2816380875097,
+        "t3": 1551.5942933225133
+      },
+      "rvol": 1.114021716874616,
+      "rsi": 34.71522615921678,
+      "regime": {
+        "direction": "SELL",
+        "structure": "NEUTRAL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "ltp": 1578.5
+    }
+  },
+  "alert_state": {
+    "ATHERENERG": {
+      "direction": "SELL",
+      "setup": "BREAKOUT",
+      "score": 82,
+      "rvol": 1.114021716874616,
+      "alerted_at": "2026-09-08T11:10:32.792889+05:30",
+      "candle_time": "08 Sep 2026, 11:15 AM IST"
+    }
+  }
 }
