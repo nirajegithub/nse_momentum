@@ -9,7 +9,7 @@ from .calendar import is_nse_trading_day
 from .config import SETTINGS
 from .dhan_client import DhanClient
 from .indicators import add_indicators
-from .nse_universe import build_universe
+from .nse_universe import build_universe, refresh_dynamic_volume_gainers
 from .scoring import score_signal
 from .state import (
     load,
@@ -333,6 +333,12 @@ def main():
 
     dhan = DhanClient()
     state = load(ts.date())
+
+    # Refresh NSE Volume Gainers every 10 minutes and append newly
+    # qualifying stocks to today's existing universe.
+    if action != "universe" and hhmm >= 925 and hhmm <= 1505:
+        refresh_dynamic_volume_gainers(dhan, state, ts)
+        save(state)
 
     if action == "universe":
         create_universe(dhan, state)
