@@ -485,6 +485,39 @@
         "bearish_points": 5
       },
       "ltp": 335.5
+    },
+    "NTPC|BUY|CONTINUATION|08 Sep 2026, 02:10 PM IST": {
+      "symbol": "NTPC",
+      "security_id": "11630",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "08 Sep 2026, 02:10 PM IST",
+      "signal_price": 331.95,
+      "score": 82,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 331.95,
+        "sl": 330.82622428385315,
+        "risk": 1.123775716146838,
+        "t1": 333.63566357422025,
+        "t2": 334.7594392903671,
+        "t3": 335.8832150065139
+      },
+      "rvol": 1.0878288586569798,
+      "rsi": 59.35777932772304,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "ltp": 331.95
     }
   },
   "alert_state": {
@@ -503,6 +536,14 @@
       "rvol": 1.9953777800957693,
       "alerted_at": "2026-09-08T11:50:35.755349+05:30",
       "candle_time": "08 Sep 2026, 11:55 AM IST"
+    },
+    "NTPC": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 82,
+      "rvol": 1.0878288586569798,
+      "alerted_at": "2026-09-08T14:05:31.460193+05:30",
+      "candle_time": "08 Sep 2026, 02:10 PM IST"
     }
   }
 }
