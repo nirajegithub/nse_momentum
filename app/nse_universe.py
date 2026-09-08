@@ -412,7 +412,7 @@ def build_universe(dhan: DhanClient, as_of_date=None):
             # Previous-day volume filter
             # -------------------------------------------------
 
-            if prev_volume < SETTINGS.min_prev_volume:
+            if prev_volume <= SETTINGS.min_prev_volume:
 
                 volume_rejected += 1
 
