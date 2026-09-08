@@ -17,6 +17,7 @@ LOG = logging.getLogger(__name__)
 
 BASE = "https://www.nseindia.com"
 URL = f"{BASE}/api/heatmap-symbols"
+VOLUME_GAINERS_URL = f"{BASE}/api/live-analysis-volume-gainers"
 
 INDEXES = {
     "M50": "NIFTY500MOMENTM50",
@@ -40,6 +41,8 @@ IST = ZoneInfo("Asia/Kolkata")
 NSE_TIMEOUT = 45
 NSE_RETRIES = 3
 NSE_RETRY_DELAY = 5
+VOLUME_GAINER_MIN_VOLUME = 200_000
+VOLUME_GAINER_MIN_PRICE = 350.0
 
 
 def extract_symbols(payload):
@@ -392,12 +395,12 @@ def build_universe(dhan: DhanClient, as_of_date=None):
             # Price filter
             # -------------------------------------------------
 
-            if close_price <= SETTINGS.min_price:
+            if close_price < SETTINGS.min_price:
 
                 price_rejected += 1
 
                 LOG.info(
-                    "%s rejected: price %.2f <= %.2f",
+                    "%s rejected: price %.2f < %.2f",
                     symbol,
                     close_price,
                     SETTINGS.min_price,
@@ -409,12 +412,12 @@ def build_universe(dhan: DhanClient, as_of_date=None):
             # Previous-day volume filter
             # -------------------------------------------------
 
-            if prev_volume <= SETTINGS.min_prev_volume:
+            if prev_volume < SETTINGS.min_prev_volume:
 
                 volume_rejected += 1
 
                 LOG.info(
-                    "%s rejected: volume %d <= %d",
+                    "%s rejected: volume %d < %d",
                     symbol,
                     prev_volume,
                     SETTINGS.min_prev_volume,
@@ -476,3 +479,71 @@ def build_universe(dhan: DhanClient, as_of_date=None):
     )
 
     return result
+
+
+def fetch_volume_gainer_symbols(session):
+    """Fetch current NSE Volume Gainers and return symbols passing filters."""
+    response = nse_get(session, VOLUME_GAINERS_URL)
+    payload = response.json()
+    rows = payload.get("data", [])
+    if not isinstance(rows, list):
+        raise RuntimeError("NSE Volume Gainers response did not contain a data list")
+
+    symbols = []
+    for row in rows:
+        try:
+            symbol = str(row.get("symbol") or "").strip().upper()
+            price = float(row.get("ltp") or 0)
+            volume = float(row.get("volume") or 0)
+            if symbol and volume > VOLUME_GAINER_MIN_VOLUME and price >= VOLUME_GAINER_MIN_PRICE:
+                symbols.append(symbol)
+        except (TypeError, ValueError):
+            continue
+
+    return sorted(set(symbols))
+
+
+def refresh_dynamic_volume_gainers(dhan, state, ts):
+    """Refresh Volume Gainers every 15 minutes and append new stocks to today's universe."""
+    minute_bucket = ts.replace(minute=(ts.minute // 15) * 15, second=0, microsecond=0)
+    bucket_key = minute_bucket.isoformat()
+    if state.get("volume_gainers_last_refresh") == bucket_key:
+        return False
+
+    session = create_nse_session()
+    try:
+        symbols = fetch_volume_gainer_symbols(session)
+    except Exception as exc:
+        LOG.warning("Volume Gainers refresh failed: %s", exc)
+        return False
+
+    existing = {str(item.get("symbol", "")).upper() for item in state.get("universe", [])}
+    new_symbols = [symbol for symbol in symbols if symbol not in existing]
+    if not new_symbols:
+        state["volume_gainers_last_refresh"] = bucket_key
+        LOG.info("Volume Gainers refresh | eligible=%d | new=0 | universe=%d", len(symbols), len(existing))
+        return True
+
+    mapping = dhan.build_symbol_map(new_symbols)
+    added = 0
+    for symbol in new_symbols:
+        meta = mapping.get(symbol)
+        if not meta:
+            LOG.warning("Volume Gainer missing Dhan security_id: %s", symbol)
+            continue
+        state.setdefault("universe", []).append({
+            "symbol": symbol,
+            **meta,
+            "indices": ["VOLUME_GAINERS"],
+            "membership_count": 1,
+            "universe_source": "NSE_VOLUME_GAINERS",
+            "volume_gainer_added_at": ts.isoformat(),
+        })
+        added += 1
+
+    state["volume_gainers_last_refresh"] = bucket_key
+    LOG.info(
+        "Volume Gainers refresh | eligible=%d | new=%d | added=%d | universe=%d",
+        len(symbols), len(new_symbols), added, len(state.get("universe", [])),
+    )
+    return True
