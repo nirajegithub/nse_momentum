@@ -584,6 +584,39 @@
         "bearish_points": 0
       },
       "ltp": 1385.0
+    },
+    "BHEL|SELL|CONTINUATION|08 Sep 2026, 03:10 PM IST": {
+      "symbol": "BHEL",
+      "security_id": "438",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "08 Sep 2026, 03:10 PM IST",
+      "signal_price": 422.35,
+      "score": 82,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 422.35,
+        "sl": 423.8660147639074,
+        "risk": 1.5160147639073784,
+        "t1": 420.07597785413896,
+        "t2": 418.5599630902316,
+        "t3": 417.0439483263242
+      },
+      "rvol": 1.0684138869979578,
+      "rsi": 42.48813626174213,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 422.35
     }
   },
   "alert_state": {
@@ -626,6 +659,14 @@
       "rvol": 3.1889262428687855,
       "alerted_at": "2026-09-08T14:15:33.997655+05:30",
       "candle_time": "08 Sep 2026, 02:20 PM IST"
+    },
+    "BHEL": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 82,
+      "rvol": 1.0684138869979578,
+      "alerted_at": "2026-09-08T15:05:28.058181+05:30",
+      "candle_time": "08 Sep 2026, 03:10 PM IST"
     }
   }
 }
