@@ -69,7 +69,12 @@ def ltp_batch(dhan, ids):
 
 
 def create_universe(dhan, state):
+    LOG.info(
+        "CREATE_UNIVERSE START | existing universe=%d",
+        len(state.get("universe", [])),
+    )
     if state["universe"]:
+        LOG.info("CREATE_UNIVERSE SKIPPED | universe already exists")
         return
 
     state["universe"] = build_universe(dhan)
@@ -327,6 +332,13 @@ def main():
     action = os.getenv("SCANNER_ACTION", "auto").lower()
     hhmm = ts.hour * 100 + ts.minute
 
+    LOG.info(
+        "MAIN START | date=%s | time=%s | action=%s",
+        ts.date(),
+        ts.strftime("%H:%M:%S"),
+        action,
+    )
+    
     if not is_nse_trading_day(ts.date()):
         LOG.info("Not an NSE trading day")
         return
@@ -334,6 +346,13 @@ def main():
     dhan = DhanClient()
     state = load(ts.date())
 
+    LOG.info(
+        "STATE LOADED | date=%s | universe=%d | signals=%d",
+        state.get("date"),
+        len(state.get("universe", [])),
+        len(state.get("signals", {})),
+    )
+    
     # Refresh NSE Volume Gainers every 10 minutes and append newly
     # qualifying stocks to today's existing universe.
     if action != "universe" and hhmm >= 925 and hhmm <= 1505:
