@@ -551,6 +551,39 @@
         "bearish_points": 0
       },
       "ltp": 418.8
+    },
+    "GESHIP|BUY|BREAKOUT|08 Sep 2026, 02:20 PM IST": {
+      "symbol": "GESHIP",
+      "security_id": "13776",
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "signal_time": "08 Sep 2026, 02:20 PM IST",
+      "signal_price": 1385.0,
+      "score": 90,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1385.0,
+        "sl": 1380.0588329585426,
+        "risk": 4.941167041457447,
+        "t1": 1392.4117505621862,
+        "t2": 1397.3529176036436,
+        "t3": 1402.294084645101
+      },
+      "rvol": 3.1889262428687855,
+      "rsi": 60.36241510760565,
+      "regime": {
+        "direction": "BUY",
+        "structure": "NEUTRAL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "ltp": 1385.0
     }
   },
   "alert_state": {
@@ -585,6 +618,14 @@
       "rvol": 1.588958780916351,
       "alerted_at": "2026-09-08T14:10:31.091978+05:30",
       "candle_time": "08 Sep 2026, 02:15 PM IST"
+    },
+    "GESHIP": {
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "score": 90,
+      "rvol": 3.1889262428687855,
+      "alerted_at": "2026-09-08T14:15:33.997655+05:30",
+      "candle_time": "08 Sep 2026, 02:20 PM IST"
     }
   }
 }
