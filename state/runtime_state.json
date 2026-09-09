@@ -542,9 +542,57 @@
       "membership_count": 1,
       "universe_source": "NSE_VOLUME_GAINERS",
       "volume_gainer_added_at": "2026-09-09T09:30:49.769421+05:30"
+    },
+    {
+      "symbol": "GOACARBON",
+      "security_id": "14687",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:40:32.651515+05:30"
+    },
+    {
+      "symbol": "NOVARTIND",
+      "security_id": "9007",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:40:32.651515+05:30"
+    },
+    {
+      "symbol": "VIJAYA",
+      "security_id": "5585",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:40:32.651515+05:30"
+    },
+    {
+      "symbol": "WESTLIFE",
+      "security_id": "11580",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:40:32.651515+05:30"
     }
   ],
   "signals": {},
   "alert_state": {},
-  "volume_gainers_last_refresh": "2026-09-09T09:30:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-09T09:40:00+05:30"
 }
