@@ -626,6 +626,18 @@
       "membership_count": 1,
       "universe_source": "NSE_VOLUME_GAINERS",
       "volume_gainer_added_at": "2026-09-09T11:50:46.201843+05:30"
+    },
+    {
+      "symbol": "INDNIPPON",
+      "security_id": "4747",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T14:40:32.206287+05:30"
     }
   ],
   "signals": {
@@ -755,5 +767,5 @@
       "candle_time": "09 Sep 2026, 02:40 PM IST"
     }
   },
-  "volume_gainers_last_refresh": "2026-09-09T14:30:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-09T14:40:00+05:30"
 }
