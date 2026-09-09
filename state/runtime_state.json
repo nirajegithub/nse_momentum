@@ -661,6 +661,39 @@
         "bearish_points": 0
       },
       "ltp": 541.0
+    },
+    "RRKABEL|SELL|CONTINUATION|09 Sep 2026, 01:45 PM IST": {
+      "symbol": "RRKABEL",
+      "security_id": "18566",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "09 Sep 2026, 01:45 PM IST",
+      "signal_price": 2419.8,
+      "score": 82,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 2419.8,
+        "sl": 2431.928181897141,
+        "risk": 12.128181897140621,
+        "t1": 2401.607727154289,
+        "t2": 2389.479545257149,
+        "t3": 2377.351363360008
+      },
+      "rvol": 1.0081364572100775,
+      "rsi": 33.497187644069015,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 2419.8
     }
   },
   "alert_state": {
@@ -671,7 +704,15 @@
       "rvol": 1.3946897607602504,
       "alerted_at": "2026-09-09T11:15:33.535005+05:30",
       "candle_time": "09 Sep 2026, 11:20 AM IST"
+    },
+    "RRKABEL": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 82,
+      "rvol": 1.0081364572100775,
+      "alerted_at": "2026-09-09T13:40:41.431155+05:30",
+      "candle_time": "09 Sep 2026, 01:45 PM IST"
     }
   },
-  "volume_gainers_last_refresh": "2026-09-09T13:30:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-09T13:40:00+05:30"
 }
