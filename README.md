@@ -6,7 +6,7 @@ V1 universe: **NIFTY500MOMENTM50 (M50)** + **NIFTY200MOMENTM30 (M30)** only.
 - 09:22: check NSE trading day; fetch M50/M30; merge + deduplicate; map Dhan security IDs; apply Price > ₹250 and previous-day Volume > 500,000; save fixed daily universe.
 - 09:25 through 15:05: every 5 minutes, scan only today's universe for new A/A+ signals.
 - 15:10 through 15:25: monitor existing active signals only.
-- 15:30: finalise summary; exited signals use actual exit price, active-at-EOD signals use final LTP; clear runtime state.
+- 15:30: finalise summary; exited signals use actual exit price, active-at-EOD signals use final LTP; back up the completed state to `state/backups/runtime_state_YYYY-MM-DD.json`, then clear runtime state.
 - Saturday, Sunday and dates in `data/nse_holidays.json` are skipped.
 
 ## Data

@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 STATE = Path(__file__).resolve().parents[1] / "state" / "runtime_state.json"
+BACKUP_DIR = STATE.parent / "backups"
 
 
 def blank(day):
@@ -37,6 +38,19 @@ def load(day):
 def save(s):
     STATE.parent.mkdir(parents=True, exist_ok=True)
     STATE.write_text(json.dumps(s, indent=2, ensure_ascii=False))
+
+
+def backup_and_clear(s, day):
+    """Back up the completed day's state, then clear the live state file."""
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    backup = BACKUP_DIR / f"runtime_state_{day.isoformat()}.json"
+    backup.write_text(json.dumps(s, indent=2, ensure_ascii=False))
+    save({
+        "date": "",
+        "universe": [],
+        "signals": {},
+        "alert_state": {},
+    })
 
 
 def key(symbol, direction, setup, candle):

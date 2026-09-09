@@ -14,6 +14,7 @@ from .scoring import score_signal
 from .state import (
     load,
     save,
+    backup_and_clear,
     key,
     alert_allowed,
     record_alert,
@@ -314,13 +315,7 @@ def summary(dhan, state, ts):
 
     send(build_summary(state, prices))
 
-    # Reset the day while preserving the newer alert_state schema.
-    save({
-        "date": "",
-        "universe": [],
-        "signals": {},
-        "alert_state": {},
-    })
+    backup_and_clear(state, ts.date())
 
 
 def main():
