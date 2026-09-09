@@ -441,7 +441,7 @@ def success_message(
 
         "<b>Next:</b>\n"
         "09:22 → Build Universe\n"
-        "09:25 → Scanner starts"
+        "09:30 → Scanner starts"
     )
 
 

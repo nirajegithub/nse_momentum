@@ -69,6 +69,16 @@ def ltp_batch(dhan, ids):
     return block if isinstance(block, dict) else {}
 
 
+def completed_candles(df, ts, interval):
+    if df.empty:
+        return df
+
+    cutoff = ts.replace(second=0, microsecond=0)
+    if interval == 1:
+        return df[df.index < cutoff]
+    return df[df.index <= cutoff]
+
+
 def create_universe(dhan, state):
     LOG.info(
         "CREATE_UNIVERSE START | existing universe=%d",
@@ -91,27 +101,49 @@ def scan(dhan, state, ts):
         symbol = item["symbol"]
 
         try:
-            df5 = add_indicators(
-                dhan.intraday_df(
-                    item["security_id"],
-                    5,
-                    start.strftime("%Y-%m-%d"),
-                    ts.strftime("%Y-%m-%d"),
+            df1 = completed_candles(
+                add_indicators(
+                    dhan.intraday_df(
+                        item["security_id"],
+                        1,
+                        start.strftime("%Y-%m-%d"),
+                        ts.strftime("%Y-%m-%d"),
+                    ),
+                    SETTINGS.rvol_lookback,
                 ),
-                SETTINGS.rvol_lookback,
+                ts,
+                1,
             )
 
-            df15 = add_indicators(
-                dhan.intraday_df(
-                    item["security_id"],
-                    15,
-                    start.strftime("%Y-%m-%d"),
-                    ts.strftime("%Y-%m-%d"),
+            df5 = completed_candles(
+                add_indicators(
+                    dhan.intraday_df(
+                        item["security_id"],
+                        5,
+                        start.strftime("%Y-%m-%d"),
+                        ts.strftime("%Y-%m-%d"),
+                    ),
+                    SETTINGS.rvol_lookback,
                 ),
-                SETTINGS.rvol_lookback,
+                ts,
+                5,
             )
 
-            result = evaluate(df5, df15)
+            df15 = completed_candles(
+                add_indicators(
+                    dhan.intraday_df(
+                        item["security_id"],
+                        15,
+                        start.strftime("%Y-%m-%d"),
+                        ts.strftime("%Y-%m-%d"),
+                    ),
+                    SETTINGS.rvol_lookback,
+                ),
+                ts,
+                15,
+            )
+
+            result = evaluate(df1, df5, df15)
             if not result:
                 continue
 
@@ -122,14 +154,18 @@ def scan(dhan, state, ts):
                 "security_id": item["security_id"],
                 "direction": result["direction"],
                 "setup": result["setup"],
-                "signal_time": format_signal_time(result["candle_time"]),
+                "signal_time": format_signal_time(result["entry_candle_time"]),
                 "signal_price": result["signal_price"],
                 "score": score,
                 "grade": grade,
                 "status": "ACTIVE",
                 "risk": result["risk"],
                 "rvol": result["rvol"],
+                "entry_rvol": result["entry_rvol"],
                 "rsi": result["rsi"],
+                "atr": result["atr"],
+                "risk_atr_ratio": result["risk_atr_ratio"],
+                "max_entry": result["max_entry"],
                 "regime": result["regime"],
             }
 
@@ -169,6 +205,20 @@ def scan(dhan, state, ts):
                     signal["ltp"],
                 )
 
+            allowed, reason = alert_allowed(
+                state,
+                signal,
+                ts,
+                SETTINGS,
+            )
+            if not allowed:
+                LOG.info(
+                    "%s | ALERT SUPPRESSED | %s",
+                    symbol,
+                    reason,
+                )
+                continue
+
             k = key(
                 symbol,
                 signal["direction"],
@@ -200,6 +250,7 @@ def scan(dhan, state, ts):
                         symbol,
                         signal["direction"],
                         ts,
+                        signal.get("ltp"),
                     )
 
                 state["signals"][k] = signal
@@ -258,6 +309,20 @@ def monitor(dhan, state, ts):
         if s["direction"] == "SELL" and px >= s["risk"]["sl"]:
             reason = "Stop loss reached"
 
+        if (
+            reason is None
+            and s["direction"] == "BUY"
+            and px >= s["risk"]["t1"]
+        ):
+            reason = "Target 1 reached"
+
+        if (
+            reason is None
+            and s["direction"] == "SELL"
+            and px <= s["risk"]["t1"]
+        ):
+            reason = "Target 1 reached"
+
         if reason and send(
             exit_message(
                 s,
@@ -270,6 +335,10 @@ def monitor(dhan, state, ts):
             s["exit_price"] = px
             s["exit_time"] = ts.isoformat()
             s["exit_reason"] = reason
+            risk = float(s["risk"]["risk"])
+            entry = float(s["risk"]["entry"])
+            move = px - entry if s["direction"] == "BUY" else entry - px
+            s["r_multiple"] = move / risk if risk > 0 else None
             changed = True
 
     if changed:
@@ -333,6 +402,12 @@ def main():
         ts.strftime("%H:%M:%S"),
         action,
     )
+
+    scan_window = (
+        SETTINGS.scan_start_hhmm
+        <= hhmm
+        <= SETTINGS.scan_end_hhmm
+    )
     
     if not is_nse_trading_day(ts.date()):
         LOG.info("Not an NSE trading day")
@@ -350,12 +425,18 @@ def main():
     
     # Refresh NSE Volume Gainers every 10 minutes and append newly
     # qualifying stocks to today's existing universe.
-    if action != "universe" and hhmm >= 925 and hhmm <= 1505:
+    if action != "universe" and scan_window:
         refresh_dynamic_volume_gainers(dhan, state, ts)
         save(state)
 
     if action == "universe":
         create_universe(dhan, state)
+        return
+
+    if action == "summary" or (
+        action == "auto" and hhmm == 1525
+    ):
+        summary(dhan, state, ts)
         return
 
     if not state["universe"]:
@@ -364,21 +445,21 @@ def main():
         )
         return
 
-    if action == "scan" or (
-        action == "auto" and 925 <= hhmm <= 1505
-    ):
+    if action in {"scan", "auto"} and scan_window:
+        monitor(dhan, state, ts)
         scan(dhan, state, ts)
+
+    elif action == "scan":
+        LOG.info(
+            "Scan skipped outside window %04d-%04d",
+            SETTINGS.scan_start_hhmm,
+            SETTINGS.scan_end_hhmm,
+        )
 
     elif action == "monitor" or (
         action == "auto" and 1510 <= hhmm <= 1525
     ):
         monitor(dhan, state, ts)
-
-    elif action == "summary" or (
-        action == "auto" and hhmm == 1530
-    ):
-        summary(dhan, state, ts)
-
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from .config import SETTINGS
 
 
@@ -153,15 +155,31 @@ def breakout(df, lookback=20):
     return None
 
 
-def evaluate(df5, df15):
+def breakout_level(df, direction, lookback=20):
+    """Return the completed-candle breakout level for a direction."""
+    if len(df) < lookback + 1:
+        return None
+
+    previous = df.iloc[-lookback - 1:-1]
+    if direction == "BUY":
+        return float(previous.high.max())
+    if direction == "SELL":
+        return float(previous.low.min())
+    return None
+
+
+def evaluate(df1, df5, df15):
     """
-    Evaluate a 5M trade setup using the 15M regime.
+    Evaluate a 1M entry trigger using a 5M setup and 15M regime.
 
     15M = regime / directional confirmation
-    5M  = trade entry
+    5M  = setup and risk structure
+    1M  = precise entry trigger
     """
 
     if (
+        len(df1) < SETTINGS.min_1m_candles
+        or
         len(df5) < SETTINGS.min_5m_candles
         or len(df15) < SETTINGS.min_15m_candles
     ):
@@ -173,6 +191,7 @@ def evaluate(df5, df15):
         return None
 
     c = df5.iloc[-1]
+    trigger = df1.iloc[-1]
     direction = r15["direction"]
 
     # 5M EMA confirmation
@@ -214,6 +233,34 @@ def evaluate(df5, df15):
     if not setup:
         return None
 
+    trigger_ema_ok = (
+        bool(trigger.ema9 > trigger.ema20)
+        if direction == "BUY"
+        else bool(trigger.ema9 < trigger.ema20)
+    )
+    trigger_vwap_ok = (
+        bool(trigger.close > trigger.vwap)
+        if direction == "BUY"
+        else bool(trigger.close < trigger.vwap)
+    )
+    trigger_rsi_ok = (
+        bool(trigger.rsi14 > 50 and trigger.rsi14 > trigger.rsi_ema9)
+        if direction == "BUY"
+        else bool(trigger.rsi14 < 50 and trigger.rsi14 < trigger.rsi_ema9)
+    )
+    previous_trigger = df1.iloc[-2]
+    trigger_break_ok = (
+        bool(trigger.close > previous_trigger.high)
+        if direction == "BUY"
+        else bool(trigger.close < previous_trigger.low)
+    )
+
+    if not all(
+        [trigger_ema_ok, trigger_vwap_ok, trigger_rsi_ok, trigger_break_ok]
+    ):
+        return None
+
+    entry = float(trigger.close)
     atr = float(c.atr14)
 
     if atr <= 0:
@@ -223,11 +270,11 @@ def evaluate(df5, df15):
     if direction == "BUY":
         swing = float(df5.low.tail(8).min())
         sl = swing - SETTINGS.atr_buffer * atr
-        risk = float(c.close - sl)
+        risk = float(entry - sl)
     else:
         swing = float(df5.high.tail(8).max())
         sl = swing + SETTINGS.atr_buffer * atr
-        risk = float(sl - c.close)
+        risk = float(sl - entry)
 
     # Invalid risk
     if risk <= 0:
@@ -237,7 +284,41 @@ def evaluate(df5, df15):
     if risk > SETTINGS.max_stop_atr * atr:
         return None
 
-    entry = float(c.close)
+    risk_atr_ratio = risk / atr
+    if risk_atr_ratio < SETTINGS.min_stop_atr:
+        return None
+
+    rvol = float(c.rvol) if c.rvol == c.rvol else 0.0
+    entry_rvol = (
+        float(trigger.rvol)
+        if trigger.rvol == trigger.rvol
+        else 0.0
+    )
+    if not math.isfinite(rvol) or rvol < 0:
+        return None
+    if (
+        not math.isfinite(entry_rvol)
+        or entry_rvol < SETTINGS.min_entry_rvol
+    ):
+        return None
+
+    max_entry = None
+    if setup == "BREAKOUT":
+        level = breakout_level(df5, direction)
+        if level is None:
+            return None
+        chase_distance = SETTINGS.max_entry_chase_atr * atr
+        max_entry = (
+            level + chase_distance
+            if direction == "BUY"
+            else level - chase_distance
+        )
+        if (
+            entry > max_entry
+            if direction == "BUY"
+            else entry < max_entry
+        ):
+            return None
 
     # Current V1 targets remain unchanged:
     # T1 = 1.5R
@@ -256,13 +337,19 @@ def evaluate(df5, df15):
         "direction": direction,
         "setup": setup,
         "candle_time": df5.index[-1].isoformat(),
+        "entry_candle_time": df1.index[-1].isoformat(),
         "signal_price": entry,
-        "rvol": (
-            float(c.rvol)
-            if c.rvol == c.rvol
-            else 0.0
-        ),
+        "rvol": rvol,
         "rsi": float(c.rsi14),
+        "entry_rsi": float(trigger.rsi14),
+        "entry_rvol": entry_rvol,
+        "atr": atr,
+        "risk_atr_ratio": risk_atr_ratio,
+        "max_entry": max_entry,
+        "entry_ema_ok": trigger_ema_ok,
+        "entry_vwap_ok": trigger_vwap_ok,
+        "entry_rsi_ok": trigger_rsi_ok,
+        "entry_break_ok": trigger_break_ok,
         "ema_ok": ema_ok,
         "vwap_ok": vwap_ok,
         "rsi_ok": rsi_ok,

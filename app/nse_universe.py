@@ -18,11 +18,18 @@ LOG = logging.getLogger(__name__)
 BASE = "https://www.nseindia.com"
 URL = f"{BASE}/api/heatmap-symbols"
 VOLUME_GAINERS_URL = f"{BASE}/api/live-analysis-volume-gainers"
+MOST_ACTIVE_URL = f"{BASE}/api/live-analysis-most-active-securities"
+VARIATIONS_URL = f"{BASE}/api/live-analysis-variations"
 
-INDEXES = {
-    "M50": "NIFTY500MOMENTM50",
-    "M30": "NIFTY200MOMENTM30",
-}
+# M50/M30 are intentionally disabled. These broader NSE sources are used for
+# discovery; Dhan daily liquidity filters still decide the final universe.
+NSE_UNIVERSE_SOURCES = (
+    ("MOST_ACTIVE_VOLUME", MOST_ACTIVE_URL, {"index": "volume"}, None),
+    ("MOST_ACTIVE_VALUE", MOST_ACTIVE_URL, {"index": "value"}, None),
+    ("NIFTY", VARIATIONS_URL, {"index": "gainers"}, "NIFTY"),
+    ("NIFTYNEXT50", VARIATIONS_URL, {"index": "gainers"}, "NIFTYNEXT50"),
+    ("FOSec", VARIATIONS_URL, {"index": "gainers"}, "FOSec"),
+)
 
 HEADERS = {
     "User-Agent": (
@@ -182,6 +189,23 @@ def nse_get(session, url, params=None):
     raise RuntimeError("NSE request failed after retries")
 
 
+def fetch_source_symbols(session, url, params, section=None):
+    response = nse_get(session, url, params=params)
+    payload = response.json()
+
+    if section is not None:
+        payload = payload.get(section, {})
+
+    symbols = extract_symbols(payload)
+    LOG.info(
+        "NSE source=%s params=%s returned %d symbols",
+        section or url,
+        params,
+        len(symbols),
+    )
+    return symbols
+
+
 def fetch_index(session, code):
 
     response = nse_get(
@@ -236,12 +260,8 @@ def build_universe(dhan: DhanClient, as_of_date=None):
 
     membership = defaultdict(set)
 
-    for name, code in INDEXES.items():
-
-        symbols = fetch_index(
-            session,
-            code,
-        )
+    for name, url, params, section in NSE_UNIVERSE_SOURCES:
+        symbols = fetch_source_symbols(session, url, params, section)
 
         LOG.info(
             "%s returned %d symbols",
@@ -493,8 +513,14 @@ def fetch_volume_gainer_symbols(session):
     for row in rows:
         try:
             symbol = str(row.get("symbol") or "").strip().upper()
-            price = float(row.get("ltp") or 0)
-            volume = float(row.get("volume") or 0)
+            price = float(row.get("ltp", row.get("lastPrice", 0)) or 0)
+            volume = float(
+                row.get(
+                    "volume",
+                    row.get("totalTradedVolume", row.get("quantityTraded", 0)),
+                )
+                or 0
+            )
             if symbol and volume > VOLUME_GAINER_MIN_VOLUME and price >= VOLUME_GAINER_MIN_PRICE:
                 symbols.append(symbol)
         except (TypeError, ValueError):
