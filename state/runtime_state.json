@@ -739,6 +739,39 @@
         "bearish_points": 0
       },
       "ltp": 2186.4
+    },
+    "GESHIP|BUY|CONTINUATION|09 Sep 2026, 02:55 PM IST": {
+      "symbol": "GESHIP",
+      "security_id": "13776",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "09 Sep 2026, 02:55 PM IST",
+      "signal_price": 1396.7,
+      "score": 82,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1396.7,
+        "sl": 1391.9080716699132,
+        "risk": 4.791928330086876,
+        "t1": 1403.8878924951305,
+        "t2": 1408.6798208252171,
+        "t3": 1413.4717491553042
+      },
+      "rvol": 1.1381378522467631,
+      "rsi": 62.54091421670846,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "ltp": 1396.7
     }
   },
   "alert_state": {
@@ -765,7 +798,15 @@
       "rvol": 301.92090395480227,
       "alerted_at": "2026-09-09T14:35:28.008680+05:30",
       "candle_time": "09 Sep 2026, 02:40 PM IST"
+    },
+    "GESHIP": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 82,
+      "rvol": 1.1381378522467631,
+      "alerted_at": "2026-09-09T14:50:32.462693+05:30",
+      "candle_time": "09 Sep 2026, 02:55 PM IST"
     }
   },
-  "volume_gainers_last_refresh": "2026-09-09T14:40:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-09T14:50:00+05:30"
 }
