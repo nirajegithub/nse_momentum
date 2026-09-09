@@ -805,6 +805,39 @@
         "bearish_points": 0
       },
       "ltp": 463.5
+    },
+    "BHARATFORG|SELL|CONTINUATION|09 Sep 2026, 03:05 PM IST": {
+      "symbol": "BHARATFORG",
+      "security_id": "422",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "09 Sep 2026, 03:05 PM IST",
+      "signal_price": 1975.7,
+      "score": 82,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1975.7,
+        "sl": 1982.8231548309125,
+        "risk": 7.123154830912426,
+        "t1": 1965.0152677536314,
+        "t2": 1957.892112922719,
+        "t3": 1950.7689580918066
+      },
+      "rvol": 1.1819527579326767,
+      "rsi": 39.793359284748284,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 1975.7
     }
   },
   "alert_state": {
@@ -847,7 +880,15 @@
       "rvol": 3.4455340577789557,
       "alerted_at": "2026-09-09T14:55:32.662161+05:30",
       "candle_time": "09 Sep 2026, 03:00 PM IST"
+    },
+    "BHARATFORG": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 82,
+      "rvol": 1.1819527579326767,
+      "alerted_at": "2026-09-09T15:00:43.907019+05:30",
+      "candle_time": "09 Sep 2026, 03:05 PM IST"
     }
   },
-  "volume_gainers_last_refresh": "2026-09-09T14:50:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-09T15:00:00+05:30"
 }
