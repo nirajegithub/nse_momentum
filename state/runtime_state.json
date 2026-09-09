@@ -694,6 +694,39 @@
         "bearish_points": 5
       },
       "ltp": 2419.8
+    },
+    "NOVARTIND|BUY|CONTINUATION|09 Sep 2026, 02:40 PM IST": {
+      "symbol": "NOVARTIND",
+      "security_id": "9007",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "09 Sep 2026, 02:40 PM IST",
+      "signal_price": 2186.4,
+      "score": 80,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 2186.4,
+        "sl": 2186.1504864475432,
+        "risk": 0.2495135524568468,
+        "t1": 2186.7742703286854,
+        "t2": 2187.023783881142,
+        "t3": 2187.273297433599
+      },
+      "rvol": 301.92090395480227,
+      "rsi": 82.1242252380164,
+      "regime": {
+        "direction": "BUY",
+        "structure": "NEUTRAL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "ltp": 2186.4
     }
   },
   "alert_state": {
@@ -712,6 +745,14 @@
       "rvol": 1.0081364572100775,
       "alerted_at": "2026-09-09T13:40:41.431155+05:30",
       "candle_time": "09 Sep 2026, 01:45 PM IST"
+    },
+    "NOVARTIND": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 80,
+      "rvol": 301.92090395480227,
+      "alerted_at": "2026-09-09T14:35:28.008680+05:30",
+      "candle_time": "09 Sep 2026, 02:40 PM IST"
     }
   },
   "volume_gainers_last_refresh": "2026-09-09T14:30:00+05:30"
