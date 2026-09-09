@@ -616,7 +616,50 @@
       "volume_gainer_added_at": "2026-09-09T10:20:33.030292+05:30"
     }
   ],
-  "signals": {},
-  "alert_state": {},
+  "signals": {
+    "HINDCOPPER|BUY|BREAKOUT|09 Sep 2026, 11:20 AM IST": {
+      "symbol": "HINDCOPPER",
+      "security_id": "17939",
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "signal_time": "09 Sep 2026, 11:20 AM IST",
+      "signal_price": 541.0,
+      "score": 85,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 541.0,
+        "sl": 536.5842235786238,
+        "risk": 4.415776421376222,
+        "t1": 547.6236646320643,
+        "t2": 552.0394410534406,
+        "t3": 556.4552174748168
+      },
+      "rvol": 1.3946897607602504,
+      "rsi": 65.31868805727665,
+      "regime": {
+        "direction": "BUY",
+        "structure": "NEUTRAL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": false,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "ltp": 541.0
+    }
+  },
+  "alert_state": {
+    "HINDCOPPER": {
+      "direction": "BUY",
+      "setup": "BREAKOUT",
+      "score": 85,
+      "rvol": 1.3946897607602504,
+      "alerted_at": "2026-09-09T11:15:33.535005+05:30",
+      "candle_time": "09 Sep 2026, 11:20 AM IST"
+    }
+  },
   "volume_gainers_last_refresh": "2026-09-09T11:10:00+05:30"
 }
