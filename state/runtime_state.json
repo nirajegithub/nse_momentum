@@ -446,8 +446,93 @@
       "prev_close": 2599.5,
       "prev_volume": 1053885,
       "prev_trading_day": "2026-09-08"
+    },
+    {
+      "symbol": "ASTEC",
+      "security_id": "17728",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
+    },
+    {
+      "symbol": "BIOCON",
+      "security_id": "11373",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
+    },
+    {
+      "symbol": "BLACKBUCK",
+      "security_id": "27144",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
+    },
+    {
+      "symbol": "COFORGE",
+      "security_id": "11543",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
+    },
+    {
+      "symbol": "GRAPHITE",
+      "security_id": "592",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
+    },
+    {
+      "symbol": "WABAG",
+      "security_id": "20188",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
+    },
+    {
+      "symbol": "WHEELS",
+      "security_id": "3766",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-09T09:25:31.196355+05:30"
     }
   ],
   "signals": {},
-  "alert_state": {}
+  "alert_state": {},
+  "volume_gainers_last_refresh": "2026-09-09T09:20:00+05:30"
 }
