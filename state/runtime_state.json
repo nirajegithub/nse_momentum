@@ -925,6 +925,43 @@
         "bearish_points": 5
       },
       "ltp": 1000.5
+    },
+    "HDFCBANK|BUY|CONTINUATION|10 Sep 2026, 12:59 PM IST": {
+      "symbol": "HDFCBANK",
+      "security_id": "1333",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:59 PM IST",
+      "signal_price": 693.0,
+      "score": 85,
+      "grade": "A",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 693.0,
+        "sl": 690.7866845647185,
+        "risk": 2.2133154352815154,
+        "t1": 696.3199731529223,
+        "t2": 698.5332885882037,
+        "t3": 700.7466040234854
+      },
+      "rvol": 1.2134773033631354,
+      "entry_rvol": 2.1980658159292683,
+      "rsi": 63.415349407392775,
+      "atr": 1.0532617411259957,
+      "risk_atr_ratio": 2.1013916568500415,
+      "max_entry": null,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "ltp": 693.0
     }
   },
   "alert_state": {
@@ -983,7 +1020,15 @@
       "rvol": 0.648286700146903,
       "alerted_at": "2026-09-10T12:45:31.865832+05:30",
       "candle_time": "10 Sep 2026, 12:44 PM IST"
+    },
+    "HDFCBANK": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 85,
+      "rvol": 1.2134773033631354,
+      "alerted_at": "2026-09-10T13:00:35.995015+05:30",
+      "candle_time": "10 Sep 2026, 12:59 PM IST"
     }
   },
-  "volume_gainers_last_refresh": "2026-09-10T12:50:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-10T13:00:00+05:30"
 }
