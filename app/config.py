@@ -5,7 +5,7 @@ import os
 @dataclass(frozen=True)
 class Settings:
     min_price: float = float(os.getenv("MIN_PRICE", "350"))
-    min_prev_volume: int = int(os.getenv("MIN_PREV_VOLUME", "200000"))
+    min_prev_volume: int = int(os.getenv("MIN_PREV_VOLUME", "100000"))
     atr_buffer: float = float(os.getenv("ATR_BUFFER", "0.25"))
     min_stop_atr: float = float(os.getenv("MIN_STOP_ATR", "0.5"))
     max_stop_atr: float = float(os.getenv("MAX_STOP_ATR", "2.5"))

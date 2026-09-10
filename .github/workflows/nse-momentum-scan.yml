@@ -23,7 +23,7 @@ jobs:
 
       DRY_RUN: "false"
       MIN_PRICE: "350"
-      MIN_PREV_VOLUME: "200000"
+      MIN_PREV_VOLUME: "100000"
 
       SCANNER_ACTION: "scan"
 
