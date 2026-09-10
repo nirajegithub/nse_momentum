@@ -35,7 +35,7 @@ def evaluate_setup(df5, daily_close, daily_volume, rejection=None):
         and current.rsi14 > previous.rsi14
         and current.close > current.vwap
         and current.close > current.ema20
-        and current.rvol >= SETTINGS.min_5m_rvol
+        and current.rvol > SETTINGS.min_5m_rvol
     )
     bearish = (
         current.ema9 < current.ema20
@@ -43,7 +43,7 @@ def evaluate_setup(df5, daily_close, daily_volume, rejection=None):
         and current.rsi14 < previous.rsi14
         and current.close < current.vwap
         and current.close < current.ema20
-        and current.rvol >= SETTINGS.min_5m_rvol
+        and current.rvol > SETTINGS.min_5m_rvol
     )
     if SETTINGS.require_ema_crossover:
         bullish = bullish and previous.ema9 <= previous.ema20

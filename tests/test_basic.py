@@ -18,7 +18,7 @@ def frame(direction="BUY"):
         "open": [500.0] * 21, "high": [520.0] * 21, "low": [510.0] * 21,
         "close": [518.0 if buy else 502.0] * 21, "volume": [200.0] * 20 + [400.0],
         "avg_volume": [200.0] * 21, "rvol": [1.0] * 20 + [2.0],
-        "ema9": [510.0 if buy else 490.0] * 21, "ema20": [500.0] * 21,
+        "ema9": [510.0 if buy else 500.0] * 21, "ema20": [500.0 if buy else 510.0] * 21,
         "vwap": [510.0 if buy else 510.0] * 21,
         "rsi14": [60.0 if buy else 40.0] * 20 + [65.0 if buy else 35.0],
     }, index=index)
@@ -62,7 +62,7 @@ def test_buy_rejects_non_rising_rsi_and_daily_boundaries():
 
 
 @pytest.mark.parametrize("field,value", [
-    ("ema9", 500), ("rsi14", 45), ("rsi14", 30), ("vwap", 502),
+    ("ema9", 510), ("rsi14", 45), ("rsi14", 30), ("vwap", 502),
     ("ema20", 502), ("rvol", 1.5),
 ])
 def test_sell_quality_rejects_each_core_filter(field, value):
