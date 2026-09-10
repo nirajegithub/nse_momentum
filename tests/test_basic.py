@@ -1,9 +1,12 @@
 import json
 from datetime import date, datetime
 
+import pandas as pd
+
 from app import state
 from app.calendar import is_nse_trading_day
 from app.nse_universe import extract_symbols, fetch_volume_gainer_symbols
+from app.strategy import evaluate
 
 
 class AlertSettings:
@@ -14,6 +17,75 @@ class AlertSettings:
     alert_reversal_min_score = 85
     alert_cooldown_minutes = 30
     alert_score_improvement = 10
+
+
+def _indicator_frame(direction):
+    index = pd.date_range(
+        "2026-09-10 09:30",
+        periods=30,
+        freq="min",
+        tz="Asia/Kolkata",
+    )
+    bullish = direction == "BUY"
+    frame = pd.DataFrame(
+        {
+            "open": [100.0] * 30,
+            "high": [101.0] * 30,
+            "low": [99.0] * 30,
+            "close": [100.0] * 30,
+            "volume": [1000.0] * 30,
+            "ema9": [120.0 if bullish else 80.0] * 30,
+            "ema20": [110.0 if bullish else 90.0] * 30,
+            "ema20_slope": [1.0 if bullish else -1.0] * 30,
+            "vwap": [100.0] * 30,
+            "rsi14": [65.0 if bullish else 35.0] * 30,
+            "rsi_ema9": [60.0 if bullish else 40.0] * 30,
+            "atr14": [4.5] * 30,
+            "rvol": [1.5] * 30,
+        },
+        index=index,
+    )
+
+    if bullish:
+        frame.loc[frame.index[:15], ["high", "low"]] = [
+            [101.0 + i * 0.2, 91.0 + i * 0.2]
+            for i in range(15)
+        ]
+        frame.loc[frame.index[15:], ["high", "low"]] = [
+            [111.0 + i * 0.2, 101.0 + i * 0.2]
+            for i in range(15)
+        ]
+    else:
+        frame.loc[frame.index[:15], ["high", "low"]] = [
+            [109.0 - i * 0.2, 99.0 - i * 0.2]
+            for i in range(15)
+        ]
+        frame.loc[frame.index[15:], ["high", "low"]] = [
+            [99.0 - i * 0.2, 89.0 - i * 0.2]
+            for i in range(15)
+        ]
+
+    frame.iloc[-1, frame.columns.get_loc("close")] = 110.0 if bullish else 90.0
+    frame.iloc[-1, frame.columns.get_loc("high")] = 111.0 if bullish else 91.0
+    frame.iloc[-1, frame.columns.get_loc("low")] = 109.0 if bullish else 89.0
+    frame.iloc[-2, frame.columns.get_loc("high")] = 109.0 if bullish else 92.0
+    frame.iloc[-2, frame.columns.get_loc("low")] = 108.0 if bullish else 91.0
+    frame.iloc[-1, frame.columns.get_loc("rvol")] = 1.5
+    return frame
+
+
+def test_strategy_emits_buy_and_sell_with_complete_required_data():
+    for direction in ("BUY", "SELL"):
+        df1 = _indicator_frame(direction)
+        df5 = _indicator_frame(direction)
+        df15 = _indicator_frame(direction)
+        df1.iloc[-1, df1.columns.get_loc("rvol")] = 1.5
+
+        result = evaluate(df1, df5, df15)
+
+        assert result is not None
+        assert result["direction"] == direction
+        assert result["setup"] == "CONTINUATION"
 
 def test_weekend_is_not_trading_day():
     assert not is_nse_trading_day(date(2026, 9, 5))
