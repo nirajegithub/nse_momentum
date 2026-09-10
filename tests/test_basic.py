@@ -1,10 +1,12 @@
 import json
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
 from app import state
 from app.calendar import is_nse_trading_day
+from app.main import completed_candles
 from app.nse_universe import extract_symbols, fetch_volume_gainer_symbols
 from app.strategy import evaluate
 
@@ -89,6 +91,28 @@ def test_strategy_emits_buy_and_sell_with_complete_required_data():
 
 def test_weekend_is_not_trading_day():
     assert not is_nse_trading_day(date(2026, 9, 5))
+
+
+def test_completed_candles_include_closed_higher_timeframes_only():
+    index = pd.date_range(
+        "2026-09-10 10:55",
+        periods=3,
+        freq="5min",
+        tz="Asia/Kolkata",
+    )
+    frame = pd.DataFrame({"close": [100, 101, 102]}, index=index)
+    scan_time = datetime(
+        2026,
+        9,
+        10,
+        11,
+        5,
+        30,
+        tzinfo=ZoneInfo("Asia/Kolkata"),
+    )
+
+    assert completed_candles(frame, scan_time, 5).index.tolist() == list(index[:3])
+    assert completed_candles(frame, scan_time, 1).index.tolist() == list(index[:2])
 
 
 def test_nse_gainer_payload_uses_last_price_and_total_volume(monkeypatch):

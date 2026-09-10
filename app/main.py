@@ -128,7 +128,9 @@ def completed_candles(df, ts, interval):
         return df
 
     cutoff = ts.replace(second=0, microsecond=0)
-    return df[df.index < cutoff]
+    if interval == 1:
+        return df[df.index < cutoff]
+    return df[df.index <= cutoff]
 
 
 def create_universe(dhan, state):
