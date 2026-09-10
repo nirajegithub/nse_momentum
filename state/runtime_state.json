@@ -649,9 +649,24 @@
       "membership_count": 1,
       "universe_source": "NSE_VOLUME_GAINERS",
       "volume_gainer_added_at": "2026-09-10T10:01:00.989606+05:30"
+    },
+    {
+      "symbol": "SUNDRMFAST",
+      "security_id": "3345",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T11:10:37.714133+05:30",
+      "prev_close": 1219.4,
+      "prev_volume": 99959,
+      "prev_trading_day": "2026-09-09"
     }
   ],
   "signals": {},
   "alert_state": {},
-  "volume_gainers_last_refresh": "2026-09-10T11:00:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-10T11:10:00+05:30"
 }
