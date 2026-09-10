@@ -1,6 +1,1058 @@
 {
   "date": "2026-09-10",
-  "universe": [],
-  "signals": {},
-  "alert_state": {}
+  "universe": [
+    {
+      "symbol": "APOLLOHOSP",
+      "security_id": "157",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 8967.0,
+      "prev_volume": 375525,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "ATHERENERG",
+      "security_id": "757645",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 2,
+      "prev_close": 1580.0,
+      "prev_volume": 1669212,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "AXISBANK",
+      "security_id": "5900",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 1238.5,
+      "prev_volume": 6679663,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "security_id": "317",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1039.3,
+      "prev_volume": 9244698,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "BHARTIARTL",
+      "security_id": "10604",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1814.7,
+      "prev_volume": 5574027,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "CHENNPETRO",
+      "security_id": "2049",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1604.4,
+      "prev_volume": 8400385,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "CIPLA",
+      "security_id": "694",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1363.1,
+      "prev_volume": 818773,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "COALINDIA",
+      "security_id": "20374",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 431.0,
+      "prev_volume": 22791556,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "DIVISLAB",
+      "security_id": "10940",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 9488.0,
+      "prev_volume": 385273,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "DLF",
+      "security_id": "14732",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 1,
+      "prev_close": 655.1,
+      "prev_volume": 17000327,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "ENRIN",
+      "security_id": "756871",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 1,
+      "prev_close": 3183.7,
+      "prev_volume": 276989,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "ESDS",
+      "security_id": "765553",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE",
+        "MOST_ACTIVE_VOLUME"
+      ],
+      "membership_count": 2,
+      "prev_close": 1438.85,
+      "prev_volume": 312887,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "GRAPHITE",
+      "security_id": "592",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 844.65,
+      "prev_volume": 36292952,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "HAL",
+      "security_id": "2303",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 2,
+      "prev_close": 5000.5,
+      "prev_volume": 1669937,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "HDFCBANK",
+      "security_id": "1333",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 687.1,
+      "prev_volume": 39173990,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "HINDCOPPER",
+      "security_id": "17939",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 532.3,
+      "prev_volume": 15102525,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "security_id": "1394",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1945.0,
+      "prev_volume": 1455307,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "HINDZINC",
+      "security_id": "1424",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 1,
+      "prev_close": 605.4,
+      "prev_volume": 6313228,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "INDIANB",
+      "security_id": "14309",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 856.65,
+      "prev_volume": 1463841,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "INDOMIM",
+      "security_id": "764301",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 984.55,
+      "prev_volume": 1874991,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "INFY",
+      "security_id": "1594",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 1035.0,
+      "prev_volume": 13530457,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "LT",
+      "security_id": "11483",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 3922.6,
+      "prev_volume": 2954721,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "MAZDOCK",
+      "security_id": "509",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 1,
+      "prev_close": 2408.8,
+      "prev_volume": 563605,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "MOLBIO",
+      "security_id": "764548",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1257.9,
+      "prev_volume": 9414132,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "MUTHOOTFIN",
+      "security_id": "23650",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 1,
+      "prev_close": 2815.0,
+      "prev_volume": 1027017,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "NATIONALUM",
+      "security_id": "6364",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 377.6,
+      "prev_volume": 9139475,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "NESTLEIND",
+      "security_id": "17963",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1393.0,
+      "prev_volume": 994121,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "NETWEB",
+      "security_id": "17433",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 4898.5,
+      "prev_volume": 1696353,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "NOVARTIND",
+      "security_id": "9007",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 2186.4,
+      "prev_volume": 785816,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "OIL",
+      "security_id": "17438",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 498.95,
+      "prev_volume": 2471923,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "REDINGTON",
+      "security_id": "14255",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE",
+        "MOST_ACTIVE_VOLUME"
+      ],
+      "membership_count": 2,
+      "prev_close": 378.05,
+      "prev_volume": 4173283,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "RELIANCE",
+      "security_id": "2885",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1279.0,
+      "prev_volume": 12152819,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "SBIN",
+      "security_id": "3045",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 1000.5,
+      "prev_volume": 7091386,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "SHAKTIPUMP",
+      "security_id": "25574",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE",
+        "MOST_ACTIVE_VOLUME"
+      ],
+      "membership_count": 2,
+      "prev_close": 467.8,
+      "prev_volume": 389496,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "TATACONSUM",
+      "security_id": "3432",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 1001.0,
+      "prev_volume": 973918,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "TCS",
+      "security_id": "11536",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTY"
+      ],
+      "membership_count": 1,
+      "prev_close": 2208.0,
+      "prev_volume": 3370071,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "VBL",
+      "security_id": "18921",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 2,
+      "prev_close": 407.0,
+      "prev_volume": 11284331,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "WHEELS",
+      "security_id": "3766",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 2400.6,
+      "prev_volume": 6608762,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "ZYDUSLIFE",
+      "security_id": "7929",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "NIFTYNEXT50"
+      ],
+      "membership_count": 1,
+      "prev_close": 1127.4,
+      "prev_volume": 1185373,
+      "prev_trading_day": "2026-09-09"
+    },
+    {
+      "symbol": "DBL",
+      "security_id": "18086",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "GMDCLTD",
+      "security_id": "5204",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "INDNIPPON",
+      "security_id": "4747",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "KOLTEPATIL",
+      "security_id": "15124",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "SREEL",
+      "security_id": "31837",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "TATAINVEST",
+      "security_id": "1621",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "BHAGYANGR",
+      "security_id": "20776",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "CORONA",
+      "security_id": "760254",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "POKARNA",
+      "security_id": "17651",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "VSSL",
+      "security_id": "27067",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "ITDC",
+      "security_id": "19299",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T10:01:00.989606+05:30"
+    },
+    {
+      "symbol": "SUNDRMFAST",
+      "security_id": "3345",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T11:10:37.714133+05:30",
+      "prev_close": 1219.4,
+      "prev_volume": 99959,
+      "prev_trading_day": "2026-09-09"
+    }
+  ],
+  "signals": {
+    "ATHERENERG|BUY|CONTINUATION|10 Sep 2026, 11:29 AM IST": {
+      "symbol": "ATHERENERG",
+      "security_id": "757645",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 11:29 AM IST",
+      "signal_price": 1638.7,
+      "score": 92,
+      "grade": "A+",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 1638.7,
+        "sl": 1627.650305187328,
+        "risk": 11.049694812671987,
+        "t1": 1655.274542219008,
+        "t2": 1666.32423703168,
+        "t3": 1677.373931844352
+      },
+      "rvol": 1.0933772596015485,
+      "entry_rvol": 4.758489711610885,
+      "rsi": 62.48151145597711,
+      "atr": 7.398779250688173,
+      "risk_atr_ratio": 1.4934483701002752,
+      "max_entry": null,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "ltp": 1638.7,
+      "exit_price": 1638.7,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "ENRIN|SELL|CONTINUATION|10 Sep 2026, 11:29 AM IST": {
+      "symbol": "ENRIN",
+      "security_id": "756871",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 11:29 AM IST",
+      "signal_price": 3170.0,
+      "score": 92,
+      "grade": "A+",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 3170.0,
+        "sl": 3180.84992709293,
+        "risk": 10.849927092930102,
+        "t1": 3153.7251093606046,
+        "t2": 3142.875182267675,
+        "t3": 3132.0252551747444
+      },
+      "rvol": 1.1314741035856575,
+      "entry_rvol": 1.9112627986348123,
+      "rsi": 40.95188538119627,
+      "atr": 6.999708371721643,
+      "risk_atr_ratio": 1.5500541617938095,
+      "max_entry": null,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 3170.0,
+      "exit_price": 3170.0,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "DIVISLAB|SELL|CONTINUATION|10 Sep 2026, 11:39 AM IST": {
+      "symbol": "DIVISLAB",
+      "security_id": "10940",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 11:39 AM IST",
+      "signal_price": 9413.0,
+      "score": 90,
+      "grade": "A+",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 9413.0,
+        "sl": 9440.701565845,
+        "risk": 27.701565845000005,
+        "t1": 9371.4476512325,
+        "t2": 9343.7460853875,
+        "t3": 9316.0445195425
+      },
+      "rvol": 0.5845972957084068,
+      "entry_rvol": 1.7772996234534697,
+      "rsi": 38.260797224564236,
+      "atr": 18.80626338000043,
+      "risk_atr_ratio": 1.4729968035255374,
+      "max_entry": null,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 9413.0,
+      "exit_price": 9413.0,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "INDOMIM|BUY|CONTINUATION|10 Sep 2026, 12:14 PM IST": {
+      "symbol": "INDOMIM",
+      "security_id": "764301",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:14 PM IST",
+      "signal_price": 1019.5,
+      "score": 92,
+      "grade": "A+",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 1019.5,
+        "sl": 1009.1352760936667,
+        "risk": 10.364723906333325,
+        "t1": 1035.0470858595,
+        "t2": 1045.4118097658334,
+        "t3": 1055.7765336721666
+      },
+      "rvol": 1.0503360290928105,
+      "entry_rvol": 1.2807713477707974,
+      "rsi": 63.75115687101897,
+      "atr": 4.658895625333238,
+      "risk_atr_ratio": 2.224716915737292,
+      "max_entry": null,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "ltp": 1019.5,
+      "exit_price": 1019.5,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "NOVARTIND|BUY|CONTINUATION|10 Sep 2026, 12:24 PM IST": {
+      "symbol": "NOVARTIND",
+      "security_id": "9007",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:24 PM IST",
+      "signal_price": 2579.7,
+      "score": 80,
+      "grade": "A",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 2579.7,
+        "sl": 2546.9532493397564,
+        "risk": 32.74675066024338,
+        "t1": 2628.820125990365,
+        "t2": 2661.5668766506083,
+        "t3": 2694.3136273108516
+      },
+      "rvol": 0.6867544087136929,
+      "entry_rvol": 4.5277361319340335,
+      "rsi": 67.00796212037505,
+      "atr": 21.787002640974286,
+      "risk_atr_ratio": 1.5030406522583037,
+      "max_entry": null,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "ltp": 2579.7,
+      "exit_price": 2579.7,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "POKARNA|SELL|CONTINUATION|10 Sep 2026, 12:34 PM IST": {
+      "symbol": "POKARNA",
+      "security_id": "17651",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:34 PM IST",
+      "signal_price": 779.4,
+      "score": 80,
+      "grade": "A",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 779.4,
+        "sl": 787.4157334400586,
+        "risk": 8.015733440058625,
+        "t1": 767.376399839912,
+        "t2": 759.3606663998535,
+        "t3": 751.3449329597947
+      },
+      "rvol": 0.9247148846703909,
+      "entry_rvol": 9.686338892249202,
+      "rsi": 44.009141251203,
+      "atr": 6.062933760234698,
+      "risk_atr_ratio": 1.322088242598305,
+      "max_entry": null,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 4
+      },
+      "ltp": 779.4,
+      "exit_price": 779.4,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "TATACONSUM|SELL|CONTINUATION|10 Sep 2026, 12:44 PM IST": {
+      "symbol": "TATACONSUM",
+      "security_id": "3432",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:44 PM IST",
+      "signal_price": 1000.5,
+      "score": 90,
+      "grade": "A+",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 1000.5,
+        "sl": 1004.2960066305124,
+        "risk": 3.796006630512352,
+        "t1": 994.8059900542314,
+        "t2": 991.0099834237192,
+        "t3": 987.2139767932067
+      },
+      "rvol": 0.648286700146903,
+      "entry_rvol": 1.3513982977245091,
+      "rsi": 43.59732548850589,
+      "atr": 1.5840265220495202,
+      "risk_atr_ratio": 2.396428707267365,
+      "max_entry": null,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 1000.5,
+      "exit_price": 1000.5,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    },
+    "HDFCBANK|BUY|CONTINUATION|10 Sep 2026, 12:59 PM IST": {
+      "symbol": "HDFCBANK",
+      "security_id": "1333",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:59 PM IST",
+      "signal_price": 693.0,
+      "score": 85,
+      "grade": "A",
+      "status": "CLOSED_EOD",
+      "risk": {
+        "entry": 693.0,
+        "sl": 690.7866845647185,
+        "risk": 2.2133154352815154,
+        "t1": 696.3199731529223,
+        "t2": 698.5332885882037,
+        "t3": 700.7466040234854
+      },
+      "rvol": 1.2134773033631354,
+      "entry_rvol": 2.1980658159292683,
+      "rsi": 63.415349407392775,
+      "atr": 1.0532617411259957,
+      "risk_atr_ratio": 2.1013916568500415,
+      "max_entry": null,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": false,
+        "structure_ok": true,
+        "bullish_points": 4,
+        "bearish_points": 0
+      },
+      "ltp": 693.0,
+      "exit_price": 693.0,
+      "exit_time": "2026-09-10T15:25:26.972124+05:30",
+      "exit_reason": "END_OF_DAY"
+    }
+  },
+  "alert_state": {
+    "ATHERENERG": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 92,
+      "rvol": 1.0933772596015485,
+      "alerted_at": "2026-09-10T11:30:42.267047+05:30",
+      "candle_time": "10 Sep 2026, 11:29 AM IST"
+    },
+    "ENRIN": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 92,
+      "rvol": 1.1314741035856575,
+      "alerted_at": "2026-09-10T11:30:42.267047+05:30",
+      "candle_time": "10 Sep 2026, 11:29 AM IST"
+    },
+    "DIVISLAB": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 90,
+      "rvol": 0.5845972957084068,
+      "alerted_at": "2026-09-10T11:40:33.939046+05:30",
+      "candle_time": "10 Sep 2026, 11:39 AM IST"
+    },
+    "INDOMIM": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 92,
+      "rvol": 1.0503360290928105,
+      "alerted_at": "2026-09-10T12:15:31.809199+05:30",
+      "candle_time": "10 Sep 2026, 12:14 PM IST"
+    },
+    "NOVARTIND": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 80,
+      "rvol": 0.6867544087136929,
+      "alerted_at": "2026-09-10T12:25:29.895060+05:30",
+      "candle_time": "10 Sep 2026, 12:24 PM IST"
+    },
+    "POKARNA": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 80,
+      "rvol": 0.9247148846703909,
+      "alerted_at": "2026-09-10T12:35:30.486821+05:30",
+      "candle_time": "10 Sep 2026, 12:34 PM IST"
+    },
+    "TATACONSUM": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 90,
+      "rvol": 0.648286700146903,
+      "alerted_at": "2026-09-10T12:45:31.865832+05:30",
+      "candle_time": "10 Sep 2026, 12:44 PM IST"
+    },
+    "HDFCBANK": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 85,
+      "rvol": 1.2134773033631354,
+      "alerted_at": "2026-09-10T13:00:35.995015+05:30",
+      "candle_time": "10 Sep 2026, 12:59 PM IST"
+    }
+  },
+  "volume_gainers_last_refresh": "2026-09-10T15:00:00+05:30"
 }
