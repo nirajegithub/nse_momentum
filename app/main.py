@@ -199,6 +199,24 @@ def scan(dhan, state, ts):
 
             result = evaluate(df1, df5, df15)
             if not result:
+                if (
+                    len(df1) < SETTINGS.min_1m_candles
+                    or len(df5) < SETTINGS.min_5m_candles
+                    or len(df15) < SETTINGS.min_15m_candles
+                ):
+                    LOG.warning(
+                        "%s | NO SIGNAL | insufficient candles | "
+                        "1M=%d/%d | 5M=%d/%d | 15M=%d/%d",
+                        symbol,
+                        len(df1),
+                        SETTINGS.min_1m_candles,
+                        len(df5),
+                        SETTINGS.min_5m_candles,
+                        len(df15),
+                        SETTINGS.min_15m_candles,
+                    )
+                    continue
+
                 LOG.info(
                     "%s | NO SIGNAL | no matching setup from 1M/5M/15M evaluation",
                     symbol,

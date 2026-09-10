@@ -551,12 +551,56 @@ def refresh_dynamic_volume_gainers(dhan, state, ts):
         return True
 
     mapping = dhan.build_symbol_map(new_symbols)
+    prev_day = previous_trading_day(ts.date())
+    from_date = prev_day.isoformat()
+    to_date = (prev_day + timedelta(days=1)).isoformat()
     added = 0
     for symbol in new_symbols:
         meta = mapping.get(symbol)
         if not meta:
             LOG.warning("Volume Gainer missing Dhan security_id: %s", symbol)
             continue
+
+        try:
+            df = dhan.historical_daily_df(
+                security_id=meta["security_id"],
+                from_date=from_date,
+                to_date=to_date,
+            )
+            prev_rows = df[df.index.date == prev_day] if not df.empty else df
+            if prev_rows.empty:
+                LOG.warning(
+                    "%s volume gainer rejected: no candle for %s",
+                    symbol,
+                    prev_day.isoformat(),
+                )
+                continue
+
+            candle = prev_rows.iloc[-1]
+            prev_close = float(candle["close"])
+            prev_volume = int(candle["volume"])
+
+            if prev_close < SETTINGS.min_price:
+                LOG.info(
+                    "%s volume gainer rejected: price %.2f < %.2f",
+                    symbol,
+                    prev_close,
+                    SETTINGS.min_price,
+                )
+                continue
+
+            if prev_volume <= SETTINGS.min_prev_volume:
+                LOG.info(
+                    "%s volume gainer rejected: volume %d <= %d",
+                    symbol,
+                    prev_volume,
+                    SETTINGS.min_prev_volume,
+                )
+                continue
+        except Exception:
+            LOG.exception("%s volume gainer daily filter failed", symbol)
+            continue
+
         state.setdefault("universe", []).append({
             "symbol": symbol,
             **meta,
@@ -564,6 +608,9 @@ def refresh_dynamic_volume_gainers(dhan, state, ts):
             "membership_count": 1,
             "universe_source": "NSE_VOLUME_GAINERS",
             "volume_gainer_added_at": ts.isoformat(),
+            "prev_close": prev_close,
+            "prev_volume": prev_volume,
+            "prev_trading_day": prev_day.isoformat(),
         })
         added += 1
 
