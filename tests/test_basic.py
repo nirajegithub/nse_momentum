@@ -6,7 +6,7 @@ import pandas as pd
 
 from app import state
 from app.calendar import is_nse_trading_day
-from app.main import completed_candles
+from app.main import completed_candles, live_ltp
 from app.nse_universe import extract_symbols, fetch_volume_gainer_symbols
 from app.strategy import evaluate
 
@@ -148,6 +148,25 @@ def test_completed_candles_include_closed_higher_timeframes_only():
 
     assert completed_candles(frame, scan_time, 5).index.tolist() == list(index[:3])
     assert completed_candles(frame, scan_time, 1).index.tolist() == list(index[:2])
+
+
+def test_live_ltp_rejects_missing_invalid_and_nonpositive_quotes():
+    class Dhan:
+        def __init__(self, quote):
+            self.quote = quote
+
+        def __getattr__(self, name):
+            if name == "dhan":
+                return self
+            raise AttributeError(name)
+
+        def ohlc_data(self, securities):
+            return {"data": {"NSE_EQ": {"123": self.quote}}}
+
+    assert live_ltp(Dhan({"last_price": 101.5}), "123") == 101.5
+    assert live_ltp(Dhan({}), "123") is None
+    assert live_ltp(Dhan({"last_price": "bad"}), "123") is None
+    assert live_ltp(Dhan({"last_price": 0}), "123") is None
 
 
 def test_nse_gainer_payload_uses_last_price_and_total_volume(monkeypatch):

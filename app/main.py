@@ -123,6 +123,16 @@ def ltp_batch(dhan, ids):
     return block if isinstance(block, dict) else {}
 
 
+def live_ltp(dhan, security_id):
+    quote = ltp_batch(dhan, [security_id]).get(str(security_id), {})
+    value = quote.get("last_price", quote.get("ltp"))
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return None
+    return value if value > 0 else None
+
+
 def completed_candles(df, ts, interval):
     if df.empty:
         return df
@@ -280,24 +290,14 @@ def scan(dhan, state, ts):
                 )
                 continue
 
-            # Prefer live LTP. If the separate quote endpoint does not
-            # return an LTP, use the completed 5M candle close.
-            q = ltp_batch(
-                dhan,
-                [item["security_id"]],
-            ).get(str(item["security_id"]), {})
-
-            ltp = q.get("last_price", q.get("ltp"))
-
-            if ltp is not None:
-                signal["ltp"] = float(ltp)
-            else:
-                signal["ltp"] = float(result["signal_price"])
+            ltp = live_ltp(dhan, item["security_id"])
+            if ltp is None:
                 LOG.info(
-                    "%s | LTP unavailable | using 5M close %.2f",
+                    "%s | POST_LTP_ALERT_GATE | live LTP unavailable | alert suppressed",
                     symbol,
-                    signal["ltp"],
                 )
+                continue
+            signal["ltp"] = ltp
 
             allowed, reason = alert_allowed(
                 state,
