@@ -19,6 +19,8 @@ def blank(day):
         "universe": [],
         "signals": {},
         "alert_state": {},
+        "pending_setups": {},
+        "processed_5m_candles": {},
     }
 
 
@@ -38,6 +40,8 @@ def load(day):
     s.setdefault("universe", [])
     s.setdefault("signals", {})
     s.setdefault("alert_state", {})
+    s.setdefault("pending_setups", {})
+    s.setdefault("processed_5m_candles", {})
     return s
 
 
@@ -74,6 +78,8 @@ def backup_and_clear(s, day):
         "universe": [],
         "signals": {},
         "alert_state": {},
+        "pending_setups": {},
+        "processed_5m_candles": {},
     })
 
 

@@ -2,154 +2,36 @@ from __future__ import annotations
 
 import os
 import requests
-
 from .config import DISCLAIMER
-
 
 TELEGRAM_API_URL = "https://api.telegram.org/bot"
 
-
 def send(text):
-    """
-    Send a Telegram message.
-
-    DRY_RUN=true:
-        Print message only.
-
-    DRY_RUN=false:
-        Send message to configured Telegram chat.
-    """
     full = text.rstrip() + "\n\n" + DISCLAIMER
-
     if os.getenv("DRY_RUN", "true").lower() == "true":
         print(full)
         return True
-
-    token = os.environ["TELEGRAM_BOT_TOKEN"]
-    chat_id = os.environ["TELEGRAM_CHAT_ID"]
-
-    response = requests.post(
-        f"{TELEGRAM_API_URL}{token}/sendMessage",
-        json={
-            "chat_id": chat_id,
-            "text": full,
-            "parse_mode": "HTML",
-            "disable_web_page_preview": True,
-        },
-        timeout=20,
-    )
-
+    response = requests.post(f"{TELEGRAM_API_URL}{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage", json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": full, "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=20)
     response.raise_for_status()
-
-    result = response.json()
-
-    if not result.get("ok"):
-        raise RuntimeError(
-            f"Telegram API error: {result}"
-        )
-
+    if not response.json().get("ok"):
+        raise RuntimeError("Telegram API returned failure")
     return True
 
-
 def signal_message(s):
-    """
-    Build formatted signal message.
-    """
-
-    risk = s["risk"]
-
-    if s["direction"] == "BUY":
-        header = "🚀 <b>BUY — " + str(s["grade"]) + "</b>"
-    else:
-        header = "🔻 <b>SELL — " + str(s["grade"]) + "</b>"
-
-    return (
-        f"{header}\n\n"
-
-        f"<b>{s['symbol']}</b>\n\n"
-
-        f"📌 <b>Signal Candle Close:</b> "
-        f"₹{s['signal_price']:,.2f}\n"
-
-        f"💰 <b>Current LTP:</b> "
-        f"₹{s['ltp']:,.2f}\n"
-
-        f"🕐 <b>Signal Time:</b> "
-        f"{s['signal_time']}\n\n"
-
-        f"🛡 <b>Risk Management</b>\n"
-
-        f"<b>Entry:</b> "
-        f"₹{risk['entry']:,.2f}\n"
-
-        f"<b>SL:</b> "
-        f"₹{risk['sl']:,.2f}\n"
-
-        f"<b>T1:</b> "
-        f"₹{risk['t1']:,.2f}\n"
-
-        f"<b>T2:</b> "
-        f"₹{risk['t2']:,.2f}\n"
-
-        f"<b>T3:</b> "
-        f"₹{risk['t3']:,.2f}\n\n"
-
-        f"📊 <b>Technical Setup</b>\n"
-
-        f"<b>15M Regime:</b> "
-        f"{s['regime']['direction']}\n"
-
-        f"<b>5M Setup:</b> "
-        f"{s['setup']}\n"
-
-        f"<b>RSI:</b> "
-        f"{s['rsi']:.1f}\n"
-
-        f"<b>RVOL:</b> "
-        f"{s['rvol']:.2f}x\n"
-
-        f"<b>Score:</b> "
-        f"<b>{s['score']}/100</b>"
-    )
-
+    icon = "🚀" if s["direction"] == "BUY" else "🔻"
+    level_label = "5M High" if s["direction"] == "BUY" else "5M Low"
+    relation = "above" if s["direction"] == "BUY" else "below"
+    return (f"{icon} <b>{s['direction']} ALERT</b>\n\n<b>{s['symbol']}</b>\n\n"
+            f"<b>5M Setup:</b> {s['setup_time']}\n<b>1M Confirmation:</b> {s['signal_time']}\n\n"
+            f"<b>Entry:</b> ₹{s['risk']['entry']:,.2f}\n<b>Stop Loss:</b> ₹{s['risk']['sl']:,.2f}\n\n"
+            f"<b>{level_label}:</b> ₹{s['breakout_level']:,.2f}\n<b>5M Close:</b> ₹{s['setup_5m_close']:,.2f}\n\n"
+            f"<b>5M EMA9:</b> {s['setup_5m_ema9']:.2f}\n<b>5M EMA20:</b> {s['setup_5m_ema20']:.2f}\n"
+            f"<b>5M RSI:</b> {s['setup_5m_rsi14']:.2f}\n<b>5M VWAP:</b> {s['setup_5m_vwap']:.2f}\n\n"
+            f"<b>5M Volume:</b> {s['setup_5m_volume']:,.0f}\n<b>5M Avg Volume(20):</b> {s['setup_5m_avg_volume']:,.0f}\n<b>RVOL:</b> {s['rvol']:.2f}\n\n"
+            f"<b>Daily Close:</b> {s['daily_close']:.2f}\n<b>Daily Volume:</b> {s['daily_volume']:,.0f}\n\n"
+            f"<b>Reason:</b> 5M quality setup + 1M close {relation} 5M {level_label.split()[-1].lower()}")
 
 def exit_message(s, exit_price, reason, exit_time):
-    """
-    Build formatted EXIT message.
-    """
-
     entry = s["risk"]["entry"]
-
-    if s["direction"] == "BUY":
-        move = (exit_price - entry) / entry * 100
-    else:
-        move = (entry - exit_price) / entry * 100
-
-    return (
-        f"⚠️ <b>EXIT — {s['symbol']}</b>\n\n"
-
-        f"<b>Direction:</b> {s['direction']}\n"
-
-        f"<b>Entry:</b> "
-        f"₹{entry:,.2f}\n"
-
-        f"<b>Exit:</b> "
-        f"₹{exit_price:,.2f}\n"
-
-        f"<b>Move:</b> "
-        f"{move:+.2f}%\n\n"
-
-        f"<b>Reason:</b> {reason}\n"
-
-        f"<b>Original Signal:</b> "
-        f"{s['grade']}\n"
-
-        f"<b>Original Score:</b> "
-        f"{s['score']}/100\n"
-
-        f"<b>Entry Time:</b> "
-        f"{s['signal_time']}\n"
-
-        f"<b>Exit Time:</b> "
-        f"{exit_time}"
-    )
+    move = (exit_price - entry) / entry * 100 if s["direction"] == "BUY" else (entry - exit_price) / entry * 100
+    return f"⚠️ <b>EXIT — {s['symbol']}</b>\n\n<b>Direction:</b> {s['direction']}\n<b>Entry:</b> ₹{entry:,.2f}\n<b>Exit:</b> ₹{exit_price:,.2f}\n<b>Move:</b> {move:+.2f}%\n\n<b>Reason:</b> {reason}\n<b>Exit Time:</b> {exit_time}"

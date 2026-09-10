@@ -5,7 +5,16 @@ import os
 @dataclass(frozen=True)
 class Settings:
     min_price: float = float(os.getenv("MIN_PRICE", "350"))
-    min_prev_volume: int = int(os.getenv("MIN_PREV_VOLUME", "50000"))
+    min_prev_volume: int = int(os.getenv("MIN_DAILY_VOLUME", os.getenv("MIN_PREV_VOLUME", "500000")))
+    buy_rsi_min: float = float(os.getenv("BUY_RSI_MIN", "55"))
+    buy_rsi_max: float = float(os.getenv("BUY_RSI_MAX", "70"))
+    sell_rsi_min: float = float(os.getenv("SELL_RSI_MIN", "30"))
+    sell_rsi_max: float = float(os.getenv("SELL_RSI_MAX", "45"))
+    min_5m_rvol: float = float(os.getenv("MIN_5M_RVOL", "1.5"))
+    require_ema_crossover: bool = os.getenv("REQUIRE_EMA_CROSSOVER", "false").lower() == "true"
+    pending_setup_max_5m_candles: int = int(os.getenv("PENDING_SETUP_MAX_5M_CANDLES", "1"))
+    entry_timeframe: int = int(os.getenv("ENTRY_TIMEFRAME", "1"))
+    setup_timeframe: int = int(os.getenv("SETUP_TIMEFRAME", "5"))
     atr_buffer: float = float(os.getenv("ATR_BUFFER", "0.25"))
     min_stop_atr: float = float(os.getenv("MIN_STOP_ATR", "0.5"))
     max_stop_atr: float = float(os.getenv("MAX_STOP_ATR", "2.5"))

@@ -10,18 +10,15 @@ from .config import SETTINGS
 from .dhan_client import DhanClient
 from .indicators import add_indicators
 from .nse_universe import build_universe, refresh_dynamic_volume_gainers
-from .scoring import score_signal
 from .state import (
     load,
     save,
     backup_and_clear,
     key,
-    alert_allowed,
-    record_alert,
     active_signal_for_symbol,
     reverse_active_signal,
 )
-from .strategy import evaluate
+from .strategy import evaluate_setup, confirm_setup
 from .summary import build_summary
 from .telegram import send, signal_message, exit_message
 
@@ -158,6 +155,7 @@ def create_universe(dhan, state):
 
 
 def scan(dhan, state, ts):
+    """Evaluate each new completed 5M candle and confirm pending setups every minute."""
     start = ts - timedelta(days=7)
     changed = False
 
@@ -193,176 +191,52 @@ def scan(dhan, state, ts):
                 5,
             )
 
-            df15 = completed_candles(
-                add_indicators(
-                    dhan.intraday_df(
-                        item["security_id"],
-                        15,
-                        start.strftime("%Y-%m-%d"),
-                        ts.strftime("%Y-%m-%d"),
-                    ),
-                    SETTINGS.rvol_lookback,
-                ),
-                ts,
-                15,
-            )
-
-            rejection = []
-            result = evaluate(df1, df5, df15, rejection)
-            if not result:
-                if (
-                    len(df1) < SETTINGS.min_1m_candles
-                    or len(df5) < SETTINGS.min_5m_candles
-                    or len(df15) < SETTINGS.min_15m_candles
-                ):
-                    LOG.warning(
-                        "%s | NO SIGNAL | insufficient candles | "
-                        "1M=%d/%d | 5M=%d/%d | 15M=%d/%d",
-                        symbol,
-                        len(df1),
-                        SETTINGS.min_1m_candles,
-                        len(df5),
-                        SETTINGS.min_5m_candles,
-                        len(df15),
-                        SETTINGS.min_15m_candles,
-                    )
-                    continue
-
-                LOG.info(
-                    "%s | NO SIGNAL | %s",
-                    symbol,
-                    rejection[0] if rejection else "evaluation rejected",
-                )
+            if df5.empty or df1.empty:
+                LOG.info("%s | NO SIGNAL | insufficient completed candles", symbol)
                 continue
-
-            score, grade = score_signal(result["regime"], result)
-            LOG.info(
-                "%s | SIGNAL CANDIDATE | score=%s | grade=%s | direction=%s | setup=%s | RVOL=%.2f",
-                symbol,
-                score,
-                grade,
-                result["direction"],
-                result["setup"],
-                result["rvol"],
-            )
-
-            signal = {
-                "symbol": symbol,
-                "security_id": item["security_id"],
-                "direction": result["direction"],
-                "setup": result["setup"],
-                "signal_time": format_signal_time(result["entry_candle_time"]),
-                "signal_price": result["signal_price"],
-                "score": score,
-                "grade": grade,
-                "status": "ACTIVE",
-                "risk": result["risk"],
-                "rvol": result["rvol"],
-                "entry_rvol": result["entry_rvol"],
-                "rsi": result["rsi"],
-                "atr": result["atr"],
-                "risk_atr_ratio": result["risk_atr_ratio"],
-                "max_entry": result["max_entry"],
-                "regime": result["regime"],
-            }
-
-            # The state.py alert filter requires the current timestamp
-            # and the Settings object.
-            allowed, reason = alert_allowed(
-                state,
-                signal,
-                ts,
-                SETTINGS,
-            )
-
-            if not allowed:
-                LOG.info(
-                    "%s | PRE_ALERT_GATE | score=%s | grade=%s | RVOL=%.2f | reason=%s",
-                    symbol,
-                    signal.get("score"),
-                    signal.get("grade"),
-                    signal.get("rvol", 0.0),
-                    reason,
-                )
-                LOG.info(
-                    "%s",
-                    format_alert_decision(symbol, signal, False, reason),
-                )
-                continue
-
-            ltp = live_ltp(dhan, item["security_id"])
-            if ltp is None:
-                LOG.info(
-                    "%s | POST_LTP_ALERT_GATE | live LTP unavailable | alert suppressed",
-                    symbol,
-                )
-                continue
-            signal["ltp"] = ltp
-
-            allowed, reason = alert_allowed(
-                state,
-                signal,
-                ts,
-                SETTINGS,
-            )
-            if not allowed:
-                LOG.info(
-                    "%s | POST_LTP_ALERT_GATE | score=%s | grade=%s | ltp=%s | max_entry=%s | reason=%s",
-                    symbol,
-                    signal.get("score"),
-                    signal.get("grade"),
-                    signal.get("ltp"),
-                    signal.get("max_entry"),
-                    reason,
-                )
-                LOG.info(
-                    "%s",
-                    format_alert_decision(symbol, signal, False, reason),
-                )
-                continue
-
-            k = key(
-                symbol,
-                signal["direction"],
-                signal["setup"],
-                signal["signal_time"],
-            )
-
-            if k in state["signals"]:
-                LOG.info(
-                    "%s",
-                    format_alert_decision(symbol, signal, False, "duplicate signal"),
-                )
-                continue
-
-            # Send first. Change the previous active signal only after
-            # Telegram successfully accepts the new alert.
-            if send(signal_message(signal)):
-                previous = active_signal_for_symbol(
-                    state,
-                    symbol,
-                )
-
-                if (
-                    previous
-                    and previous.get("direction") != signal["direction"]
-                ):
-                    reverse_active_signal(
-                        state,
-                        symbol,
-                        signal["direction"],
-                        ts,
-                        signal.get("ltp"),
-                    )
-
-                state["signals"][k] = signal
-                record_alert(state, signal, ts)
+            setup_timestamp = df5.index[-1].isoformat()
+            if state["processed_5m_candles"].get(symbol) != setup_timestamp:
+                old = state["pending_setups"].pop(symbol, None)
+                if old:
+                    LOG.info("%s | SETUP_EXPIRED | direction=%s | setup_time=%s | reason=NEXT_5M_CANDLE", symbol, old["direction"], old["setup_5m_timestamp"])
+                state["processed_5m_candles"][symbol] = setup_timestamp
+                rejection = []
+                setup = evaluate_setup(df5, item.get("prev_close"), item.get("prev_volume"), rejection)
+                if setup:
+                    setup.update({"symbol": symbol, "security_id": item["security_id"]})
+                    state["pending_setups"][symbol] = setup
+                    LOG.info("%s | 5M_SETUP | direction=%s | candle=%s | ema9=%.2f | ema20=%.2f | rsi=%.2f | prev_rsi=%.2f | vwap=%.2f | volume=%.0f | avg_volume20=%.0f | rvol=%.2f | daily_close=%.2f | daily_volume=%.0f | high=%.2f | low=%.2f | close=%.2f", symbol, setup["direction"], setup_timestamp, setup["setup_5m_ema9"], setup["setup_5m_ema20"], setup["setup_5m_rsi14"], setup["setup_5m_previous_rsi14"], setup["setup_5m_vwap"], setup["setup_5m_volume"], setup["setup_5m_avg_volume"], setup["setup_5m_rvol"], setup["daily_close"], setup["daily_volume"], setup["setup_5m_high"], setup["setup_5m_low"], setup["setup_5m_close"])
+                elif rejection:
+                    LOG.info("%s | NO_5M_SETUP | %s", symbol, rejection[0])
                 changed = True
 
-                LOG.info(
-                    "%s",
-                    format_alert_decision(symbol, signal, True, "approved"),
-                )
+            setup = state["pending_setups"].get(symbol)
+            if not setup:
+                continue
+            candle = df1.iloc[-1]
+            confirmation_time = (df1.index[-1] + timedelta(minutes=1)).isoformat()
+            confirmed = confirm_setup(setup, candle, confirmation_time)
+            if not confirmed:
+                LOG.info("%s | NO_1M_CONFIRMATION | close=%.2f | required=%s%.2f", symbol, candle.close, ">" if setup["direction"] == "BUY" else "<", setup["breakout_level"])
+                LOG.info("%s | WAITING_1M_CONFIRMATION | direction=%s | setup_time=%s | breakout_level=%.2f | stop_loss=%.2f", symbol, setup["direction"], setup["setup_5m_timestamp"], setup["breakout_level"], setup["stop_loss"])
+                continue
+            k = key(symbol, setup["direction"], "5M_QUALITY", setup["setup_5m_timestamp"])
+            if k in state["signals"]:
+                state["pending_setups"].pop(symbol, None)
+                changed = True
+                continue
+            entry, sl = confirmed["entry"], confirmed["stop_loss"]
+            risk = abs(entry - sl)
+            targets = [entry + (1.5 + step) * risk if setup["direction"] == "BUY" else entry - (1.5 + step) * risk for step in (0, 1, 2)]
+            signal = {**setup, "setup": "5M_QUALITY", "signal_time": format_signal_time(confirmed["confirmation_time"]), "setup_time": format_signal_time(setup["setup_5m_timestamp"]), "signal_price": entry, "status": "ACTIVE", "score": 0, "grade": "QUALITY", "rvol": setup["setup_5m_rvol"], "risk": {"entry": entry, "sl": sl, "risk": risk, "t1": targets[0], "t2": targets[1], "t3": targets[2]}}
+            if send(signal_message(signal)):
+                previous = active_signal_for_symbol(state, symbol)
+                if previous and previous.get("direction") != signal["direction"]:
+                    reverse_active_signal(state, symbol, signal["direction"], ts, entry)
+                state["signals"][k] = signal
+                state["pending_setups"].pop(symbol, None)
+                changed = True
+                LOG.info("%s | 1M_CONFIRMATION | direction=%s | setup_time=%s | confirmation_time=%s | entry=%.2f | stop_loss=%.2f", symbol, signal["direction"], setup["setup_5m_timestamp"], confirmed["confirmation_time"], entry, sl)
 
         except Exception:
             LOG.exception("Scan failed: %s", symbol)

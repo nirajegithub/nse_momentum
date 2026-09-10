@@ -415,7 +415,7 @@ def build_universe(dhan: DhanClient, as_of_date=None):
             # Price filter
             # -------------------------------------------------
 
-            if close_price < SETTINGS.min_price:
+            if close_price <= SETTINGS.min_price:
 
                 price_rejected += 1
 
@@ -580,7 +580,7 @@ def refresh_dynamic_volume_gainers(dhan, state, ts):
             prev_close = float(candle["close"])
             prev_volume = int(candle["volume"])
 
-            if prev_close < SETTINGS.min_price:
+            if prev_close <= SETTINGS.min_price:
                 LOG.info(
                     "%s volume gainer rejected: price %.2f < %.2f",
                     symbol,
