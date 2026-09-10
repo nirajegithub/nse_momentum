@@ -2,9 +2,6 @@ name: NSE Momentum - Scanner
 
 on:
   workflow_dispatch:
-  schedule:
-    # 09:30-15:05 IST; app.main enforces the exact intraday window.
-    - cron: "* 4-9 * * 1-5"
 
 permissions:
   contents: write
