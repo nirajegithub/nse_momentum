@@ -51,6 +51,60 @@ def format_signal_time(value):
     return dt.strftime("%d %b %Y, %I:%M %p IST")
 
 
+def explain_alert_reason(signal, reason):
+    """Convert the gate reason into a clear log message."""
+    score = int(signal.get("score", 0))
+    rvol = float(signal.get("rvol", 0.0))
+    direction = str(signal.get("direction", "")).upper()
+    regime_direction = str((signal.get("regime") or {}).get("direction", "")).upper()
+    max_entry = signal.get("max_entry")
+    ltp = signal.get("ltp")
+
+    if reason == "below alert score/grade threshold":
+        return f"score<{SETTINGS.alert_min_score}"
+    if reason == "below minimum RVOL":
+        return f"RVOL<{SETTINGS.alert_min_rvol:.2f}"
+    if reason == "extreme RVOL requires review":
+        return f"RVOL>{SETTINGS.alert_max_rvol:.2f}"
+    if reason == "signal/regime direction mismatch":
+        return f"direction={direction} vs regime={regime_direction}"
+    if reason == "15M structure not confirmed":
+        return "15M structure not confirmed"
+    if reason == "entry is too far from breakout":
+        return f"ltp={ltp} vs max_entry={max_entry}"
+    if reason == "same-direction cooldown":
+        return "same-direction cooldown"
+    if reason == "no meaningful score improvement":
+        return "no meaningful score improvement"
+    if reason == "reversal score too low":
+        return f"reversal score<{SETTINGS.alert_reversal_min_score}"
+    if reason == "invalid RVOL":
+        return "RVOL is invalid"
+    if reason == "approved":
+        return "approved"
+    if reason == "duplicate signal":
+        return "duplicate signal"
+    return reason
+
+
+def format_alert_decision(symbol, signal, allowed, reason):
+    score = int(signal.get("score", 0))
+    verdict = "ALERT=QUALIFIED" if allowed else "ALERT=SUPPRESSED"
+    action = "qualified and sent" if allowed else "rejected"
+
+    if not allowed and reason == "below alert score/grade threshold":
+        detail = f"score<{SETTINGS.alert_min_score}"
+    elif allowed and score >= SETTINGS.alert_min_score:
+        detail = f"score>={SETTINGS.alert_min_score}"
+    else:
+        detail = explain_alert_reason(signal, reason)
+
+    return (
+        f"{symbol} | SIGNAL | score={score} | "
+        f"{verdict} | {detail} - {action}"
+    )
+
+
 def ltp_batch(dhan, ids):
     if not ids:
         return {}
@@ -180,9 +234,8 @@ def scan(dhan, state, ts):
 
             if not allowed:
                 LOG.info(
-                    "%s | ALERT SUPPRESSED | %s",
-                    symbol,
-                    reason,
+                    "%s",
+                    format_alert_decision(symbol, signal, False, reason),
                 )
                 continue
 
@@ -213,9 +266,8 @@ def scan(dhan, state, ts):
             )
             if not allowed:
                 LOG.info(
-                    "%s | ALERT SUPPRESSED | %s",
-                    symbol,
-                    reason,
+                    "%s",
+                    format_alert_decision(symbol, signal, False, reason),
                 )
                 continue
 
@@ -228,8 +280,8 @@ def scan(dhan, state, ts):
 
             if k in state["signals"]:
                 LOG.info(
-                    "%s | ALERT SUPPRESSED | duplicate signal",
-                    symbol,
+                    "%s",
+                    format_alert_decision(symbol, signal, False, "duplicate signal"),
                 )
                 continue
 
@@ -258,11 +310,8 @@ def scan(dhan, state, ts):
                 changed = True
 
                 LOG.info(
-                    "%s | ALERT SENT | %s | score=%s | RVOL=%.2f",
-                    symbol,
-                    signal["direction"],
-                    signal["score"],
-                    signal["rvol"],
+                    "%s",
+                    format_alert_decision(symbol, signal, True, "approved"),
                 )
 
         except Exception:

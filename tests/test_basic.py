@@ -188,3 +188,41 @@ def test_reversal_records_exit_price_and_r_multiple():
     assert signal["status"] == "REVERSED"
     assert signal["exit_price"] == 90.0
     assert signal["r_multiple"] == -2.0
+
+
+def test_alert_log_format_includes_score_threshold_reason():
+    from app.main import format_alert_decision
+
+    signal = {
+        "symbol": "TCS",
+        "score": 74,
+        "rvol": 1.2,
+        "direction": "BUY",
+        "regime": {"direction": "BUY", "structure_ok": True},
+    }
+
+    suppressed = state.alert_allowed(
+        {"alert_state": {}, "signals": {}},
+        signal,
+        datetime.now(),
+        AlertSettings(),
+    )
+
+    assert suppressed == (False, "below alert score/grade threshold")
+    assert (
+        format_alert_decision("TCS", signal, False, suppressed[1])
+        == "TCS | SIGNAL | score=74 | ALERT=SUPPRESSED | score<80 - rejected"
+    )
+
+    qualified_signal = {
+        "symbol": "TCS",
+        "score": 82,
+        "rvol": 1.2,
+        "direction": "BUY",
+        "regime": {"direction": "BUY", "structure_ok": True},
+    }
+
+    assert (
+        format_alert_decision("TCS", qualified_signal, True, "approved")
+        == "TCS | SIGNAL | score=82 | ALERT=QUALIFIED | score>=80 - qualified and sent"
+    )
