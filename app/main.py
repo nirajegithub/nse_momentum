@@ -199,9 +199,22 @@ def scan(dhan, state, ts):
 
             result = evaluate(df1, df5, df15)
             if not result:
+                LOG.info(
+                    "%s | NO SIGNAL | no matching setup from 1M/5M/15M evaluation",
+                    symbol,
+                )
                 continue
 
             score, grade = score_signal(result["regime"], result)
+            LOG.info(
+                "%s | SIGNAL CANDIDATE | score=%s | grade=%s | direction=%s | setup=%s | RVOL=%.2f",
+                symbol,
+                score,
+                grade,
+                result["direction"],
+                result["setup"],
+                result["rvol"],
+            )
 
             signal = {
                 "symbol": symbol,
@@ -234,6 +247,14 @@ def scan(dhan, state, ts):
 
             if not allowed:
                 LOG.info(
+                    "%s | PRE_ALERT_GATE | score=%s | grade=%s | RVOL=%.2f | reason=%s",
+                    symbol,
+                    signal.get("score"),
+                    signal.get("grade"),
+                    signal.get("rvol", 0.0),
+                    reason,
+                )
+                LOG.info(
                     "%s",
                     format_alert_decision(symbol, signal, False, reason),
                 )
@@ -265,6 +286,15 @@ def scan(dhan, state, ts):
                 SETTINGS,
             )
             if not allowed:
+                LOG.info(
+                    "%s | POST_LTP_ALERT_GATE | score=%s | grade=%s | ltp=%s | max_entry=%s | reason=%s",
+                    symbol,
+                    signal.get("score"),
+                    signal.get("grade"),
+                    signal.get("ltp"),
+                    signal.get("max_entry"),
+                    reason,
+                )
                 LOG.info(
                     "%s",
                     format_alert_decision(symbol, signal, False, reason),
