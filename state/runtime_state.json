@@ -589,9 +589,57 @@
       "membership_count": 1,
       "universe_source": "NSE_VOLUME_GAINERS",
       "volume_gainer_added_at": "2026-09-10T09:30:47.664039+05:30"
+    },
+    {
+      "symbol": "BHAGYANGR",
+      "security_id": "20776",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "CORONA",
+      "security_id": "760254",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "POKARNA",
+      "security_id": "17651",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
+    },
+    {
+      "symbol": "VSSL",
+      "security_id": "27067",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-10T09:40:33.031151+05:30"
     }
   ],
   "signals": {},
   "alert_state": {},
-  "volume_gainers_last_refresh": "2026-09-10T09:30:00+05:30"
+  "volume_gainers_last_refresh": "2026-09-10T09:40:00+05:30"
 }
