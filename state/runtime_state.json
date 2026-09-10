@@ -888,6 +888,43 @@
         "bearish_points": 4
       },
       "ltp": 779.4
+    },
+    "TATACONSUM|SELL|CONTINUATION|10 Sep 2026, 12:44 PM IST": {
+      "symbol": "TATACONSUM",
+      "security_id": "3432",
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:44 PM IST",
+      "signal_price": 1000.5,
+      "score": 90,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1000.5,
+        "sl": 1004.2960066305124,
+        "risk": 3.796006630512352,
+        "t1": 994.8059900542314,
+        "t2": 991.0099834237192,
+        "t3": 987.2139767932067
+      },
+      "rvol": 0.648286700146903,
+      "entry_rvol": 1.3513982977245091,
+      "rsi": 43.59732548850589,
+      "atr": 1.5840265220495202,
+      "risk_atr_ratio": 2.396428707267365,
+      "max_entry": null,
+      "regime": {
+        "direction": "SELL",
+        "structure": "BEARISH_LH_LL",
+        "price_above_vwap": false,
+        "ema9_gt_ema20": false,
+        "ema20_rising": false,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 0,
+        "bearish_points": 5
+      },
+      "ltp": 1000.5
     }
   },
   "alert_state": {
@@ -938,6 +975,14 @@
       "rvol": 0.9247148846703909,
       "alerted_at": "2026-09-10T12:35:30.486821+05:30",
       "candle_time": "10 Sep 2026, 12:34 PM IST"
+    },
+    "TATACONSUM": {
+      "direction": "SELL",
+      "setup": "CONTINUATION",
+      "score": 90,
+      "rvol": 0.648286700146903,
+      "alerted_at": "2026-09-10T12:45:31.865832+05:30",
+      "candle_time": "10 Sep 2026, 12:44 PM IST"
     }
   },
   "volume_gainers_last_refresh": "2026-09-10T12:40:00+05:30"
