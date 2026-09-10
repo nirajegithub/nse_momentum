@@ -267,13 +267,19 @@ def evaluate(df1, df5, df15, rejection=None):
         else bool(trigger.close < previous_trigger.low)
     )
 
-    if not all(
-        [trigger_ema_ok, trigger_vwap_ok, trigger_rsi_ok, trigger_break_ok]
-    ):
+    trigger_confirmation_ok = trigger_rsi_ok or trigger_break_ok
+    trigger_ok = (
+        all([trigger_ema_ok, trigger_vwap_ok, trigger_rsi_ok, trigger_break_ok])
+        if setup == "BREAKOUT"
+        else all([trigger_ema_ok, trigger_vwap_ok, trigger_confirmation_ok])
+    )
+
+    if not trigger_ok:
         return reject(
             "1M trigger failed "
             f"(ema={trigger_ema_ok}, vwap={trigger_vwap_ok}, "
-            f"rsi={trigger_rsi_ok}, break={trigger_break_ok})"
+            f"rsi={trigger_rsi_ok}, break={trigger_break_ok}, "
+            f"confirmation={trigger_confirmation_ok})"
         )
 
     entry = float(trigger.close)

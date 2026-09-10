@@ -89,6 +89,23 @@ def test_strategy_emits_buy_and_sell_with_complete_required_data():
         assert result["direction"] == direction
         assert result["setup"] == "CONTINUATION"
 
+
+def test_continuation_allows_rsi_or_recent_break_confirmation():
+    df1 = _indicator_frame("BUY")
+    df1.iloc[-1, df1.columns.get_loc("rsi14")] = 45.0
+    df1.iloc[-1, df1.columns.get_loc("rsi_ema9")] = 60.0
+
+    result = evaluate(
+        df1,
+        _indicator_frame("BUY"),
+        _indicator_frame("BUY"),
+    )
+
+    assert result is not None
+    assert result["setup"] == "CONTINUATION"
+    assert not result["entry_rsi_ok"]
+    assert result["entry_break_ok"]
+
 def test_weekend_is_not_trading_day():
     assert not is_nse_trading_day(date(2026, 9, 5))
 
