@@ -168,7 +168,7 @@ def breakout_level(df, direction, lookback=20):
     return None
 
 
-def evaluate(df1, df5, df15):
+def evaluate(df1, df5, df15, rejection=None):
     """
     Evaluate a 1M entry trigger using a 5M setup and 15M regime.
 
@@ -177,18 +177,27 @@ def evaluate(df1, df5, df15):
     1M  = precise entry trigger
     """
 
+    def reject(reason):
+        if rejection is not None:
+            rejection.append(reason)
+        return None
+
     if (
         len(df1) < SETTINGS.min_1m_candles
         or
         len(df5) < SETTINGS.min_5m_candles
         or len(df15) < SETTINGS.min_15m_candles
     ):
-        return None
+        return reject("insufficient candles")
 
     r15 = regime(df15)
 
     if r15["direction"] == "NEUTRAL":
-        return None
+        return reject(
+            "15M regime neutral "
+            f"(bullish={r15['bullish_points']}, "
+            f"bearish={r15['bearish_points']})"
+        )
 
     c = df5.iloc[-1]
     trigger = df1.iloc[-1]
@@ -231,7 +240,10 @@ def evaluate(df1, df5, df15):
         setup = None
 
     if not setup:
-        return None
+        return reject(
+            "5M setup failed "
+            f"(ema={ema_ok}, vwap={vwap_ok}, rsi={rsi_ok}, breakout={bo})"
+        )
 
     trigger_ema_ok = (
         bool(trigger.ema9 > trigger.ema20)
@@ -258,13 +270,17 @@ def evaluate(df1, df5, df15):
     if not all(
         [trigger_ema_ok, trigger_vwap_ok, trigger_rsi_ok, trigger_break_ok]
     ):
-        return None
+        return reject(
+            "1M trigger failed "
+            f"(ema={trigger_ema_ok}, vwap={trigger_vwap_ok}, "
+            f"rsi={trigger_rsi_ok}, break={trigger_break_ok})"
+        )
 
     entry = float(trigger.close)
     atr = float(c.atr14)
 
     if atr <= 0:
-        return None
+        return reject("invalid ATR")
 
     # Technical stop based on confirmed recent 5M structure
     if direction == "BUY":
@@ -278,15 +294,15 @@ def evaluate(df1, df5, df15):
 
     # Invalid risk
     if risk <= 0:
-        return None
+        return reject("invalid risk")
 
     # Stop too wide
     if risk > SETTINGS.max_stop_atr * atr:
-        return None
+        return reject("stop wider than maximum ATR")
 
     risk_atr_ratio = risk / atr
     if risk_atr_ratio < SETTINGS.min_stop_atr:
-        return None
+        return reject("stop narrower than minimum ATR")
 
     rvol = float(c.rvol) if c.rvol == c.rvol else 0.0
     entry_rvol = (
@@ -295,18 +311,21 @@ def evaluate(df1, df5, df15):
         else 0.0
     )
     if not math.isfinite(rvol) or rvol < 0:
-        return None
+        return reject("invalid 5M RVOL")
     if (
         not math.isfinite(entry_rvol)
         or entry_rvol < SETTINGS.min_entry_rvol
     ):
-        return None
+        return reject(
+            f"1M RVOL below minimum ({entry_rvol:.2f}"
+            f"<{SETTINGS.min_entry_rvol:.2f})"
+        )
 
     max_entry = None
     if setup == "BREAKOUT":
         level = breakout_level(df5, direction)
         if level is None:
-            return None
+            return reject("breakout level unavailable")
         chase_distance = SETTINGS.max_entry_chase_atr * atr
         max_entry = (
             level + chase_distance
@@ -318,7 +337,7 @@ def evaluate(df1, df5, df15):
             if direction == "BUY"
             else entry < max_entry
         ):
-            return None
+            return reject("entry chased breakout")
 
     # Current V1 targets remain unchanged:
     # T1 = 1.5R

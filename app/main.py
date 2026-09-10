@@ -197,7 +197,8 @@ def scan(dhan, state, ts):
                 15,
             )
 
-            result = evaluate(df1, df5, df15)
+            rejection = []
+            result = evaluate(df1, df5, df15, rejection)
             if not result:
                 if (
                     len(df1) < SETTINGS.min_1m_candles
@@ -218,8 +219,9 @@ def scan(dhan, state, ts):
                     continue
 
                 LOG.info(
-                    "%s | NO SIGNAL | no matching setup from 1M/5M/15M evaluation",
+                    "%s | NO SIGNAL | %s",
                     symbol,
+                    rejection[0] if rejection else "evaluation rejected",
                 )
                 continue
 
