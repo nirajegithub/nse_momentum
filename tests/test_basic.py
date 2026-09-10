@@ -106,6 +106,24 @@ def test_continuation_allows_rsi_or_recent_break_confirmation():
     assert not result["entry_rsi_ok"]
     assert result["entry_break_ok"]
 
+
+def test_continuation_accepts_two_of_three_five_minute_checks():
+    df5 = _indicator_frame("BUY")
+    df5.iloc[-1, df5.columns.get_loc("rsi14")] = 45.0
+    df5.iloc[-1, df5.columns.get_loc("rsi_ema9")] = 60.0
+
+    result = evaluate(
+        _indicator_frame("BUY"),
+        df5,
+        _indicator_frame("BUY"),
+    )
+
+    assert result is not None
+    assert result["setup"] == "CONTINUATION"
+    assert result["ema_ok"]
+    assert result["vwap_ok"]
+    assert not result["rsi_ok"]
+
 def test_weekend_is_not_trading_day():
     assert not is_nse_trading_day(date(2026, 9, 5))
 

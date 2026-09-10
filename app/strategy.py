@@ -234,7 +234,7 @@ def evaluate(df1, df5, df15, rejection=None):
 
     if bo == direction:
         setup = "BREAKOUT"
-    elif ema_ok and vwap_ok and rsi_ok:
+    elif sum([ema_ok, vwap_ok, rsi_ok]) >= 2:
         setup = "CONTINUATION"
     else:
         setup = None

@@ -22,14 +22,9 @@ def score_signal(regime, entry):
     Volume:
       - RVOL                = 10
 
-    Setup:
-      - BREAKOUT            = 10
-      - CONTINUATION        = 0
-
-    The old implementation awarded the final 10 points to both
-    BREAKOUT and CONTINUATION, even though evaluate() only returns
-    those two setup types. That made every signal automatically
-    receive +10 points.
+        Setup:
+            - BREAKOUT            = 10
+            - CONTINUATION        = 10
     """
 
     buy = entry["direction"] == "BUY"
@@ -97,10 +92,7 @@ def score_signal(regime, entry):
         entry.get("setup", "")
     ).upper()
 
-    # IMPORTANT:
-    # Only BREAKOUT receives the additional 10 points.
-    # CONTINUATION does not receive automatic bonus points.
-    if setup == "BREAKOUT":
+    if setup in {"BREAKOUT", "CONTINUATION"}:
         score += 10
 
     # ---------------------------------------------------------
