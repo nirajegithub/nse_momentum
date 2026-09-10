@@ -777,6 +777,43 @@
         "bearish_points": 5
       },
       "ltp": 9413.0
+    },
+    "INDOMIM|BUY|CONTINUATION|10 Sep 2026, 12:14 PM IST": {
+      "symbol": "INDOMIM",
+      "security_id": "764301",
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "signal_time": "10 Sep 2026, 12:14 PM IST",
+      "signal_price": 1019.5,
+      "score": 92,
+      "grade": "A+",
+      "status": "ACTIVE",
+      "risk": {
+        "entry": 1019.5,
+        "sl": 1009.1352760936667,
+        "risk": 10.364723906333325,
+        "t1": 1035.0470858595,
+        "t2": 1045.4118097658334,
+        "t3": 1055.7765336721666
+      },
+      "rvol": 1.0503360290928105,
+      "entry_rvol": 1.2807713477707974,
+      "rsi": 63.75115687101897,
+      "atr": 4.658895625333238,
+      "risk_atr_ratio": 2.224716915737292,
+      "max_entry": null,
+      "regime": {
+        "direction": "BUY",
+        "structure": "BULLISH_HH_HL",
+        "price_above_vwap": true,
+        "ema9_gt_ema20": true,
+        "ema20_rising": true,
+        "rsi_ok": true,
+        "structure_ok": true,
+        "bullish_points": 5,
+        "bearish_points": 0
+      },
+      "ltp": 1019.5
     }
   },
   "alert_state": {
@@ -803,6 +840,14 @@
       "rvol": 0.5845972957084068,
       "alerted_at": "2026-09-10T11:40:33.939046+05:30",
       "candle_time": "10 Sep 2026, 11:39 AM IST"
+    },
+    "INDOMIM": {
+      "direction": "BUY",
+      "setup": "CONTINUATION",
+      "score": 92,
+      "rvol": 1.0503360290928105,
+      "alerted_at": "2026-09-10T12:15:31.809199+05:30",
+      "candle_time": "10 Sep 2026, 12:14 PM IST"
     }
   },
   "volume_gainers_last_refresh": "2026-09-10T12:10:00+05:30"
