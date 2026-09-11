@@ -347,11 +347,8 @@
         "t2": 1215.1999999999998,
         "t3": 1217.0
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "PAYTM": {
+    },
+    "PAYTM|BUY|5M_QUALITY|2026-09-11T09:50:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T09:50:00+05:30",
       "setup_5m_open": 1742.5,
@@ -371,9 +368,27 @@
       "breakout_level": 1750.0,
       "stop_loss": 1748.3,
       "symbol": "PAYTM",
-      "security_id": "6705"
+      "security_id": "6705",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 09:51 AM IST",
+      "setup_time": "11 Sep 2026, 09:50 AM IST",
+      "signal_price": 1751.1,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.9756413999524352,
+      "risk": {
+        "entry": 1751.1,
+        "sl": 1748.3,
+        "risk": 2.7999999999999545,
+        "t1": 1755.2999999999997,
+        "t2": 1758.1,
+        "t3": 1760.8999999999996
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T09:50:00+05:30",
     "BSE": "2026-09-11T09:50:00+05:30",
