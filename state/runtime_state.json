@@ -271,10 +271,8 @@
       "prev_trading_day": "2026-09-10"
     }
   ],
-  "signals": {},
-  "alert_state": {},
-  "pending_setups": {
-    "ATHERENERG": {
+  "signals": {
+    "ATHERENERG|BUY|5M_QUALITY|2026-09-11T09:35:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T09:35:00+05:30",
       "setup_5m_open": 1658.4,
@@ -294,9 +292,25 @@
       "breakout_level": 1660.0,
       "stop_loss": 1659.9,
       "symbol": "ATHERENERG",
-      "security_id": "757645"
+      "security_id": "757645",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 09:36 AM IST",
+      "setup_time": "11 Sep 2026, 09:35 AM IST",
+      "signal_price": 1662.5,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.6143268113196643,
+      "risk": {
+        "entry": 1662.5,
+        "sl": 1659.9,
+        "risk": 2.599999999999909,
+        "t1": 1666.3999999999999,
+        "t2": 1668.9999999999998,
+        "t3": 1671.5999999999997
+      }
     },
-    "HCLTECH": {
+    "HCLTECH|BUY|5M_QUALITY|2026-09-11T09:35:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T09:35:00+05:30",
       "setup_5m_open": 1205.0,
@@ -316,9 +330,27 @@
       "breakout_level": 1210.5,
       "stop_loss": 1208.9,
       "symbol": "HCLTECH",
-      "security_id": "7229"
+      "security_id": "7229",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 09:36 AM IST",
+      "setup_time": "11 Sep 2026, 09:35 AM IST",
+      "signal_price": 1210.7,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 2.123437529281685,
+      "risk": {
+        "entry": 1210.7,
+        "sl": 1208.9,
+        "risk": 1.7999999999999545,
+        "t1": 1213.4,
+        "t2": 1215.1999999999998,
+        "t3": 1217.0
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T09:35:00+05:30",
     "BSE": "2026-09-11T09:35:00+05:30",
