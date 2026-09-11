@@ -628,11 +628,8 @@
         "t2": 3255.0999999999995,
         "t3": 3251.7
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "BSE": {
+    },
+    "BSE|BUY|5M_QUALITY|2026-09-11T12:30:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T12:30:00+05:30",
       "setup_5m_open": 3218.8,
@@ -652,9 +649,27 @@
       "breakout_level": 3229.8,
       "stop_loss": 3228.0,
       "symbol": "BSE",
-      "security_id": "19585"
+      "security_id": "19585",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 12:32 PM IST",
+      "setup_time": "11 Sep 2026, 12:30 PM IST",
+      "signal_price": 3230.4,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 2.0064670792217205,
+      "risk": {
+        "entry": 3230.4,
+        "sl": 3228.0,
+        "risk": 2.400000000000091,
+        "t1": 3234.0,
+        "t2": 3236.4000000000005,
+        "t3": 3238.8
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T12:30:00+05:30",
     "BSE": "2026-09-11T12:30:00+05:30",
