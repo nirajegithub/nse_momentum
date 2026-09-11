@@ -856,11 +856,8 @@
         "t2": 1037.4000000000005,
         "t3": 1037.0000000000005
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "COFORGE": {
+    },
+    "COFORGE|BUY|5M_QUALITY|2026-09-11T13:55:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T13:55:00+05:30",
       "setup_5m_open": 1841.9,
@@ -880,8 +877,27 @@
       "breakout_level": 1849.3,
       "stop_loss": 1849.2,
       "symbol": "COFORGE",
-      "security_id": "11543"
-    },
+      "security_id": "11543",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 01:56 PM IST",
+      "setup_time": "11 Sep 2026, 01:55 PM IST",
+      "signal_price": 1852.2,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.534245184865633,
+      "risk": {
+        "entry": 1852.2,
+        "sl": 1849.2,
+        "risk": 3.0,
+        "t1": 1856.7,
+        "t2": 1859.7,
+        "t3": 1862.7
+      }
+    }
+  },
+  "alert_state": {},
+  "pending_setups": {
     "INFY": {
       "direction": "SELL",
       "setup_5m_timestamp": "2026-09-11T13:55:00+05:30",
