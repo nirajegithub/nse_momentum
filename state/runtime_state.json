@@ -1088,6 +1088,44 @@
         "t2": 1825.4999999999998,
         "t3": 1828.0999999999997
       }
+    },
+    "TCS|SELL|5M_QUALITY|2026-09-11T15:00:00+05:30": {
+      "direction": "SELL",
+      "setup_5m_timestamp": "2026-09-11T15:00:00+05:30",
+      "setup_5m_open": 2209.4,
+      "setup_5m_high": 2210.1,
+      "setup_5m_low": 2206.2,
+      "setup_5m_close": 2206.6,
+      "setup_5m_ema9": 2209.1789531485774,
+      "setup_5m_ema20": 2209.5549770396938,
+      "setup_5m_rsi14": 40.95243369974952,
+      "setup_5m_previous_rsi14": 48.107256609899025,
+      "setup_5m_vwap": 2211.5482559619813,
+      "setup_5m_volume": 52018.0,
+      "setup_5m_avg_volume": 30671.5,
+      "setup_5m_rvol": 1.6959718305267104,
+      "daily_close": 2204.1,
+      "daily_volume": 2490912.0,
+      "breakout_level": 2206.2,
+      "stop_loss": 2206.6,
+      "symbol": "TCS",
+      "security_id": "11536",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 03:01 PM IST",
+      "setup_time": "11 Sep 2026, 03:00 PM IST",
+      "signal_price": 2204.3,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.6959718305267104,
+      "risk": {
+        "entry": 2204.3,
+        "sl": 2206.6,
+        "risk": 2.299999999999727,
+        "t1": 2200.8500000000004,
+        "t2": 2198.550000000001,
+        "t3": 2196.250000000001
+      }
     }
   },
   "alert_state": {},
@@ -1135,28 +1173,6 @@
       "stop_loss": 1037.9,
       "symbol": "INFY",
       "security_id": "1594"
-    },
-    "TCS": {
-      "direction": "SELL",
-      "setup_5m_timestamp": "2026-09-11T15:00:00+05:30",
-      "setup_5m_open": 2209.4,
-      "setup_5m_high": 2210.1,
-      "setup_5m_low": 2206.2,
-      "setup_5m_close": 2206.6,
-      "setup_5m_ema9": 2209.1789531485774,
-      "setup_5m_ema20": 2209.5549770396938,
-      "setup_5m_rsi14": 40.95243369974952,
-      "setup_5m_previous_rsi14": 48.107256609899025,
-      "setup_5m_vwap": 2211.5482559619813,
-      "setup_5m_volume": 52018.0,
-      "setup_5m_avg_volume": 30671.5,
-      "setup_5m_rvol": 1.6959718305267104,
-      "daily_close": 2204.1,
-      "daily_volume": 2490912.0,
-      "breakout_level": 2206.2,
-      "stop_loss": 2206.6,
-      "symbol": "TCS",
-      "security_id": "11536"
     }
   },
   "processed_5m_candles": {
