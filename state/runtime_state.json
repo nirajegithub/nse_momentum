@@ -1,6 +1,276 @@
 {
-  "date": "",
-  "universe": [],
+  "date": "2026-09-11",
+  "universe": [
+    {
+      "symbol": "ATHERENERG",
+      "security_id": "757645",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1658.3,
+      "prev_volume": 8086256,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "BSE",
+      "security_id": "19585",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 3306.0,
+      "prev_volume": 2228183,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "CHENNPETRO",
+      "security_id": "2049",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1626.4,
+      "prev_volume": 3754568,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "COALINDIA",
+      "security_id": "20374",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 432.0,
+      "prev_volume": 8811171,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "COFORGE",
+      "security_id": "11543",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 1833.1,
+      "prev_volume": 2691550,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "ESDS",
+      "security_id": "765553",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1582.2,
+      "prev_volume": 15676632,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "GRANULES",
+      "security_id": "11872",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 899.25,
+      "prev_volume": 1597031,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "HCLTECH",
+      "security_id": "7229",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 1207.0,
+      "prev_volume": 2197859,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "HDFCBANK",
+      "security_id": "1333",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE",
+        "MOST_ACTIVE_VOLUME"
+      ],
+      "membership_count": 2,
+      "prev_close": 693.8,
+      "prev_volume": 27108053,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "HINDCOPPER",
+      "security_id": "17939",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 527.3,
+      "prev_volume": 8458321,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "INDUSTOWER",
+      "security_id": "29135",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 372.0,
+      "prev_volume": 4491149,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "INFY",
+      "security_id": "1594",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "MOST_ACTIVE_VALUE",
+        "NIFTY"
+      ],
+      "membership_count": 3,
+      "prev_close": 1036.5,
+      "prev_volume": 8998529,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "LICHSGFIN",
+      "security_id": "1997",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 552.3,
+      "prev_volume": 2842584,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "MCX",
+      "security_id": "31181",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 2,
+      "prev_close": 3300.0,
+      "prev_volume": 1308638,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "MOLBIO",
+      "security_id": "764548",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1509.4,
+      "prev_volume": 11329700,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "OIL",
+      "security_id": "17438",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec"
+      ],
+      "membership_count": 1,
+      "prev_close": 500.3,
+      "prev_volume": 4397946,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "PAYTM",
+      "security_id": "6705",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1739.0,
+      "prev_volume": 1479094,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "RELIANCE",
+      "security_id": "2885",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "MOST_ACTIVE_VALUE"
+      ],
+      "membership_count": 1,
+      "prev_close": 1274.0,
+      "prev_volume": 9296079,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "TCS",
+      "security_id": "11536",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "MOST_ACTIVE_VALUE",
+        "NIFTY"
+      ],
+      "membership_count": 3,
+      "prev_close": 2204.1,
+      "prev_volume": 2490912,
+      "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "TECHM",
+      "security_id": "13538",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "FOSec",
+        "NIFTY"
+      ],
+      "membership_count": 2,
+      "prev_close": 1525.8,
+      "prev_volume": 1405653,
+      "prev_trading_day": "2026-09-10"
+    }
+  ],
   "signals": {},
   "alert_state": {},
   "pending_setups": {},
