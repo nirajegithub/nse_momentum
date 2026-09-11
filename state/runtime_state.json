@@ -1126,11 +1126,8 @@
         "t2": 2198.550000000001,
         "t3": 2196.250000000001
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "COALINDIA": {
+    },
+    "COALINDIA|SELL|5M_QUALITY|2026-09-11T15:00:00+05:30": {
       "direction": "SELL",
       "setup_5m_timestamp": "2026-09-11T15:00:00+05:30",
       "setup_5m_open": 425.65,
@@ -1150,9 +1147,25 @@
       "breakout_level": 425.25,
       "stop_loss": 425.3,
       "symbol": "COALINDIA",
-      "security_id": "20374"
+      "security_id": "20374",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 03:02 PM IST",
+      "setup_time": "11 Sep 2026, 03:00 PM IST",
+      "signal_price": 424.85,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.7837900058184548,
+      "risk": {
+        "entry": 424.85,
+        "sl": 425.3,
+        "risk": 0.44999999999998863,
+        "t1": 424.17500000000007,
+        "t2": 423.725,
+        "t3": 423.2750000000001
+      }
     },
-    "INFY": {
+    "INFY|SELL|5M_QUALITY|2026-09-11T15:00:00+05:30": {
       "direction": "SELL",
       "setup_5m_timestamp": "2026-09-11T15:00:00+05:30",
       "setup_5m_open": 1038.0,
@@ -1172,9 +1185,27 @@
       "breakout_level": 1037.4,
       "stop_loss": 1037.9,
       "symbol": "INFY",
-      "security_id": "1594"
+      "security_id": "1594",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 03:02 PM IST",
+      "setup_time": "11 Sep 2026, 03:00 PM IST",
+      "signal_price": 1037.0,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 2.527241206456953,
+      "risk": {
+        "entry": 1037.0,
+        "sl": 1037.9,
+        "risk": 0.900000000000091,
+        "t1": 1035.6499999999999,
+        "t2": 1034.7499999999998,
+        "t3": 1033.8499999999997
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T15:00:00+05:30",
     "BSE": "2026-09-11T15:00:00+05:30",
