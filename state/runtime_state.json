@@ -666,6 +666,44 @@
         "t2": 3236.4000000000005,
         "t3": 3238.8
       }
+    },
+    "HINDCOPPER|BUY|5M_QUALITY|2026-09-11T12:50:00+05:30": {
+      "direction": "BUY",
+      "setup_5m_timestamp": "2026-09-11T12:50:00+05:30",
+      "setup_5m_open": 512.1,
+      "setup_5m_high": 514.4,
+      "setup_5m_low": 511.8,
+      "setup_5m_close": 513.8,
+      "setup_5m_ema9": 511.946901510145,
+      "setup_5m_ema20": 511.77486681296426,
+      "setup_5m_rsi14": 61.10514181909854,
+      "setup_5m_previous_rsi14": 49.736792696722986,
+      "setup_5m_vwap": 509.81494434077547,
+      "setup_5m_volume": 336553.0,
+      "setup_5m_avg_volume": 46496.25,
+      "setup_5m_rvol": 7.238282657203538,
+      "daily_close": 527.3,
+      "daily_volume": 8458321.0,
+      "breakout_level": 514.4,
+      "stop_loss": 513.8,
+      "symbol": "HINDCOPPER",
+      "security_id": "17939",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 12:51 PM IST",
+      "setup_time": "11 Sep 2026, 12:50 PM IST",
+      "signal_price": 514.45,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 7.238282657203538,
+      "risk": {
+        "entry": 514.45,
+        "sl": 513.8,
+        "risk": 0.650000000000091,
+        "t1": 515.4250000000002,
+        "t2": 516.0750000000003,
+        "t3": 516.7250000000004
+      }
     }
   },
   "alert_state": {},
@@ -691,28 +729,6 @@
       "stop_loss": 426.95,
       "symbol": "COALINDIA",
       "security_id": "20374"
-    },
-    "HINDCOPPER": {
-      "direction": "BUY",
-      "setup_5m_timestamp": "2026-09-11T12:50:00+05:30",
-      "setup_5m_open": 512.1,
-      "setup_5m_high": 514.4,
-      "setup_5m_low": 511.8,
-      "setup_5m_close": 513.8,
-      "setup_5m_ema9": 511.946901510145,
-      "setup_5m_ema20": 511.77486681296426,
-      "setup_5m_rsi14": 61.10514181909854,
-      "setup_5m_previous_rsi14": 49.736792696722986,
-      "setup_5m_vwap": 509.81494434077547,
-      "setup_5m_volume": 336553.0,
-      "setup_5m_avg_volume": 46496.25,
-      "setup_5m_rvol": 7.238282657203538,
-      "daily_close": 527.3,
-      "daily_volume": 8458321.0,
-      "breakout_level": 514.4,
-      "stop_loss": 513.8,
-      "symbol": "HINDCOPPER",
-      "security_id": "17939"
     }
   },
   "processed_5m_candles": {
