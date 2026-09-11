@@ -932,11 +932,8 @@
         "t2": 1261.75,
         "t3": 1262.4500000000003
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "SMSPHARMA": {
+    },
+    "SMSPHARMA|BUY|5M_QUALITY|2026-09-11T14:00:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T14:00:00+05:30",
       "setup_5m_open": 453.7,
@@ -956,9 +953,27 @@
       "breakout_level": 463.95,
       "stop_loss": 460.35,
       "symbol": "SMSPHARMA",
-      "security_id": "14329"
+      "security_id": "14329",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 02:03 PM IST",
+      "setup_time": "11 Sep 2026, 02:00 PM IST",
+      "signal_price": 464.75,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 3.6488456876030195,
+      "risk": {
+        "entry": 464.75,
+        "sl": 460.35,
+        "risk": 4.399999999999977,
+        "t1": 471.34999999999997,
+        "t2": 475.74999999999994,
+        "t3": 480.1499999999999
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T14:00:00+05:30",
     "BSE": "2026-09-11T14:00:00+05:30",
