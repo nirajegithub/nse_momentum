@@ -742,6 +742,44 @@
         "t2": 426.375,
         "t3": 426.32499999999993
       }
+    },
+    "SMSPHARMA|BUY|5M_QUALITY|2026-09-11T13:35:00+05:30": {
+      "direction": "BUY",
+      "setup_5m_timestamp": "2026-09-11T13:35:00+05:30",
+      "setup_5m_open": 455.05,
+      "setup_5m_high": 457.8,
+      "setup_5m_low": 455.05,
+      "setup_5m_close": 457.0,
+      "setup_5m_ema9": 454.3478097483677,
+      "setup_5m_ema20": 452.2931599182917,
+      "setup_5m_rsi14": 63.830812015493585,
+      "setup_5m_previous_rsi14": 60.66834846079708,
+      "setup_5m_vwap": 448.74066217116996,
+      "setup_5m_volume": 58224.0,
+      "setup_5m_avg_volume": 35352.4,
+      "setup_5m_rvol": 1.6469603195256899,
+      "daily_close": 417.45,
+      "daily_volume": 561774.0,
+      "breakout_level": 457.8,
+      "stop_loss": 457.0,
+      "symbol": "SMSPHARMA",
+      "security_id": "14329",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 01:38 PM IST",
+      "setup_time": "11 Sep 2026, 01:35 PM IST",
+      "signal_price": 457.9,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.6469603195256899,
+      "risk": {
+        "entry": 457.9,
+        "sl": 457.0,
+        "risk": 0.8999999999999773,
+        "t1": 459.24999999999994,
+        "t2": 460.1499999999999,
+        "t3": 461.0499999999999
+      }
     }
   },
   "alert_state": {},
@@ -767,28 +805,6 @@
       "stop_loss": 494.45,
       "symbol": "OIL",
       "security_id": "17438"
-    },
-    "SMSPHARMA": {
-      "direction": "BUY",
-      "setup_5m_timestamp": "2026-09-11T13:35:00+05:30",
-      "setup_5m_open": 455.05,
-      "setup_5m_high": 457.8,
-      "setup_5m_low": 455.05,
-      "setup_5m_close": 457.0,
-      "setup_5m_ema9": 454.3478097483677,
-      "setup_5m_ema20": 452.2931599182917,
-      "setup_5m_rsi14": 63.830812015493585,
-      "setup_5m_previous_rsi14": 60.66834846079708,
-      "setup_5m_vwap": 448.74066217116996,
-      "setup_5m_volume": 58224.0,
-      "setup_5m_avg_volume": 35352.4,
-      "setup_5m_rvol": 1.6469603195256899,
-      "daily_close": 417.45,
-      "daily_volume": 561774.0,
-      "breakout_level": 457.8,
-      "stop_loss": 457.0,
-      "symbol": "SMSPHARMA",
-      "security_id": "14329"
     }
   },
   "processed_5m_candles": {
