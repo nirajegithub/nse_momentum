@@ -476,11 +476,8 @@
         "t2": 1518.0,
         "t3": 1514.0
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "HCLTECH": {
+    },
+    "HCLTECH|BUY|5M_QUALITY|2026-09-11T11:40:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T11:40:00+05:30",
       "setup_5m_open": 1218.3,
@@ -500,9 +497,25 @@
       "breakout_level": 1220.5,
       "stop_loss": 1220.1,
       "symbol": "HCLTECH",
-      "security_id": "7229"
+      "security_id": "7229",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 11:41 AM IST",
+      "setup_time": "11 Sep 2026, 11:40 AM IST",
+      "signal_price": 1221.7,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 2.4402125431485864,
+      "risk": {
+        "entry": 1221.7,
+        "sl": 1220.1,
+        "risk": 1.6000000000001364,
+        "t1": 1224.1000000000004,
+        "t2": 1225.7000000000003,
+        "t3": 1227.3000000000006
+      }
     },
-    "TECHM": {
+    "TECHM|BUY|5M_QUALITY|2026-09-11T11:40:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T11:40:00+05:30",
       "setup_5m_open": 1555.6,
@@ -522,9 +535,27 @@
       "breakout_level": 1555.7,
       "stop_loss": 1555.0,
       "symbol": "TECHM",
-      "security_id": "13538"
+      "security_id": "13538",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 11:41 AM IST",
+      "setup_time": "11 Sep 2026, 11:40 AM IST",
+      "signal_price": 1557.0,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 2.1626013360204346,
+      "risk": {
+        "entry": 1557.0,
+        "sl": 1555.0,
+        "risk": 2.0,
+        "t1": 1560.0,
+        "t2": 1562.0,
+        "t3": 1564.0
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T11:40:00+05:30",
     "BSE": "2026-09-11T11:40:00+05:30",
