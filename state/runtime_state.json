@@ -438,11 +438,8 @@
         "t2": 386.85,
         "t3": 388.6500000000001
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "MOLBIO": {
+    },
+    "MOLBIO|SELL|5M_QUALITY|2026-09-11T11:20:00+05:30": {
       "direction": "SELL",
       "setup_5m_timestamp": "2026-09-11T11:20:00+05:30",
       "setup_5m_open": 1562.2,
@@ -462,9 +459,27 @@
       "breakout_level": 1530.3,
       "stop_loss": 1532.0,
       "symbol": "MOLBIO",
-      "security_id": "764548"
+      "security_id": "764548",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 11:21 AM IST",
+      "setup_time": "11 Sep 2026, 11:20 AM IST",
+      "signal_price": 1528.0,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.7986160524384909,
+      "risk": {
+        "entry": 1528.0,
+        "sl": 1532.0,
+        "risk": 4.0,
+        "t1": 1522.0,
+        "t2": 1518.0,
+        "t3": 1514.0
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T11:20:00+05:30",
     "BSE": "2026-09-11T11:20:00+05:30",
