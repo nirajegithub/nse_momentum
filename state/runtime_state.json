@@ -269,6 +269,21 @@
       "prev_close": 1525.8,
       "prev_volume": 1405653,
       "prev_trading_day": "2026-09-10"
+    },
+    {
+      "symbol": "SMSPHARMA",
+      "security_id": "14329",
+      "exchange_segment": "NSE_EQ",
+      "instrument": "EQUITY",
+      "indices": [
+        "VOLUME_GAINERS"
+      ],
+      "membership_count": 1,
+      "universe_source": "NSE_VOLUME_GAINERS",
+      "volume_gainer_added_at": "2026-09-11T10:30:44.741122+05:30",
+      "prev_close": 417.45,
+      "prev_volume": 561774,
+      "prev_trading_day": "2026-09-10"
     }
   ],
   "signals": {
@@ -426,28 +441,52 @@
     }
   },
   "alert_state": {},
-  "pending_setups": {},
-  "processed_5m_candles": {
-    "ATHERENERG": "2026-09-11T10:25:00+05:30",
-    "BSE": "2026-09-11T10:25:00+05:30",
-    "CHENNPETRO": "2026-09-11T10:25:00+05:30",
-    "COALINDIA": "2026-09-11T10:25:00+05:30",
-    "COFORGE": "2026-09-11T10:25:00+05:30",
-    "ESDS": "2026-09-11T10:25:00+05:30",
-    "GRANULES": "2026-09-11T10:25:00+05:30",
-    "HCLTECH": "2026-09-11T10:25:00+05:30",
-    "HDFCBANK": "2026-09-11T10:25:00+05:30",
-    "HINDCOPPER": "2026-09-11T10:25:00+05:30",
-    "INDUSTOWER": "2026-09-11T10:25:00+05:30",
-    "INFY": "2026-09-11T10:25:00+05:30",
-    "LICHSGFIN": "2026-09-11T10:25:00+05:30",
-    "MCX": "2026-09-11T10:25:00+05:30",
-    "MOLBIO": "2026-09-11T10:25:00+05:30",
-    "OIL": "2026-09-11T10:25:00+05:30",
-    "PAYTM": "2026-09-11T10:25:00+05:30",
-    "RELIANCE": "2026-09-11T10:25:00+05:30",
-    "TCS": "2026-09-11T10:25:00+05:30",
-    "TECHM": "2026-09-11T10:25:00+05:30"
+  "pending_setups": {
+    "LICHSGFIN": {
+      "direction": "BUY",
+      "setup_5m_timestamp": "2026-09-11T10:30:00+05:30",
+      "setup_5m_open": 563.1,
+      "setup_5m_high": 565.4,
+      "setup_5m_low": 560.65,
+      "setup_5m_close": 564.6,
+      "setup_5m_ema9": 561.3229746441248,
+      "setup_5m_ema20": 558.6694227208186,
+      "setup_5m_rsi14": 66.66361583289213,
+      "setup_5m_previous_rsi14": 64.82029814605573,
+      "setup_5m_vwap": 558.615666438889,
+      "setup_5m_volume": 321295.0,
+      "setup_5m_avg_volume": 210418.9,
+      "setup_5m_rvol": 1.5269303280266173,
+      "daily_close": 552.3,
+      "daily_volume": 2842584.0,
+      "breakout_level": 565.4,
+      "stop_loss": 564.6,
+      "symbol": "LICHSGFIN",
+      "security_id": "1997"
+    }
   },
-  "volume_gainers_last_refresh": "2026-09-11T10:20:00+05:30"
+  "processed_5m_candles": {
+    "ATHERENERG": "2026-09-11T10:30:00+05:30",
+    "BSE": "2026-09-11T10:30:00+05:30",
+    "CHENNPETRO": "2026-09-11T10:30:00+05:30",
+    "COALINDIA": "2026-09-11T10:30:00+05:30",
+    "COFORGE": "2026-09-11T10:30:00+05:30",
+    "ESDS": "2026-09-11T10:30:00+05:30",
+    "GRANULES": "2026-09-11T10:30:00+05:30",
+    "HCLTECH": "2026-09-11T10:30:00+05:30",
+    "HDFCBANK": "2026-09-11T10:30:00+05:30",
+    "HINDCOPPER": "2026-09-11T10:30:00+05:30",
+    "INDUSTOWER": "2026-09-11T10:30:00+05:30",
+    "INFY": "2026-09-11T10:30:00+05:30",
+    "LICHSGFIN": "2026-09-11T10:30:00+05:30",
+    "MCX": "2026-09-11T10:30:00+05:30",
+    "MOLBIO": "2026-09-11T10:30:00+05:30",
+    "OIL": "2026-09-11T10:30:00+05:30",
+    "PAYTM": "2026-09-11T10:30:00+05:30",
+    "RELIANCE": "2026-09-11T10:30:00+05:30",
+    "TCS": "2026-09-11T10:30:00+05:30",
+    "TECHM": "2026-09-11T10:30:00+05:30",
+    "SMSPHARMA": "2026-09-11T10:30:00+05:30"
+  },
+  "volume_gainers_last_refresh": "2026-09-11T10:30:00+05:30"
 }
