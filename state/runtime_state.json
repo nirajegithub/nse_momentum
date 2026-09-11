@@ -552,11 +552,8 @@
         "t2": 1562.0,
         "t3": 1564.0
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "COFORGE": {
+    },
+    "COFORGE|BUY|5M_QUALITY|2026-09-11T11:50:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T11:50:00+05:30",
       "setup_5m_open": 1835.0,
@@ -576,9 +573,27 @@
       "breakout_level": 1843.1,
       "stop_loss": 1841.6,
       "symbol": "COFORGE",
-      "security_id": "11543"
+      "security_id": "11543",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 11:52 AM IST",
+      "setup_time": "11 Sep 2026, 11:50 AM IST",
+      "signal_price": 1843.5,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 4.509453386026208,
+      "risk": {
+        "entry": 1843.5,
+        "sl": 1841.6,
+        "risk": 1.900000000000091,
+        "t1": 1846.3500000000001,
+        "t2": 1848.2500000000002,
+        "t3": 1850.1500000000003
+      }
     }
   },
+  "alert_state": {},
+  "pending_setups": {},
   "processed_5m_candles": {
     "ATHERENERG": "2026-09-11T11:50:00+05:30",
     "BSE": "2026-09-11T11:50:00+05:30",
