@@ -894,11 +894,8 @@
         "t2": 1859.7,
         "t3": 1862.7
       }
-    }
-  },
-  "alert_state": {},
-  "pending_setups": {
-    "RELIANCE": {
+    },
+    "RELIANCE|BUY|5M_QUALITY|2026-09-11T14:00:00+05:30": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T14:00:00+05:30",
       "setup_5m_open": 1258.1,
@@ -918,8 +915,27 @@
       "breakout_level": 1259.6,
       "stop_loss": 1259.3,
       "symbol": "RELIANCE",
-      "security_id": "2885"
-    },
+      "security_id": "2885",
+      "setup": "5M_QUALITY",
+      "signal_time": "11 Sep 2026, 02:02 PM IST",
+      "setup_time": "11 Sep 2026, 02:00 PM IST",
+      "signal_price": 1260.0,
+      "status": "ACTIVE",
+      "score": 0,
+      "grade": "QUALITY",
+      "rvol": 1.915375733666891,
+      "risk": {
+        "entry": 1260.0,
+        "sl": 1259.3,
+        "risk": 0.7000000000000455,
+        "t1": 1261.0500000000002,
+        "t2": 1261.75,
+        "t3": 1262.4500000000003
+      }
+    }
+  },
+  "alert_state": {},
+  "pending_setups": {
     "SMSPHARMA": {
       "direction": "BUY",
       "setup_5m_timestamp": "2026-09-11T14:00:00+05:30",
