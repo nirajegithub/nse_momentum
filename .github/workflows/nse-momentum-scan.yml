@@ -1,4 +1,4 @@
-name: NSE Momentum - Scanner
+name: NSE Momentum - 5M Scanner
 
 on:
   workflow_dispatch:
@@ -7,25 +7,43 @@ permissions:
   contents: write
 
 concurrency:
-  group: nse-momentum
+  group: nse-momentum-scanner
   cancel-in-progress: false
 
 jobs:
   scanner:
-    name: Scan NSE Momentum
+    name: Scan NSE Momentum on Completed 5M Candles
     runs-on: ubuntu-latest
-
     env:
       DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
       DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-
       DRY_RUN: "false"
       MIN_PRICE: "350"
+      MIN_PREV_VOLUME: "500000"
       MIN_DAILY_VOLUME: "500000"
-
-      SCANNER_ACTION: "auto"
+      BUY_RSI_MIN: "55"
+      BUY_RSI_MAX: "70"
+      SELL_RSI_MIN: "30"
+      SELL_RSI_MAX: "45"
+      RVOL_LOOKBACK: "20"
+      MIN_15M_RVOL: "1.5"
+      REQUIRE_EMA_CROSSOVER: "false"
+      MIN_TRADE_SCORE: "5"
+      MAX_TRADE_SCORE: "7"
+      T1_RR: "2.0"
+      T2_RR: "3.0"
+      T3_RR: "4.0"
+      MIN_RR: "2.0"
+      MIN_STOP_DISTANCE_PERCENT: "0.50"
+      RISK_PERCENT: "1.0"
+      PENDING_SETUP_MAX_15M_CANDLES: "1"
+      ENTRY_TIMEFRAME: "5"
+      SETUP_TIMEFRAME: "15"
+      SCAN_START_HHMM: "930"
+      SCAN_END_HHMM: "1505"
+      SCANNER_ACTION: "scan"
 
     steps:
       - name: Checkout repository
@@ -43,19 +61,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run scanner
-        run: |
-          python -m app.main
+      - name: Run completed-5M scanner
+        run: python -m app.main
 
       - name: Commit scanner state
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add state/runtime_state.json
-
           if git diff --cached --quiet; then
-            echo "No state changes to commit."
+            echo "No scanner state changes."
           else
             git commit -m "Update NSE momentum scanner state"
             git push
