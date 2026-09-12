@@ -130,6 +130,72 @@ class DhanClient:
         return result
 
     # ------------------------------------------------------------------
+    # Intraday Historical Data
+    # ------------------------------------------------------------------
+
+    def historical_intraday_df(
+        self,
+        security_id: str,
+        from_date: str,
+        to_date: str,
+        interval: int,
+    ) -> pd.DataFrame:
+        """Fetch historical intraday candles from Dhan's V2 API.
+
+        Dhan supports 1/5/15/25/60 minute intervals. The backtester uses
+        5M and 15M only. Timestamps returned by Dhan are converted to IST.
+        """
+        if int(interval) not in (1, 5, 15, 25, 60):
+            raise ValueError("interval must be one of 1, 5, 15, 25, 60")
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "access-token": self.access_token,
+        }
+        payload = {
+            "securityId": str(security_id),
+            "exchangeSegment": "NSE_EQ",
+            "instrument": "EQUITY",
+            "interval": str(int(interval)),
+            "oi": False,
+            "fromDate": from_date,
+            "toDate": to_date,
+        }
+        try:
+            response = requests.post(
+                "https://api.dhan.co/v2/charts/intraday",
+                headers=headers,
+                json=payload,
+                timeout=30,
+            )
+            if response.status_code != 200:
+                LOG.error(
+                    "Dhan intraday API failed: security_id=%s interval=%s HTTP=%s response=%s",
+                    security_id, interval, response.status_code, response.text,
+                )
+                return pd.DataFrame()
+
+            data = response.json()
+            required = ["timestamp", "open", "high", "low", "close", "volume"]
+            missing = [key for key in required if key not in data]
+            if missing:
+                LOG.error("Dhan intraday response missing fields: security_id=%s missing=%s", security_id, missing)
+                return pd.DataFrame()
+
+            n = min(len(data[key]) for key in required)
+            if n == 0:
+                return pd.DataFrame()
+
+            df = pd.DataFrame({key: data[key][:n] for key in required})
+            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", utc=True).dt.tz_convert(IST)
+            df = df.set_index("timestamp").sort_index()
+            return df[~df.index.duplicated(keep="last")]
+        except requests.RequestException as exc:
+            LOG.error("Dhan intraday HTTP exception: security_id=%s interval=%s error=%s", security_id, interval, exc)
+            return pd.DataFrame()
+
+    # ------------------------------------------------------------------
     # Daily Historical Data
     # ------------------------------------------------------------------
 

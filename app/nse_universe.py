@@ -17,19 +17,11 @@ LOG = logging.getLogger(__name__)
 
 BASE = "https://www.nseindia.com"
 URL = f"{BASE}/api/heatmap-symbols"
-VOLUME_GAINERS_URL = f"{BASE}/api/live-analysis-volume-gainers"
-MOST_ACTIVE_URL = f"{BASE}/api/live-analysis-most-active-securities"
-VARIATIONS_URL = f"{BASE}/api/live-analysis-variations"
 
-# M50/M30 are intentionally disabled. These broader NSE sources are used for
-# discovery; Dhan daily liquidity filters still decide the final universe.
-NSE_UNIVERSE_SOURCES = (
-    ("MOST_ACTIVE_VOLUME", MOST_ACTIVE_URL, {"index": "volume"}, None),
-    ("MOST_ACTIVE_VALUE", MOST_ACTIVE_URL, {"index": "value"}, None),
-    ("NIFTY", VARIATIONS_URL, {"index": "gainers"}, "NIFTY"),
-    ("NIFTYNEXT50", VARIATIONS_URL, {"index": "gainers"}, "NIFTYNEXT50"),
-    ("FOSec", VARIATIONS_URL, {"index": "gainers"}, "FOSec"),
-)
+INDEXES = {
+    "M50": "NIFTY500MOMENTM50",
+    "M30": "NIFTY200MOMENTM30",
+}
 
 HEADERS = {
     "User-Agent": (
@@ -48,8 +40,6 @@ IST = ZoneInfo("Asia/Kolkata")
 NSE_TIMEOUT = 45
 NSE_RETRIES = 3
 NSE_RETRY_DELAY = 5
-VOLUME_GAINER_MIN_VOLUME = 50_000
-VOLUME_GAINER_MIN_PRICE = 350.0
 
 
 def extract_symbols(payload):
@@ -189,23 +179,6 @@ def nse_get(session, url, params=None):
     raise RuntimeError("NSE request failed after retries")
 
 
-def fetch_source_symbols(session, url, params, section=None):
-    response = nse_get(session, url, params=params)
-    payload = response.json()
-
-    if section is not None:
-        payload = payload.get(section, {})
-
-    symbols = extract_symbols(payload)
-    LOG.info(
-        "NSE source=%s params=%s returned %d symbols",
-        section or url,
-        params,
-        len(symbols),
-    )
-    return symbols
-
-
 def fetch_index(session, code):
 
     response = nse_get(
@@ -260,8 +233,12 @@ def build_universe(dhan: DhanClient, as_of_date=None):
 
     membership = defaultdict(set)
 
-    for name, url, params, section in NSE_UNIVERSE_SOURCES:
-        symbols = fetch_source_symbols(session, url, params, section)
+    for name, code in INDEXES.items():
+
+        symbols = fetch_index(
+            session,
+            code,
+        )
 
         LOG.info(
             "%s returned %d symbols",
@@ -420,7 +397,7 @@ def build_universe(dhan: DhanClient, as_of_date=None):
                 price_rejected += 1
 
                 LOG.info(
-                    "%s rejected: price %.2f < %.2f",
+                    "%s rejected: price %.2f <= %.2f",
                     symbol,
                     close_price,
                     SETTINGS.min_price,
@@ -499,124 +476,3 @@ def build_universe(dhan: DhanClient, as_of_date=None):
     )
 
     return result
-
-
-def fetch_volume_gainer_symbols(session):
-    """Fetch current NSE Volume Gainers and return symbols passing filters."""
-    response = nse_get(session, VOLUME_GAINERS_URL)
-    payload = response.json()
-    rows = payload.get("data", [])
-    if not isinstance(rows, list):
-        raise RuntimeError("NSE Volume Gainers response did not contain a data list")
-
-    symbols = []
-    for row in rows:
-        try:
-            symbol = str(row.get("symbol") or "").strip().upper()
-            price = float(row.get("ltp", row.get("lastPrice", 0)) or 0)
-            volume = float(
-                row.get(
-                    "volume",
-                    row.get("totalTradedVolume", row.get("quantityTraded", 0)),
-                )
-                or 0
-            )
-            if symbol and volume > VOLUME_GAINER_MIN_VOLUME and price >= VOLUME_GAINER_MIN_PRICE:
-                symbols.append(symbol)
-        except (TypeError, ValueError):
-            continue
-
-    return sorted(set(symbols))
-
-
-def refresh_dynamic_volume_gainers(dhan, state, ts):
-    """Refresh Volume Gainers every 10 minutes and append new stocks to today's universe."""
-    minute_bucket = ts.replace(minute=(ts.minute // 10) * 10, second=0, microsecond=0)
-    bucket_key = minute_bucket.isoformat()
-    if state.get("volume_gainers_last_refresh") == bucket_key:
-        return False
-
-    session = create_nse_session()
-    try:
-        symbols = fetch_volume_gainer_symbols(session)
-    except Exception as exc:
-        LOG.warning("Volume Gainers refresh failed: %s", exc)
-        return False
-
-    existing = {str(item.get("symbol", "")).upper() for item in state.get("universe", [])}
-    new_symbols = [symbol for symbol in symbols if symbol not in existing]
-    if not new_symbols:
-        state["volume_gainers_last_refresh"] = bucket_key
-        LOG.info("Volume Gainers refresh | eligible=%d | new=0 | universe=%d", len(symbols), len(existing))
-        return True
-
-    mapping = dhan.build_symbol_map(new_symbols)
-    prev_day = previous_trading_day(ts.date())
-    from_date = prev_day.isoformat()
-    to_date = (prev_day + timedelta(days=1)).isoformat()
-    added = 0
-    for symbol in new_symbols:
-        meta = mapping.get(symbol)
-        if not meta:
-            LOG.warning("Volume Gainer missing Dhan security_id: %s", symbol)
-            continue
-
-        try:
-            df = dhan.historical_daily_df(
-                security_id=meta["security_id"],
-                from_date=from_date,
-                to_date=to_date,
-            )
-            prev_rows = df[df.index.date == prev_day] if not df.empty else df
-            if prev_rows.empty:
-                LOG.warning(
-                    "%s volume gainer rejected: no candle for %s",
-                    symbol,
-                    prev_day.isoformat(),
-                )
-                continue
-
-            candle = prev_rows.iloc[-1]
-            prev_close = float(candle["close"])
-            prev_volume = int(candle["volume"])
-
-            if prev_close <= SETTINGS.min_price:
-                LOG.info(
-                    "%s volume gainer rejected: price %.2f < %.2f",
-                    symbol,
-                    prev_close,
-                    SETTINGS.min_price,
-                )
-                continue
-
-            if prev_volume <= SETTINGS.min_prev_volume:
-                LOG.info(
-                    "%s volume gainer rejected: volume %d <= %d",
-                    symbol,
-                    prev_volume,
-                    SETTINGS.min_prev_volume,
-                )
-                continue
-        except Exception:
-            LOG.exception("%s volume gainer daily filter failed", symbol)
-            continue
-
-        state.setdefault("universe", []).append({
-            "symbol": symbol,
-            **meta,
-            "indices": ["VOLUME_GAINERS"],
-            "membership_count": 1,
-            "universe_source": "NSE_VOLUME_GAINERS",
-            "volume_gainer_added_at": ts.isoformat(),
-            "prev_close": prev_close,
-            "prev_volume": prev_volume,
-            "prev_trading_day": prev_day.isoformat(),
-        })
-        added += 1
-
-    state["volume_gainers_last_refresh"] = bucket_key
-    LOG.info(
-        "Volume Gainers refresh | eligible=%d | new=%d | added=%d | universe=%d",
-        len(symbols), len(new_symbols), added, len(state.get("universe", [])),
-    )
-    return True

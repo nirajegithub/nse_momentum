@@ -44,6 +44,20 @@ def signal_message(s):
     ])
 
 
+def stop_update_message(s, new_stop, stage, basis):
+    labels = {1: "BREAK-EVEN", 2: "+0.5R LOCKED", 3: "+1R LOCKED", 4: "15M STRUCTURE TRAIL"}
+    label = labels.get(int(stage), basis)
+    return "\n".join([
+        "🔒 STOP UPDATE",
+        "",
+        str(s["symbol"]),
+        "",
+        f"Entry: {_money(s['risk']['entry'])}",
+        f"New SL: {_money(new_stop)}",
+        f"Status: {label}",
+    ])
+
+
 def exit_message(s, exit_price, reason, exit_time):
     entry = float(s["risk"]["entry"])
     points = float(exit_price) - entry if s["direction"] == "BUY" else entry - float(exit_price)

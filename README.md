@@ -1,56 +1,130 @@
-# NSE Momentum Telegram Scanner V1
+# NSE Momentum Scanner — Final Implementation Bundle
 
-Universe discovery uses NSE most-active volume, most-active value, and gainers from **NIFTY**, **NIFTYNEXT50**, and **FOSec**. M50/M30 discovery is disabled.
+This replacement bundle implements the final strategy agreed for the NSE/Dhan/Telegram scanner.
 
-## Final schedule (Asia/Kolkata)
-- 09:22: check NSE trading day; fetch configured NSE discovery sources; merge + deduplicate; map Dhan security IDs; apply the previous-day Dhan price and volume filters; save the daily universe.
-- 09:30 through 15:05: every minute, scan only today's universe. A completed 5M quality candle creates a short-lived pending setup; subsequent completed 1M closes confirm its entry.
-- During every scan cycle through 15:05: monitor existing active signals for stop-loss and T1 exits.
-- 15:10 through 15:25: monitor existing active signals only.
-- 15:25: finalise summary; exited signals use actual exit price, active-at-EOD signals use final LTP; back up the completed state to `state/backups/runtime_state_YYYY-MM-DD.json`, then clear runtime state.
-- Saturday, Sunday and dates in `data/nse_holidays.json` are skipped.
+## Strategy
 
-## Data
-DhanHQ-py 2.2.0 is used. Security IDs come from Dhan's security master, not hard-coded values. Intraday data is requested through the official SDK; only completed 5M setup candles and completed subsequent 1M confirmation candles are used. V1 does not use WebSocket or order placement.
-
-## Telegram
-Every message automatically appends the required disclaimer:
-
-⚠️ Disclaimer: Above calls are not Buy or Sell levels. These calls are for educational purposes only, based on research. Consult your financial advisor before investing.
-
-## Secrets
-Set GitHub repository secrets: `DHAN_CLIENT_ID`, `DHAN_ACCESS_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
-
-Keep `DRY_RUN=true` until dry-run validation is complete.
-
-## cron-job.org
-Use Asia/Kolkata timezone.
-
-1. 09:22 job: trigger GitHub Actions workflow dispatch with input `action=universe`.
-2. Every minute from 09:30 to 15:05: trigger the scanner workflow (or use its built-in GitHub schedule). Continue using `monitor` for 15:10–15:25 and `summary` at 15:25.
-
-The GitHub API workflow-dispatch request requires a GitHub token. Store that token in cron-job.org securely; never place Dhan or Telegram credentials in the URL.
-
-## Signal quality gates
-BUY requires 5M EMA9 above EMA20, RSI 55–70 and rising, close above VWAP and EMA20, daily close above ₹350, daily volume above 500,000, and 5M RVOL at least 1.5x. SELL uses the symmetric bearish conditions (RSI 30–45 and falling); daily liquidity filters remain the same. Set `REQUIRE_EMA_CROSSOVER=true` only to require a fresh EMA crossover.
-
-The qualifying 5M candle is retained only until the next completed 5M candle. BUY confirms when a later completed 1M close is strictly above its high; SELL confirms strictly below its low. Entry is that 1M close and SL is exactly the qualifying 5M close. No 15M regime, score, LTP, ATR-width, or chase gate blocks a valid confirmation.
-
-## Local test
-```bash
-python -m venv .venv
-# activate the environment
-pip install -r requirements.txt
-pytest -q
-python -m app.main
+```text
+Completed 15M candle
+        ↓
+15M BUY / SELL quality filters
+        ↓
+Demand/Supply trade-quality score 0–7
+        ↓
+Score >= 5
+        ↓
+Store exact 15M setup
+        ↓
+Wait for subsequent completed 5M candles
+        ↓
+BUY: 5M close > stored 15M high
+SELL: 5M close < stored 15M low
+        ↓
+Entry = confirming 5M close
+SL = stored 15M close
+        ↓
+Minimum SL distance >= 0.50%
+        ↓
+T1 >= 2R
+        ↓
+Market-structure validation
+        ↓
+Telegram alert
 ```
 
-## First rollout
-1. Run one-symbol/data validation with POLYCAB.
-2. Keep Telegram in dry-run.
-3. Validate Dhan security mapping and candle timestamps.
-4. Validate duplicate protection and EXIT accounting.
-5. Enable full M50+M30 universe only after validation.
+## Main changes
 
-## Important
-NSE and Dhan response schemas can change. Run the first deployment in dry-run and inspect logs before enabling live Telegram messages.
+- 15M setup timeframe.
+- 5M confirmation/entry timeframe.
+- No 1M confirmation.
+- Scanner cadence: approximately every 5 minutes.
+- 15M setup is stored persistently.
+- Pending setup expires when the next completed 15M candle appears.
+- BUY requires completed 5M close above stored 15M high.
+- SELL requires completed 5M close below stored 15M low.
+- Entry is the completed 5M close.
+- Initial SL is exactly the stored 15M close.
+- Minimum Entry/SL distance is 0.50%.
+- T1/T2/T3 = 2R/3R/4R.
+- New trade-quality score is 0–7 with minimum 5.
+- Old score/grade gates are removed from signal generation.
+- Telegram is intentionally concise.
+- Detailed decisions remain in logs.
+- Summary is point based from the original Entry.
+- Universe refreshes every 15 minutes and appends new candidates.
+
+## Telegram alert
+
+```text
+🚀 BUY ALERT
+
+XYZ
+
+Entry: ₹500
+SL: ₹495
+
+T1: ₹510
+T2: ₹515
+T3: ₹520
+
+Setup Quality: 6.0/7
+```
+
+## Summary
+
+```text
+📊 NSE MOMENTUM SUMMARY
+
+XYZ Stocks +15.00 points
+INFY Stocks -5.00 points
+TCS Stocks +8.00 points
+```
+
+## Small-stop rejection
+
+A signal such as:
+
+```text
+Entry = ₹1,259.90
+SL = ₹1,259.30
+Risk = ₹0.60
+Risk % ≈ 0.048%
+```
+
+is rejected as:
+
+```text
+SIGNAL_REJECTED | reason=STOP_DISTANCE_TOO_SMALL
+```
+
+No Telegram alert is sent.
+
+## Files in this bundle
+
+- `app/config.py`
+- `app/indicators.py`
+- `app/main.py`
+- `app/risk.py`
+- `app/scoring.py`
+- `app/state.py`
+- `app/strategy.py`
+- `app/summary.py`
+- `app/telegram.py`
+- `.github/workflows/nse-momentum-scan.yml`
+- `.github/workflows/nse-momentum-universe.yml`
+- `.github/workflows/nse-momentum-summary.yml`
+- `tests/test_final_strategy.py`
+- `CRON_JOB_SETUP.md`
+- `FINAL_CODE_GENERATION_PROMPT.md`
+
+## Important deployment note
+
+This is a **replacement-file bundle**, not a full clone of the repository. Existing infrastructure such as `app/dhan_client.py`, `app/calendar.py`, `app/nse_universe.py`, requirements, secrets, and other unchanged repository files must remain in place.
+
+The external cron-job.org account is not modified by this ZIP. Configure its jobs according to `CRON_JOB_SETUP.md`.
+
+## Verification performed on this bundle
+
+- Python compilation: passed.
+- Final strategy unit tests: 12 passed.
+- The four supplied small Entry/SL examples were verified to return `STOP_DISTANCE_TOO_SMALL`.

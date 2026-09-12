@@ -20,6 +20,7 @@ def blank(day):
         "pending_setups": {},
         "daily_filters": {},
         "alert_state": {},
+        "orb": {},
     }
 
 
@@ -40,6 +41,7 @@ def load(day):
     s.setdefault("pending_setups", {})
     s.setdefault("daily_filters", {})
     s.setdefault("alert_state", {})
+    s.setdefault("orb", {})
     return s
 
 

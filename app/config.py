@@ -13,11 +13,11 @@ class Settings:
     min_daily_volume: int = int(os.getenv("MIN_DAILY_VOLUME", "500000"))
 
     buy_rsi_min: float = float(os.getenv("BUY_RSI_MIN", "55"))
-    buy_rsi_max: float = float(os.getenv("BUY_RSI_MAX", "70"))
+    buy_rsi_max: float = float(os.getenv("BUY_RSI_MAX", "80"))
     sell_rsi_min: float = float(os.getenv("SELL_RSI_MIN", "30"))
     sell_rsi_max: float = float(os.getenv("SELL_RSI_MAX", "45"))
     rvol_lookback: int = int(os.getenv("RVOL_LOOKBACK", "20"))
-    min_15m_rvol: float = float(os.getenv("MIN_15M_RVOL", "1.5"))
+    min_15m_rvol: float = float(os.getenv("MIN_15M_RVOL", "1.2"))
     require_ema_crossover: bool = _bool("REQUIRE_EMA_CROSSOVER", "false")
 
     setup_timeframe: int = int(os.getenv("SETUP_TIMEFRAME", "15"))
@@ -25,7 +25,7 @@ class Settings:
     min_15m_candles: int = int(os.getenv("MIN_15M_CANDLES", "30"))
     min_5m_candles: int = int(os.getenv("MIN_5M_CANDLES", "30"))
 
-    min_trade_score: float = float(os.getenv("MIN_TRADE_SCORE", "5"))
+    min_trade_score: float = float(os.getenv("MIN_TRADE_SCORE", "3"))
     max_trade_score: float = float(os.getenv("MAX_TRADE_SCORE", "7"))
 
     t1_rr: float = float(os.getenv("T1_RR", "2.0"))
@@ -42,7 +42,7 @@ class Settings:
 
 
 DISCLAIMER = (
-    "⚠️ Educational/research alert only. No order is placed."
+    "⚠️ Educational/informational purposes only. Not financial advice. Trade at your own risk."
 )
 
 SETTINGS = Settings()

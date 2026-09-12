@@ -1,6 +1,12 @@
 name: NSE Momentum - Universe Refresh
 
 on:
+  schedule:
+    # 09:22 IST = 03:52 UTC. Fresh universe for the new trading day.
+    - cron: "52 3 * * 1-5"
+    # 09:30–14:45 IST every 15 minutes = 04:00–09:15 UTC.
+    - cron: "*/15 4-8 * * 1-5"
+    - cron: "0,15,30 9 * * 1-5"
   workflow_dispatch:
 
 permissions:

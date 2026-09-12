@@ -1,0 +1,31 @@
+Final replacement bundle — NSE 15M setup + 5M confirmation strategy
+
+MODIFIED
+app/config.py
+app/indicators.py
+app/main.py
+app/scoring.py
+app/state.py
+app/strategy.py
+app/summary.py
+app/telegram.py
+.github/workflows/nse-momentum-scan.yml
+.github/workflows/nse-momentum-universe.yml
+.github/workflows/nse-momentum-summary.yml
+
+aDDed
+app/risk.py
+tests/test_final_strategy.py
+CRON_JOB_SETUP.md
+FINAL_IMPLEMENTATION_README.md
+FINAL_CODE_GENERATION_PROMPT.md
+
+NOT INCLUDED / PRESERVED FROM EXISTING REPOSITORY
+app/dhan_client.py
+app/calendar.py
+app/nse_universe.py
+requirements.txt
+other existing repository files and secrets
+
+IMPORTANT
+The external cron-job.org account is not modified by this bundle.
