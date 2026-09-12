@@ -179,12 +179,9 @@ def _monitor_trade(dhan, state, signal, df5, df15, ts):
     }
 
     # Apply the milestone stop only when the stage advances.
+    # The new stop becomes active from the next 5M scanner cycle.
     if new_stage > stage:
         proposed = stage_stop[new_stage]
-        if new_stage == 4:
-            structure = _latest_completed_15m(df15, latest5_ts)
-            if structure is not None:
-                proposed = float(structure.low if direction == "BUY" else structure.high)
 
         old_stop = stop
         if direction == "BUY":

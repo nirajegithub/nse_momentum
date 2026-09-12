@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: nse-momentum-summary
+  group: nse-momentum-state
   cancel-in-progress: false
 
 jobs:

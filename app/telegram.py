@@ -39,13 +39,11 @@ def signal_message(s):
         f"T1: {_money(s['risk']['t1'])}",
         f"T2: {_money(s['risk']['t2'])}",
         f"T3: {_money(s['risk']['t3'])}",
-        "",
-        f"Setup Quality: {float(s.get('trade_quality_score', 0)):.1f}/7",
     ])
 
 
 def stop_update_message(s, new_stop, stage, basis):
-    labels = {1: "BREAK-EVEN", 2: "+0.5R LOCKED", 3: "+1R LOCKED", 4: "15M STRUCTURE TRAIL"}
+    labels = {1: "BREAK-EVEN", 2: "+0.5R LOCKED", 3: "+1R LOCKED", 4: "+2R / 15M STRUCTURE TRAIL"}
     label = labels.get(int(stage), basis)
     return "\n".join([
         "🔒 STOP UPDATE",

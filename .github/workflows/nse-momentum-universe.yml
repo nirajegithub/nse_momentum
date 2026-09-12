@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: nse-momentum-universe
+  group: nse-momentum-state
   cancel-in-progress: false
 
 jobs:
